@@ -1,16 +1,36 @@
-import 'package:boring_app/boring_app/boring_app_section.dart';
-import 'package:boring_app/boring_app/boring_drawer.dart';
-import 'package:boring_app/boring_app/boring_drawer_section.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class BoringApp extends StatelessWidget {
-  BoringApp(
-      {super.key,
-      required this.sections,
-      this.drawerFooterBuilder,
-      this.drawerHeaderBuilder});
+import 'package:boring_app/boring_app/boring_app_section.dart';
+import 'package:boring_app/boring_app/boring_drawer.dart';
+import 'package:boring_app/boring_app/boring_drawer_section.dart';
 
+class BoringThemeConfig {
+  final ThemeData? theme;
+  final ThemeData? darkTheme;
+  final ThemeData? highContrastTheme;
+  final ThemeData? highContrastDarkTheme;
+  final ThemeMode? themeMode;
+  const BoringThemeConfig({
+    this.theme,
+    this.darkTheme,
+    this.highContrastTheme,
+    this.highContrastDarkTheme,
+    this.themeMode = ThemeMode.system,
+  });
+}
+
+class BoringApp extends StatelessWidget {
+  BoringApp({
+    super.key,
+    required this.sections,
+    this.drawerFooterBuilder,
+    this.drawerHeaderBuilder,
+    this.themeConfig = const BoringThemeConfig(),
+  });
+  final BoringThemeConfig themeConfig;
   final List<BoringAppSection> sections;
   final Widget Function(BuildContext context)? drawerHeaderBuilder;
   final Widget Function(BuildContext context)? drawerFooterBuilder;
@@ -51,6 +71,12 @@ class BoringApp extends StatelessWidget {
       routeInformationParser: _goRouter.routeInformationParser,
       routeInformationProvider: _goRouter.routeInformationProvider,
       routerDelegate: _goRouter.routerDelegate,
+      //them section
+      theme: themeConfig.theme,
+      darkTheme: themeConfig.darkTheme,
+      highContrastTheme: themeConfig.highContrastTheme,
+      highContrastDarkTheme: themeConfig.highContrastDarkTheme,
+      themeMode: themeConfig.themeMode,
     );
   }
 }
