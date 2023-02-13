@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  go_router: ^5.2.4
+  go_router: ^6.0.0
   local_hero: ^0.2.0
 
 dev_dependencies:
