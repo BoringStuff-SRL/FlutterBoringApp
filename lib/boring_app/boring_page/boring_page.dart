@@ -12,7 +12,7 @@ export 'package:boring_app/boring_app/boring_page/boring_page_base.dart';
 class BoringPage implements BoringPageBase {
   String path;
   String drawerLabel;
-  Icon? icon;
+  Widget? icon;
   List<BoringPage>? subPages;
   bool hideFromDrawer;
   bool showChildrenInDrawer;
