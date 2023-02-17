@@ -16,6 +16,9 @@ class BoringSection {
   final BoringDrawerTileStyle drawerTileStyle;
   final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
       redirect;
+
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+
   List<BoringPageBase> children;
 
   BoringSection(
@@ -72,6 +75,7 @@ class BoringSection {
         child: child,
       );
 
+
   Drawer drawer(BuildContext context) => Drawer(
         shape: RoundedRectangleBorder(borderRadius: drawerStyle.drawerRadius),
         elevation: drawerStyle.drawerElevation,
@@ -95,8 +99,8 @@ class BoringSection {
         )),
       );
 
-  List<RouteBase> _getChildrenRoutes(bool hidden) => children
-      .where((element) => element.isHidden == hidden)
+  List<RouteBase> _getChildrenRoutes(bool hiddenFromDrawer) => children
+      .where((element) => element.isHiddenFromDrawer == hiddenFromDrawer)
       .map((e) => e.getRoutes(addPrefix: !hasPath, redirectInjection: redirect))
       .expand((element) => element)
       .toList();
@@ -114,7 +118,10 @@ class BoringSection {
               controller: MaterialApp.createMaterialHeroController(),
               child: LayoutBuilder(builder: (context, constraints) {
                 return Scaffold(
-                  drawer: constraints.maxWidth > 750 ? null : drawer(context),
+                  key: _drawerKey,
+                  drawer: constraints.maxWidth > 750
+                      ? null
+                      : drawer(context, drawerShow: true),
                   body: constraints.maxWidth > 750
                       ? Padding(
                           padding: drawerStyle.drawerForeignPadding,

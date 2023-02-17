@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../style/boring_drawer_tile_style.dart';
 
 abstract class BoringPageBase {
+
   Widget? buildDrawerEntry(
       BuildContext context, BoringDrawerTileStyle tileStyle,
       [String fullPathPrefix]);

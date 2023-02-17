@@ -5,10 +5,12 @@ class BoringDrawerStyle {
   final BorderRadius drawerRadius;
   final EdgeInsets drawerContentPadding;
   final EdgeInsets drawerForeignPadding;
+  final Widget drawerIcon;
   final double drawerElevation;
 
   const BoringDrawerStyle({
     this.backgroundColor,
+    this.drawerIcon = const Icon(Icons.menu),
     this.drawerForeignPadding = const EdgeInsets.all(20),
     this.drawerContentPadding = const EdgeInsets.all(16),
     this.drawerElevation = 0,
