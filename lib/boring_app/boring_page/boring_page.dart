@@ -32,22 +32,26 @@ class BoringPage implements BoringPageBase {
       : assert(!hideFromDrawer || drawerLabel.isEmpty,
             "The page is hidden from the drawer so the drawerLabel must be empty! PATH: $path");
 
-  List<BoringDrawerEntry>? _subDrawerEntries(String fullPathPrefix) =>
+  List<BoringDrawerEntry>? _subDrawerEntries(
+          String fullPathPrefix, BoringDrawerTileStyle tileStyle) =>
       showChildrenInDrawer
           ? subPages
-              ?.map((e) => e.boringDrawerEntry(fullPathPrefix))
+              ?.map((e) => e.boringDrawerEntry(fullPathPrefix, tileStyle))
               .where((element) => element != null)
               .toList() as List<BoringDrawerEntry>
           : null;
 
-  BoringDrawerEntry? boringDrawerEntry(String fullPathPrefix) => !hideFromDrawer
-      ? BoringDrawerEntry(
-          path: "$fullPathPrefix/$path",
-          label: drawerLabel,
-          subEntries: _subDrawerEntries("$fullPathPrefix/$path"),
-          icon: icon,
-        )
-      : null;
+  BoringDrawerEntry? boringDrawerEntry(
+          String fullPathPrefix, BoringDrawerTileStyle tileStyle) =>
+      !hideFromDrawer
+          ? BoringDrawerEntry(
+              path: "$fullPathPrefix/$path",
+              label: drawerLabel,
+              subEntries: _subDrawerEntries("$fullPathPrefix/$path", tileStyle),
+              icon: icon,
+              tileStyle: tileStyle,
+            )
+          : null;
 
   // @override
   // List<BoringEntry> get getDrawerEntries =>
@@ -57,7 +61,7 @@ class BoringPage implements BoringPageBase {
   Widget? buildDrawerEntry(
       BuildContext context, BoringDrawerTileStyle tileStyle,
       [String fullPathPrefix = ""]) {
-    return boringDrawerEntry(fullPathPrefix);
+    return boringDrawerEntry(fullPathPrefix, tileStyle);
   }
 
   @override
