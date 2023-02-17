@@ -93,8 +93,8 @@ class BoringSection {
         )),
       );
 
-  List<RouteBase> _getChildrenRoutes(bool hidden) => children
-      .where((element) => element.isHidden == hidden)
+  List<RouteBase> _getChildrenRoutes(bool hiddenFromDrawer) => children
+      .where((element) => element.isHiddenFromDrawer == hiddenFromDrawer)
       .map((e) => e.getRoutes(addPrefix: !hasPath, redirectInjection: redirect))
       .expand((element) => element)
       .toList();

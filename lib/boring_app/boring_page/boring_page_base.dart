@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 
 abstract class BoringPageBase {
   Widget? buildDrawerEntry(BuildContext context, [String fullPathPrefix]);
-  bool get isHidden;
+  bool get isHiddenFromDrawer;
   List<GoRoute> getRoutes(
       {bool addPrefix = false,
       FutureOr<String?> Function(BuildContext context, GoRouterState state)?

@@ -14,8 +14,9 @@ class BoringPage implements BoringPageBase {
   List<BoringPage>? subPages;
   bool hideFromDrawer;
   bool showChildrenInDrawer;
-  Widget Function(BuildContext, GoRouterState)? builder;
-  FutureOr<String?> Function(BuildContext, GoRouterState)? redirect;
+  Widget Function(BuildContext context, GoRouterState state)? builder;
+  FutureOr<String?> Function(BuildContext context, GoRouterState state)?
+      redirect;
 
   BoringPage(
       {required this.path,
@@ -66,6 +67,7 @@ class BoringPage implements BoringPageBase {
             redirect: (context, state) =>
                 redirectInjection?.call(context, state) ??
                 redirect?.call(context, state),
+            routes: _getSubRoutes(subPages),
             pageBuilder: builder != null
                 ? (context, state) =>
                     NoTransitionPage(child: builder!(context, state))
@@ -73,8 +75,15 @@ class BoringPage implements BoringPageBase {
     ];
   }
 
+  List<RouteBase> _getSubRoutes(List<BoringPage>? subPages) =>
+      subPages
+          ?.map((route) => route.getRoutes())
+          .expand((element) => element)
+          .toList() ??
+      [];
+
   @override
-  bool get isHidden => hideFromDrawer;
+  bool get isHiddenFromDrawer => hideFromDrawer;
 
   @override
   List<BoringPage> getPagesWithEmptyPath() {
