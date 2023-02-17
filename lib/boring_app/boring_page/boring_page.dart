@@ -45,7 +45,8 @@ class BoringPage implements BoringPageBase {
           path: "$fullPathPrefix/$path",
           label: drawerLabel,
           subEntries: _subDrawerEntries("$fullPathPrefix/$path"),
-          icon: icon)
+          icon: icon,
+        )
       : null;
 
   // @override
