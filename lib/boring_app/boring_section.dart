@@ -129,28 +129,7 @@ class BoringSection {
                             Expanded(child: child)
                           ]),
                         )
-                      : Padding(
-                          padding: drawerStyle.drawerForeignPadding.copyWith(
-                              top: drawerStyle.drawerForeignPadding.top,
-                              bottom: drawerStyle.drawerForeignPadding.bottom,
-                              right: drawerStyle.drawerForeignPadding.right,
-                              left: 0),
-                          child: Row(
-                            children: [
-                              Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8, right: 8),
-                                    child: GestureDetector(
-                                        onTap: () => _drawerKey.currentState!
-                                            .openDrawer(),
-                                        child: drawerStyle.drawerIcon),
-                                  )),
-                              Expanded(child: child),
-                            ],
-                          ),
-                        ),
+                      : child,
                 );
               }),
             );
