@@ -1,28 +1,32 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:boring_app/boring_app/style/boring_drawer_style.dart';
 import 'package:boring_app/boring_app/boring_page/boring_page.dart';
+import 'package:boring_app/boring_app/style/boring_drawer_tile_style.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:boring_app/boring_app/boring_page/boring_page_base.dart';
-
 class BoringSection {
   final String? path;
-  List<BoringPageBase> children;
   final Widget Function(BuildContext context)? drawerHeaderBuilder;
   final Widget Function(BuildContext context)? drawerFooterBuilder;
   final String? defaultPath;
+  final BoringDrawerStyle drawerStyle;
+  final BoringDrawerTileStyle drawerTileStyle;
   final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
       redirect;
-  BoringSection({
-    this.path,
-    required this.children,
-    this.drawerHeaderBuilder,
-    this.drawerFooterBuilder,
-    this.defaultPath,
-    this.redirect,
-  }) {
+  List<BoringPageBase> children;
+
+  BoringSection(
+      {this.path,
+      required this.children,
+      this.drawerHeaderBuilder,
+      this.drawerFooterBuilder,
+      this.defaultPath,
+      this.redirect,
+      this.drawerStyle = const BoringDrawerStyle(),
+      this.drawerTileStyle = const BoringDrawerTileStyle()}) {
     _assertions();
   }
 
@@ -50,6 +54,7 @@ class BoringSection {
       }
       noPathPage = emptyPathPage[0];
     } else {
+      noPathPage = null;
       if (hasPath != hasDefaultPath) {
         throw Exception(
             "The section has a non empty path but there's no page inside with an empty path. In order to work, add a default path to be redirected to!");
@@ -59,9 +64,6 @@ class BoringSection {
 
   late final BoringPage? noPathPage;
 
-  final drawerShape =
-      RoundedRectangleBorder(borderRadius: BorderRadius.circular(16));
-  final drawerElevation = 20.0;
   drawerWrap(Widget child) => Card(
         margin: EdgeInsets.zero,
         elevation: 0,
@@ -71,18 +73,18 @@ class BoringSection {
       );
 
   Drawer drawer(BuildContext context) => Drawer(
-        shape: drawerShape,
-        elevation: drawerElevation,
+        shape: RoundedRectangleBorder(borderRadius: drawerStyle.drawerRadius),
+        elevation: drawerStyle.drawerElevation,
         child: drawerWrap(Column(
           children: [
             if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(8.0),
+                padding: drawerStyle.drawerContentPadding,
                 child: Column(
                   children: children
-                      .map((e) =>
-                          e.buildDrawerEntry(context, hasPath ? path! : ""))
+                      .map((e) => e.buildDrawerEntry(
+                          context, drawerTileStyle, hasPath ? path! : ""))
                       .whereType<Widget>()
                       .toList(),
                 ),
@@ -114,13 +116,13 @@ class BoringSection {
                 return Scaffold(
                   drawer: constraints.maxWidth > 750 ? null : drawer(context),
                   body: constraints.maxWidth > 750
-                      ? Row(children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: drawer(context),
-                          ),
-                          Expanded(child: child)
-                        ])
+                      ? Padding(
+                          padding: drawerStyle.drawerForeignPadding,
+                          child: Row(children: [
+                            drawer(context),
+                            Expanded(child: child)
+                          ]),
+                        )
                       : child,
                 );
               }),
@@ -150,5 +152,5 @@ class BoringSection {
             noPathPage?.builder?.call(context, state) ?? const Placeholder(),
         routes: subRoutes());
   }
-  //TODO add drawer header and footer
+//TODO add drawer header and footer
 }

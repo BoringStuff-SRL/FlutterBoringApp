@@ -1,16 +1,22 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:boring_app/boring_app/style/boring_drawer_tile_style.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class BoringDrawerEntry extends StatelessWidget {
   final String path;
   final String label;
-  final Icon? icon;
+  final Widget? icon;
   final List<BoringDrawerEntry>? subEntries;
+  final BoringDrawerTileStyle tileStyle;
+
+  final ValueNotifier<bool> _isHover = ValueNotifier(false);
+
   BoringDrawerEntry({
     super.key,
     required this.path,
     required this.label,
+    this.tileStyle = const BoringDrawerTileStyle(),
     this.icon,
     this.subEntries,
   });
@@ -23,51 +29,78 @@ class BoringDrawerEntry extends StatelessWidget {
         (!_hasSubentries && path != "/" && loc.contains(path));
   }
 
-  final Color selectedColor = Colors.green;
-  late final Color textColor =
-      selectedColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
-
-  Widget tile(BuildContext context) {
-    //if (entry.subEntries == null || entry.subEntries!.isEmpty) {
-    final isSelected = checkIfSelected(context);
-    return ListTile(
-      leading: icon,
-      title: Text(label),
-      textColor: isSelected ? (textColor) : null,
-      iconColor: isSelected ? (textColor) : null,
-      hoverColor:
-          isSelected ? Colors.transparent : selectedColor.withAlpha(150),
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.all(Radius.circular(12))),
-      onTap: () => GoRouter.of(context).push(path),
-      //selected: isSelected,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (!checkIfSelected(context)) return tile(context);
-    return Stack(
-      alignment: Alignment.topLeft,
+    final selectedIndex = checkIfSelected(context);
+
+    if (selectedIndex) {
+      _isHover.value = true;
+    } else {
+      _isHover.value = false;
+    }
+    return Column(
       children: [
-        Hero(
-          tag: "tag",
-          child: ClipRRect(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(12.0),
-            ),
-            child: SizedBox(
-              height: 48,
-              child: Container(color: selectedColor),
-            ),
-          ),
-        ),
-        tile(context)
+        InkWell(
+            onTap: () => GoRouter.of(context).push(path),
+            onHover: (val) {
+              if (!selectedIndex) {
+                _isHover.value = val;
+              }
+            },
+            hoverColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            child: ValueListenableBuilder(
+              valueListenable: _isHover,
+              builder: (BuildContext context, bool value, Widget? child) {
+                return Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  width: 220,
+                  decoration: BoxDecoration(
+                    color: value ? tileStyle.selectedColor : Colors.white,
+                    borderRadius: tileStyle.tileRadius,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (icon != null)
+                        Row(
+                          children: [
+                            icon!,
+                            const SizedBox(
+                              width: 10,
+                            ),
+                          ],
+                        ),
+                      Text(
+                        label,
+                        style: TextStyle(
+                            color: value
+                                ? tileStyle.selectedTextColor
+                                : tileStyle.unSelectedTextColor,
+                            fontSize: tileStyle.fontSize,
+                            fontFamily: tileStyle.fontFamily ??
+                                Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.fontFamily,
+                            fontWeight:
+                                value ? FontWeight.w600 : FontWeight.w400),
+                      )
+                    ],
+                  ),
+                );
+              },
+            )),
+        SizedBox(
+          height: tileStyle.tileSpacing,
+        )
       ],
     );
   }
 }
-
 
 // class BoringPageGroup implements BoringPageBase {
 //   String title;
