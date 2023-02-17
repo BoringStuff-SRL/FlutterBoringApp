@@ -10,6 +10,7 @@ class BoringThemeConfig {
   final ThemeData? highContrastTheme;
   final ThemeData? highContrastDarkTheme;
   final ThemeMode? themeMode;
+
   const BoringThemeConfig({
     this.theme,
     this.darkTheme,

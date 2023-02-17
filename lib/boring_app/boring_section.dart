@@ -75,7 +75,6 @@ class BoringSection {
         child: child,
       );
 
-
   Drawer drawer(BuildContext context) => Drawer(
         shape: RoundedRectangleBorder(borderRadius: drawerStyle.drawerRadius),
         elevation: drawerStyle.drawerElevation,
@@ -119,9 +118,7 @@ class BoringSection {
               child: LayoutBuilder(builder: (context, constraints) {
                 return Scaffold(
                   key: _drawerKey,
-                  drawer: constraints.maxWidth > 750
-                      ? null
-                      : drawer(context),
+                  drawer: constraints.maxWidth > 750 ? null : drawer(context),
                   body: constraints.maxWidth > 750
                       ? Padding(
                           padding: drawerStyle.drawerForeignPadding,
