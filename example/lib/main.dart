@@ -19,10 +19,12 @@ class MyApp extends StatelessWidget {
         BoringSection(
           drawerTileStyle: BoringDrawerTileStyle(
             selectedColor: Colors.red,
+            selectedTextColor: Colors.pink,
             fontFamily: "Montserrat",
           ),
           children: [
             BoringPage(
+              icon: Text("DIO"),
               drawerLabel: "Main",
               path: "main",
               builder: (context, state) {
