@@ -5,6 +5,8 @@ import 'package:boring_app/boring_app/boring_page/boring_page_base.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../style/boring_drawer_tile_style.dart';
+
 export 'package:boring_app/boring_app/boring_page/boring_page_base.dart';
 
 class BoringPage implements BoringPageBase {
@@ -51,7 +53,9 @@ class BoringPage implements BoringPageBase {
   //     !hideFromDrawer ? [_boringEntry as BoringEntry] : [];
 
   @override
-  Widget? buildDrawerEntry(BuildContext context, [String fullPathPrefix = ""]) {
+  Widget? buildDrawerEntry(
+      BuildContext context, BoringDrawerTileStyle tileStyle,
+      [String fullPathPrefix = ""]) {
     return boringDrawerEntry(fullPathPrefix);
   }
 

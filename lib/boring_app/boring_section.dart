@@ -16,7 +16,9 @@ class BoringSection {
   final BoringDrawerTileStyle drawerTileStyle;
   final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
       redirect;
+
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+
   List<BoringPageBase> children;
 
   BoringSection(
@@ -73,10 +75,9 @@ class BoringSection {
         child: child,
       );
 
-  Drawer drawer(BuildContext context, {bool? drawerShow}) => Drawer(
-        shape: drawerShow != null
-            ? null
-            : RoundedRectangleBorder(borderRadius: drawerStyle.drawerRadius),
+
+  Drawer drawer(BuildContext context) => Drawer(
+        shape: RoundedRectangleBorder(borderRadius: drawerStyle.drawerRadius),
         elevation: drawerStyle.drawerElevation,
         child: drawerWrap(Column(
           children: [
