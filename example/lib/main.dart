@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           ),
           children: [
             BoringPage(
-              icon: Text("DIO"),
+              icon: Text("TEST"),
               drawerLabel: "Main",
               path: "main",
               builder: (context, state) {
