@@ -12,7 +12,7 @@ abstract class BoringPageBase {
       BuildContext context, BoringDrawerTileStyle tileStyle,
       [String fullPathPrefix]);
 
-  bool get isHidden;
+  bool get isHiddenFromDrawer;
 
   List<GoRoute> getRoutes(
       {bool addPrefix = false,

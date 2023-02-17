@@ -121,7 +121,7 @@ class BoringSection {
                   key: _drawerKey,
                   drawer: constraints.maxWidth > 750
                       ? null
-                      : drawer(context, drawerShow: true),
+                      : drawer(context),
                   body: constraints.maxWidth > 750
                       ? Padding(
                           padding: drawerStyle.drawerForeignPadding,
