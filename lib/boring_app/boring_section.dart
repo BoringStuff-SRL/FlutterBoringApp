@@ -50,6 +50,7 @@ class BoringSection {
       }
       noPathPage = emptyPathPage[0];
     } else {
+      noPathPage = null;
       if (hasPath != hasDefaultPath) {
         throw Exception(
             "The section has a non empty path but there's no page inside with an empty path. In order to work, add a default path to be redirected to!");
