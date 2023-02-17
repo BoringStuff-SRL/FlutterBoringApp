@@ -39,7 +39,7 @@ class BoringDrawerEntry extends StatelessWidget {
           isSelected ? Colors.transparent : selectedColor.withAlpha(150),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadiusDirectional.all(Radius.circular(12))),
-      onTap: () => GoRouter.of(context).push(path),
+      onTap: () => GoRouter.of(context).go(path),
       //selected: isSelected,
     );
   }
