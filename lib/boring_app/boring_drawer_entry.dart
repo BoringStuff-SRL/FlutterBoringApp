@@ -58,7 +58,7 @@ class BoringDrawerEntry extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 width: 220,
                 decoration: BoxDecoration(
-                  color: value ? tileStyle.selectedColor : Colors.white,
+                  color: value ? tileStyle.selectedColor : Colors.transparent,
                   borderRadius: tileStyle.tileRadius,
                 ),
                 child: Row(
@@ -68,7 +68,13 @@ class BoringDrawerEntry extends StatelessWidget {
                     if (icon != null)
                       Row(
                         children: [
-                          icon!,
+                          ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                  value
+                                      ? tileStyle.selectedTextColor!
+                                      : tileStyle.unSelectedTextColor!,
+                                  BlendMode.srcIn),
+                              child: icon!),
                           const SizedBox(
                             width: 10,
                           ),
