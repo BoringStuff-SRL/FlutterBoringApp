@@ -127,7 +127,10 @@ class BoringSection {
                             Expanded(child: child)
                           ]),
                         )
-                      : child,
+                      : Padding(
+                          padding: drawerStyle.drawerForeignPadding,
+                          child: child,
+                        ),
                 );
               }),
             );
