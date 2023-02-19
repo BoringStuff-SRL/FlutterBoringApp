@@ -41,7 +41,10 @@ class BoringDrawerEntry extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-            onTap: () => GoRouter.of(context).go(path),
+            onTap: () {
+              GoRouter.of(context).go(path);
+              Scaffold.of(context).closeDrawer();
+            },
             onHover: (val) {
               if (!selectedIndex) {
                 _isHover.value = val;
