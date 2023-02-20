@@ -14,6 +14,8 @@ class BoringSection {
   final String? defaultPath;
   final BoringDrawerStyle drawerStyle;
   final BoringDrawerTileStyle drawerTileStyle;
+  final List<int> dividersAtIndexes;
+  final Widget Function(BuildContext context)? dividerBuilder;
   final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
       redirect;
 
@@ -28,6 +30,8 @@ class BoringSection {
       this.drawerFooterBuilder,
       this.defaultPath,
       this.redirect,
+      this.dividerBuilder,
+      this.dividersAtIndexes = const [],
       this.drawerStyle = const BoringDrawerStyle(),
       this.drawerTileStyle = const BoringDrawerTileStyle()}) {
     _assertions();
@@ -75,29 +79,38 @@ class BoringSection {
         child: child,
       );
 
+  Drawer drawer(BuildContext context) {
+    List<Widget> _children = children
+        .map((e) =>
+            e.buildDrawerEntry(context, drawerTileStyle, hasPath ? path! : ""))
+        .whereType<Widget>()
+        .toList();
+    int itemsAdded = 0;
+    dividersAtIndexes.forEach((e) {
+      _children.insert(
+          e + itemsAdded, dividerBuilder?.call(context) ?? const Divider());
+      itemsAdded++;
+    });
 
-  Drawer drawer(BuildContext context) => Drawer(
-        shape: RoundedRectangleBorder(borderRadius: drawerStyle.drawerRadius),
-        elevation: drawerStyle.drawerElevation,
-        child: drawerWrap(Column(
-          children: [
-            if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: drawerStyle.drawerContentPadding,
-                child: Column(
-                  children: children
-                      .map((e) => e.buildDrawerEntry(
-                          context, drawerTileStyle, hasPath ? path! : ""))
-                      .whereType<Widget>()
-                      .toList(),
-                ),
+    return Drawer(
+      shape: RoundedRectangleBorder(borderRadius: drawerStyle.drawerRadius),
+      elevation: drawerStyle.drawerElevation,
+      child: drawerWrap(Column(
+        children: [
+          if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: drawerStyle.drawerContentPadding,
+              child: Column(
+                children: _children,
               ),
             ),
-            if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
-          ],
-        )),
-      );
+          ),
+          if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
+        ],
+      )),
+    );
+  }
 
   List<RouteBase> _getChildrenRoutes(bool hiddenFromDrawer) => children
       .where((element) => element.isHiddenFromDrawer == hiddenFromDrawer)
@@ -119,9 +132,7 @@ class BoringSection {
               child: LayoutBuilder(builder: (context, constraints) {
                 return Scaffold(
                   key: _drawerKey,
-                  drawer: constraints.maxWidth > 750
-                      ? null
-                      : drawer(context, drawerShow: true),
+                  drawer: constraints.maxWidth > 750 ? null : drawer(context),
                   body: constraints.maxWidth > 750
                       ? Padding(
                           padding: drawerStyle.drawerForeignPadding,
