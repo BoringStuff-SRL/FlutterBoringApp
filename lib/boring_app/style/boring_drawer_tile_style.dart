@@ -8,6 +8,8 @@ class BoringDrawerTileStyle {
   final double? fontSize;
   final Color? selectedTextColor;
   final Color? unSelectedTextColor;
+  final Color? selectedIconColor;
+  final Color? unSelectedIconColor;
 
   const BoringDrawerTileStyle({
     this.tileRadius = const BorderRadius.all(
@@ -17,6 +19,8 @@ class BoringDrawerTileStyle {
     this.selectedColor = Colors.green,
     this.selectedTextColor = Colors.black,
     this.unSelectedTextColor = Colors.grey,
+    this.selectedIconColor,
+    this.unSelectedIconColor,
     this.fontFamily,
     this.fontSize = 14,
   });

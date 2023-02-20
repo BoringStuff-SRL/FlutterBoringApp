@@ -12,6 +12,7 @@ class BoringSection {
   final Widget Function(BuildContext context)? drawerHeaderBuilder;
   final Widget Function(BuildContext context)? drawerFooterBuilder;
   final String? defaultPath;
+  final double drawerAndPageSpacing;
   final BoringDrawerStyle drawerStyle;
   final BoringDrawerTileStyle drawerTileStyle;
   final List<int> dividersAtIndexes;
@@ -30,8 +31,12 @@ class BoringSection {
       this.drawerFooterBuilder,
       this.defaultPath,
       this.redirect,
+
+        this.drawerAndPageSpacing = 20,
+
       this.dividerBuilder,
       this.dividersAtIndexes = const [],
+
       this.drawerStyle = const BoringDrawerStyle(),
       this.drawerTileStyle = const BoringDrawerTileStyle()}) {
     _assertions();
@@ -75,11 +80,12 @@ class BoringSection {
         margin: EdgeInsets.zero,
         elevation: 0,
         clipBehavior: Clip.hardEdge,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: child,
       );
 
-  Drawer drawer(BuildContext context) {
+
+  Drawer drawer(BuildContext context, {bool isMobile = false}) {
     List<Widget> _children = children
         .map((e) =>
             e.buildDrawerEntry(context, drawerTileStyle, hasPath ? path! : ""))
@@ -93,7 +99,7 @@ class BoringSection {
     });
 
     return Drawer(
-      shape: RoundedRectangleBorder(borderRadius: drawerStyle.drawerRadius),
+      shape: RoundedRectangleBorder(borderRadius: !isMobile ? drawerStyle.drawerRadius : drawerStyle.drawerRadius.copyWith(topLeft: Radius.circular(0), bottomLeft: Radius.circular(0))),
       elevation: drawerStyle.drawerElevation,
       child: drawerWrap(Column(
         children: [
@@ -132,12 +138,13 @@ class BoringSection {
               child: LayoutBuilder(builder: (context, constraints) {
                 return Scaffold(
                   key: _drawerKey,
-                  drawer: constraints.maxWidth > 750 ? null : drawer(context),
+                  drawer: constraints.maxWidth > 750 ? null : drawer(context, isMobile: true),
                   body: constraints.maxWidth > 750
                       ? Padding(
                           padding: drawerStyle.drawerForeignPadding,
-                          child: Row(children: [
+                          child: Row( children: [
                             drawer(context),
+                            SizedBox(width: drawerAndPageSpacing,),
                             Expanded(child: child)
                           ]),
                         )
