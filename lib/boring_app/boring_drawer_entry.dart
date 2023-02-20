@@ -40,6 +40,9 @@ class BoringDrawerEntry extends StatelessWidget {
     }
     return Column(
       children: [
+        SizedBox(
+          height: tileStyle.tileSpacing / 2,
+        ),
         InkWell(
           onTap: () => GoRouter.of(context).go(path),
           onHover: (val) {
@@ -102,7 +105,7 @@ class BoringDrawerEntry extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: tileStyle.tileSpacing,
+          height: tileStyle.tileSpacing / 2,
         )
       ],
     );
