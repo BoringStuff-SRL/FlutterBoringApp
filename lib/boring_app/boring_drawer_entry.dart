@@ -40,65 +40,76 @@ class BoringDrawerEntry extends StatelessWidget {
     }
     return Column(
       children: [
+        SizedBox(
+          height: tileStyle.tileSpacing / 2,
+        ),
         InkWell(
-            onTap: () {
+
+          onTap: (){
               GoRouter.of(context).go(path);
               Scaffold.of(context).closeDrawer();
             },
-            onHover: (val) {
-              if (!selectedIndex) {
-                _isHover.value = val;
-              }
+          onHover: (val) {
+            if (!selectedIndex) {
+              _isHover.value = val;
+            }
+          },
+          hoverColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          child: ValueListenableBuilder(
+            valueListenable: _isHover,
+            builder: (BuildContext context, bool value, Widget? child) {
+              return Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                width: 220,
+                decoration: BoxDecoration(
+                  color: value ? tileStyle.selectedColor : Colors.transparent,
+                  borderRadius: tileStyle.tileRadius,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (icon != null)
+                      Row(
+                        children: [
+                          ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                  value
+                                      ? tileStyle.selectedTextColor!
+                                      : tileStyle.unSelectedTextColor!,
+                                  BlendMode.srcIn),
+                              child: icon!),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      ),
+                    Text(
+                      label,
+                      style: TextStyle(
+                          color: value
+                              ? tileStyle.selectedTextColor
+                              : tileStyle.unSelectedTextColor,
+                          fontSize: tileStyle.fontSize,
+                          fontFamily: tileStyle.fontFamily ??
+                              Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.fontFamily,
+                          fontWeight:
+                              value ? FontWeight.w600 : FontWeight.w400),
+                    )
+                  ],
+                ),
+              );
             },
-            hoverColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            child: ValueListenableBuilder(
-              valueListenable: _isHover,
-              builder: (BuildContext context, bool value, Widget? child) {
-                return Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  width: 220,
-                  decoration: BoxDecoration(
-                    color: value ? tileStyle.selectedColor : Colors.white,
-                    borderRadius: tileStyle.tileRadius,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (icon != null)
-                        Row(
-                          children: [
-                            icon!,
-                            const SizedBox(
-                              width: 10,
-                            ),
-                          ],
-                        ),
-                      Text(
-                        label,
-                        style: TextStyle(
-                            color: value
-                                ? tileStyle.selectedTextColor
-                                : tileStyle.unSelectedTextColor,
-                            fontSize: tileStyle.fontSize,
-                            fontFamily: tileStyle.fontFamily ??
-                                Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.fontFamily,
-                            fontWeight:
-                                value ? FontWeight.w600 : FontWeight.w400),
-                      )
-                    ],
-                  ),
-                );
-              },
-            )),
+          ),
+        ),
         SizedBox(
-          height: tileStyle.tileSpacing,
+          height: tileStyle.tileSpacing / 2,
         )
       ],
     );

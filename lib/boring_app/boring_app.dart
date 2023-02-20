@@ -10,6 +10,7 @@ class BoringThemeConfig {
   final ThemeData? highContrastTheme;
   final ThemeData? highContrastDarkTheme;
   final ThemeMode? themeMode;
+
   const BoringThemeConfig({
     this.theme,
     this.darkTheme,
@@ -81,6 +82,7 @@ class BoringApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     printRoutes(_goRouter.routeConfiguration.routes, 0);
+
     return MaterialApp.router(
       routerConfig: _goRouter,
       // routeInformationParser: _goRouter.routeInformationParser,

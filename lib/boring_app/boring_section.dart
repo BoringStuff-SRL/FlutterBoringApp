@@ -12,8 +12,11 @@ class BoringSection {
   final Widget Function(BuildContext context)? drawerHeaderBuilder;
   final Widget Function(BuildContext context)? drawerFooterBuilder;
   final String? defaultPath;
+  final double drawerAndPageSpacing;
   final BoringDrawerStyle drawerStyle;
   final BoringDrawerTileStyle drawerTileStyle;
+  final List<int> dividersAtIndexes;
+  final Widget Function(BuildContext context)? dividerBuilder;
   final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
       redirect;
 
@@ -28,6 +31,12 @@ class BoringSection {
       this.drawerFooterBuilder,
       this.defaultPath,
       this.redirect,
+
+        this.drawerAndPageSpacing = 20,
+
+      this.dividerBuilder,
+      this.dividersAtIndexes = const [],
+
       this.drawerStyle = const BoringDrawerStyle(),
       this.drawerTileStyle = const BoringDrawerTileStyle()}) {
     _assertions();
@@ -71,32 +80,43 @@ class BoringSection {
         margin: EdgeInsets.zero,
         elevation: 0,
         clipBehavior: Clip.hardEdge,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: child,
       );
 
-  Drawer drawer(BuildContext context) => Drawer(
-        shape: RoundedRectangleBorder(borderRadius: drawerStyle.drawerRadius),
-        elevation: drawerStyle.drawerElevation,
-        child: drawerWrap(Column(
-          children: [
-            if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: drawerStyle.drawerContentPadding,
-                child: Column(
-                  children: children
-                      .map((e) => e.buildDrawerEntry(
-                          context, drawerTileStyle, hasPath ? path! : ""))
-                      .whereType<Widget>()
-                      .toList(),
-                ),
+
+  Drawer drawer(BuildContext context, {bool isMobile = false}) {
+    List<Widget> _children = children
+        .map((e) =>
+            e.buildDrawerEntry(context, drawerTileStyle, hasPath ? path! : ""))
+        .whereType<Widget>()
+        .toList();
+    int itemsAdded = 0;
+    dividersAtIndexes.forEach((e) {
+      _children.insert(
+          e + itemsAdded, dividerBuilder?.call(context) ?? const Divider());
+      itemsAdded++;
+    });
+
+    return Drawer(
+      shape: RoundedRectangleBorder(borderRadius: !isMobile ? drawerStyle.drawerRadius : drawerStyle.drawerRadius.copyWith(topLeft: Radius.circular(0), bottomLeft: Radius.circular(0))),
+      elevation: drawerStyle.drawerElevation,
+      child: drawerWrap(Column(
+        children: [
+          if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: drawerStyle.drawerContentPadding,
+              child: Column(
+                children: _children,
               ),
             ),
-            if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
-          ],
-        )),
-      );
+          ),
+          if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
+        ],
+      )),
+    );
+  }
 
   List<RouteBase> _getChildrenRoutes(bool hiddenFromDrawer) => children
       .where((element) => element.isHiddenFromDrawer == hiddenFromDrawer)
@@ -118,12 +138,13 @@ class BoringSection {
               child: LayoutBuilder(builder: (context, constraints) {
                 return Scaffold(
                   key: _drawerKey,
-                  drawer: constraints.maxWidth > 750 ? null : drawer(context),
+                  drawer: constraints.maxWidth > 750 ? null : drawer(context, isMobile: true),
                   body: constraints.maxWidth > 750
                       ? Padding(
                           padding: drawerStyle.drawerForeignPadding,
-                          child: Row(children: [
+                          child: Row( children: [
                             drawer(context),
+                            SizedBox(width: drawerAndPageSpacing,),
                             Expanded(child: child)
                           ]),
                         )
