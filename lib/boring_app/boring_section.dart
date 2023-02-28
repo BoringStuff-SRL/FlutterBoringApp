@@ -15,6 +15,8 @@ class BoringSection {
   final double drawerAndPageSpacing;
   final BoringDrawerStyle drawerStyle;
   final BoringDrawerTileStyle drawerTileStyle;
+  final List<int> dividersAtIndexes;
+  final Widget Function(BuildContext context)? dividerBuilder;
   final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
       redirect;
 
@@ -30,6 +32,8 @@ class BoringSection {
       this.defaultPath,
       this.redirect,
       this.drawerAndPageSpacing = 20,
+      this.dividerBuilder,
+      this.dividersAtIndexes = const [],
       this.drawerStyle = const BoringDrawerStyle(),
       this.drawerTileStyle = const BoringDrawerTileStyle()}) {
     _assertions();
@@ -84,17 +88,20 @@ class BoringSection {
             child: SingleChildScrollView(
               padding: drawerStyle.drawerContentPadding,
               child: Column(
+
                 children: children
                     .map((e) => e.buildDrawerEntry(
                         context, drawerTileStyle, hasPath ? path! : ""))
                     .whereType<Widget>()
                     .toList(),
+
               ),
             ),
           ),
           if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
         ],
       ));
+
 
   List<RouteBase> _getChildrenRoutes(bool hiddenFromDrawer) => children
       .where((element) => element.isHiddenFromDrawer == hiddenFromDrawer)
