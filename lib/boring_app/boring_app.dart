@@ -27,6 +27,9 @@ class BoringApp extends StatelessWidget {
       this.themeConfig = const BoringThemeConfig(),
       this.redirect,
       this.initialLocation,
+      this.localizationsDelegates,
+      this.supportedLocales = const <Locale>[Locale('en', 'US')],
+      this.locale,
       this.refreshListenable}) {
     checkDuplicates();
   }
@@ -48,6 +51,9 @@ class BoringApp extends StatelessWidget {
       redirect;
   final String? initialLocation;
   final Listenable? refreshListenable;
+  Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
+  Iterable<Locale> supportedLocales;
+  Locale? locale;
 
   get getRootRoutes => sections
       .where((element) => !element.hasPath)
@@ -88,6 +94,10 @@ class BoringApp extends StatelessWidget {
       // routeInformationParser: _goRouter.routeInformationParser,
       // routeInformationProvider: _goRouter.routeInformationProvider,
       // routerDelegate: _goRouter.routerDelegate,
+      localizationsDelegates: localizationsDelegates,
+      supportedLocales: supportedLocales,
+      locale: locale,
+      debugShowCheckedModeBanner: false,
       theme: themeConfig.theme,
       darkTheme: themeConfig.darkTheme,
       highContrastTheme: themeConfig.highContrastTheme,

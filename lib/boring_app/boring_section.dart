@@ -19,7 +19,7 @@ class BoringSection {
       redirect;
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
-
+  late final BoringPage? noPathPage;
   List<BoringPageBase> children;
 
   BoringSection(
@@ -29,7 +29,7 @@ class BoringSection {
       this.drawerFooterBuilder,
       this.defaultPath,
       this.redirect,
-        this.drawerAndPageSpacing = 20,
+      this.drawerAndPageSpacing = 20,
       this.drawerStyle = const BoringDrawerStyle(),
       this.drawerTileStyle = const BoringDrawerTileStyle()}) {
     _assertions();
@@ -67,38 +67,34 @@ class BoringSection {
     }
   }
 
-  late final BoringPage? noPathPage;
-
-  drawerWrap(Widget child) => Card(
-        margin: EdgeInsets.zero,
-        elevation: 0,
-        clipBehavior: Clip.hardEdge,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: child,
-      );
-
   Drawer drawer(BuildContext context, {bool isMobile = false}) => Drawer(
-        shape: RoundedRectangleBorder(borderRadius: !isMobile ? drawerStyle.drawerRadius : drawerStyle.drawerRadius.copyWith(topLeft: Radius.circular(0), bottomLeft: Radius.circular(0))),
-        elevation: drawerStyle.drawerElevation,
-        child: drawerWrap(Column(
-          children: [
-            if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: drawerStyle.drawerContentPadding,
-                child: Column(
-                  children: children
-                      .map((e) => e.buildDrawerEntry(
-                          context, drawerTileStyle, hasPath ? path! : ""))
-                      .whereType<Widget>()
-                      .toList(),
-                ),
+      width: drawerStyle.width,
+      shape: RoundedRectangleBorder(
+          borderRadius: !isMobile
+              ? drawerStyle.drawerRadius
+              : drawerStyle.drawerRadius.copyWith(
+                  topLeft: const Radius.circular(0),
+                  bottomLeft: const Radius.circular(0))),
+      elevation: drawerStyle.drawerElevation,
+      backgroundColor: drawerStyle.backgroundColor,
+      child: Column(
+        children: [
+          if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: drawerStyle.drawerContentPadding,
+              child: Column(
+                children: children
+                    .map((e) => e.buildDrawerEntry(
+                        context, drawerTileStyle, hasPath ? path! : ""))
+                    .whereType<Widget>()
+                    .toList(),
               ),
             ),
-            if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
-          ],
-        )),
-      );
+          ),
+          if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
+        ],
+      ));
 
   List<RouteBase> _getChildrenRoutes(bool hiddenFromDrawer) => children
       .where((element) => element.isHiddenFromDrawer == hiddenFromDrawer)
@@ -120,13 +116,17 @@ class BoringSection {
               child: LayoutBuilder(builder: (context, constraints) {
                 return Scaffold(
                   key: _drawerKey,
-                  drawer: constraints.maxWidth > 750 ? null : drawer(context, isMobile: true),
+                  drawer: constraints.maxWidth > 750
+                      ? null
+                      : drawer(context, isMobile: true),
                   body: constraints.maxWidth > 750
                       ? Padding(
                           padding: drawerStyle.drawerForeignPadding,
-                          child: Row( children: [
+                          child: Row(children: [
                             drawer(context),
-                            SizedBox(width: drawerAndPageSpacing,),
+                            SizedBox(
+                              width: drawerAndPageSpacing,
+                            ),
                             Expanded(child: child)
                           ]),
                         )
