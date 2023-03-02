@@ -11,6 +11,7 @@ abstract class BoringPageBase {
       [String fullPathPrefix]);
 
   bool get isHiddenFromDrawer;
+  bool get maintainDrawer;
 
   List<GoRoute> getRoutes(
       {bool addPrefix = false,

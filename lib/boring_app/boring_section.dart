@@ -88,13 +88,11 @@ class BoringSection {
             child: SingleChildScrollView(
               padding: drawerStyle.drawerContentPadding,
               child: Column(
-
                 children: children
                     .map((e) => e.buildDrawerEntry(
                         context, drawerTileStyle, hasPath ? path! : ""))
                     .whereType<Widget>()
                     .toList(),
-
               ),
             ),
           ),
@@ -102,9 +100,10 @@ class BoringSection {
         ],
       ));
 
-
   List<RouteBase> _getChildrenRoutes(bool hiddenFromDrawer) => children
-      .where((element) => element.isHiddenFromDrawer == hiddenFromDrawer)
+      .where((element) =>
+          element.isHiddenFromDrawer == hiddenFromDrawer ||
+          element.maintainDrawer)
       .map((e) => e.getRoutes(addPrefix: !hasPath, redirectInjection: redirect))
       .expand((element) => element)
       .toList();
