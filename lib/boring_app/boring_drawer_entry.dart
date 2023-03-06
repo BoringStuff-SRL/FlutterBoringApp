@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:boring_app/boring_app/style/boring_drawer_tile_style.dart';
+import 'package:boring_app/boring_app/utils/boucing_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -44,11 +45,10 @@ class BoringDrawerEntry extends StatelessWidget {
           height: tileStyle.tileSpacing / 2,
         ),
         InkWell(
-
-          onTap: (){
-              GoRouter.of(context).go(path);
-              Scaffold.of(context).closeDrawer();
-            },
+          onTap: () {
+            GoRouter.of(context).go(path);
+            Scaffold.of(context).closeDrawer();
+          },
           onHover: (val) {
             if (!selectedIndex) {
               _isHover.value = val;
@@ -60,49 +60,54 @@ class BoringDrawerEntry extends StatelessWidget {
           child: ValueListenableBuilder(
             valueListenable: _isHover,
             builder: (BuildContext context, bool value, Widget? child) {
-              return Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                width: 220,
-                decoration: BoxDecoration(
-                  color: value ? tileStyle.selectedColor : Colors.transparent,
-                  borderRadius: tileStyle.tileRadius,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (icon != null)
-                      Row(
-                        children: [
-                          ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                  value
-                                      ? tileStyle.selectedTextColor!
-                                      : tileStyle.unSelectedTextColor!,
-                                  BlendMode.srcIn),
-                              child: icon!),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                        ],
-                      ),
-                    Text(
-                      label,
-                      style: TextStyle(
-                          color: value
-                              ? tileStyle.selectedTextColor
-                              : tileStyle.unSelectedTextColor,
-                          fontSize: tileStyle.fontSize,
-                          fontFamily: tileStyle.fontFamily ??
-                              Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.fontFamily,
-                          fontWeight:
-                              value ? FontWeight.w600 : FontWeight.w400),
-                    )
-                  ],
+              return CustomBounce(
+                duration: const Duration(milliseconds: 150),
+                onPressed: () {},
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  width: 220,
+                  decoration: BoxDecoration(
+                    color: value ? tileStyle.selectedColor : Colors.transparent,
+                    borderRadius: tileStyle.tileRadius,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (icon != null)
+                        Row(
+                          children: [
+                            ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                    value
+                                        ? tileStyle.selectedTextColor!
+                                        : tileStyle.unSelectedTextColor!,
+                                    BlendMode.srcIn),
+                                child: icon!),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                          ],
+                        ),
+                      Text(
+                        label,
+                        style: TextStyle(
+                            color: value
+                                ? tileStyle.selectedTextColor
+                                : tileStyle.unSelectedTextColor,
+                            fontSize: tileStyle.fontSize,
+                            fontFamily: tileStyle.fontFamily ??
+                                Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.fontFamily,
+                            fontWeight:
+                                value ? FontWeight.w600 : FontWeight.w400),
+                      )
+                    ],
+                  ),
                 ),
               );
             },

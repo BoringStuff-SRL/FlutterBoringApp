@@ -32,7 +32,7 @@ class BoringApp extends StatelessWidget {
   }
 
   checkDuplicates() {
-    final s = Set();
+    final s = <dynamic>{};
     for (var section in sections) {
       if (s.contains(section.path)) {
         throw Exception("Duplicate path for sections: '${section.path}'");
@@ -56,7 +56,7 @@ class BoringApp extends StatelessWidget {
       .toList();
 
   late final GoRouter _goRouter = GoRouter(
-      debugLogDiagnostics: true,
+      debugLogDiagnostics: false,
       initialLocation: initialLocation,
       redirect: redirect,
       refreshListenable: refreshListenable,
@@ -74,14 +74,14 @@ class BoringApp extends StatelessWidget {
       return;
     }
     for (var route in routes) {
-      print("${'-' * indent}>${route}");
-      printRoutes(route.routes, indent + 1);
+      //print("${'-' * indent}>${route}");
+      //printRoutes(route.routes, indent + 1);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    printRoutes(_goRouter.routeConfiguration.routes, 0);
+    //printRoutes(_goRouter.routeConfiguration.routes, 0);
 
     return MaterialApp.router(
       routerConfig: _goRouter,
