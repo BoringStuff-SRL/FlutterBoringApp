@@ -17,6 +17,14 @@ class MyApp extends StatelessWidget {
       initialLocation: "/main",
       sections: [
         BoringSection(
+          drawerFooterBuilder: (context) {
+            return GestureDetector(
+              onTap: () {
+                context.go('/hidden');
+              },
+              child: Text('Go to hidden'),
+            );
+          },
           drawerTileStyle: BoringDrawerTileStyle(
             selectedColor: Colors.red,
             selectedTextColor: Colors.pink,
@@ -36,6 +44,20 @@ class MyApp extends StatelessWidget {
               path: "settings",
               builder: (context, state) {
                 return HomePage();
+              },
+            ),
+            BoringPage(
+              path: "hidden",
+              hideFromDrawer: true,
+              maintainDrawerWhenHidden: true,
+              builder: (context, state) {
+                return Scaffold(
+                  body: Column(
+                    children: [
+                      Text('This is the hidden page'),
+                    ],
+                  ),
+                );
               },
             ),
           ],
