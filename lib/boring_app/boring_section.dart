@@ -39,6 +39,9 @@ class BoringSection {
     _assertions();
   }
 
+  final GlobalKey<NavigatorState> _shellController =
+      GlobalKey<NavigatorState>();
+
   _assertions() {
     //assert(hasPath == ;
     final emptyPathPage = children
@@ -71,44 +74,6 @@ class BoringSection {
     }
   }
 
-  late final BoringPage? noPathPage;
-
-  drawerWrap(Widget child) => Card(
-        margin: EdgeInsets.zero,
-        elevation: 0,
-        clipBehavior: Clip.hardEdge,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: child,
-      );
-
-  Drawer drawer(BuildContext context, {bool isMobile = false}) {
-    List<Widget> _children = children
-        .map((e) =>
-            e.buildDrawerEntry(context, drawerTileStyle, hasPath ? path! : ""))
-        .whereType<Widget>()
-        .toList();
-    int itemsAdded = 0;
-    for (var e in dividersAtIndexes) {
-      _children.insert(
-          e + itemsAdded, dividerBuilder?.call(context) ?? const Divider());
-      itemsAdded++;
-    }
-
-    return Drawer(
-      shape: RoundedRectangleBorder(
-          borderRadius: !isMobile
-              ? drawerStyle.drawerRadius
-              : drawerStyle.drawerRadius.copyWith(
-                  topLeft: Radius.circular(0), bottomLeft: Radius.circular(0))),
-      elevation: drawerStyle.drawerElevation,
-      child: drawerWrap(Column(
-        children: [
-          if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: drawerStyle.drawerContentPadding,
-              child: Column(
-                children: _children,
   Drawer drawer(BuildContext context, {bool isMobile = false}) => Drawer(
       width: drawerStyle.width,
       shape: RoundedRectangleBorder(
@@ -136,16 +101,7 @@ class BoringSection {
           ),
           if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
         ],
-      )),
-    );
-  }
-          ),
-          if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
-        ],
       ));
-
-  final GlobalKey<NavigatorState> _shellController =
-      GlobalKey<NavigatorState>();
 
   List<RouteBase> _getChildrenRoutes(bool hiddenFromDrawer) => children
       .where((element) => element.isHiddenFromDrawer == hiddenFromDrawer)
