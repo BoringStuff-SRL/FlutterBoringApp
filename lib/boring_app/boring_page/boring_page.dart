@@ -12,10 +12,9 @@ export 'package:boring_app/boring_app/boring_page/boring_page_base.dart';
 class BoringPage implements BoringPageBase {
   String path;
   String drawerLabel;
-  Widget? icon;
+  Icon? icon;
   List<BoringPage>? subPages;
   bool hideFromDrawer;
-  bool? maintainDrawerWhenHidden;
   bool showChildrenInDrawer;
   Widget Function(BuildContext context, GoRouterState state)? builder;
   FutureOr<String?> Function(BuildContext context, GoRouterState state)?
@@ -29,40 +28,25 @@ class BoringPage implements BoringPageBase {
       this.hideFromDrawer = false,
       this.showChildrenInDrawer = false,
       this.builder,
-      this.maintainDrawerWhenHidden,
       this.redirect})
       : assert(!hideFromDrawer || drawerLabel.isEmpty,
-            "The page is hidden from the drawer so the drawerLabel must be empty! PATH: $path") {
-    if (hideFromDrawer) {
-      assert(maintainDrawerWhenHidden != null,
-          'If you want to hide the current page from the drawer, please specify if you still want the drawer when navigating or not.');
-    }
-    if (maintainDrawerWhenHidden != null) {
-      assert(hideFromDrawer,
-          'hideFromDrawer must be true if you specify maintainDrawerWhenHidden');
-    }
-  }
+            "The page is hidden from the drawer so the drawerLabel must be empty! PATH: $path");
 
-  List<BoringDrawerEntry>? _subDrawerEntries(
-          String fullPathPrefix, BoringDrawerTileStyle tileStyle) =>
+  List<BoringDrawerEntry>? _subDrawerEntries(String fullPathPrefix) =>
       showChildrenInDrawer
           ? subPages
-              ?.map((e) => e.boringDrawerEntry(fullPathPrefix, tileStyle))
+              ?.map((e) => e.boringDrawerEntry(fullPathPrefix))
               .where((element) => element != null)
               .toList() as List<BoringDrawerEntry>
           : null;
 
-  BoringDrawerEntry? boringDrawerEntry(
-          String fullPathPrefix, BoringDrawerTileStyle tileStyle) =>
-      !hideFromDrawer
-          ? BoringDrawerEntry(
-              path: "$fullPathPrefix/$path",
-              label: drawerLabel,
-              subEntries: _subDrawerEntries("$fullPathPrefix/$path", tileStyle),
-              icon: icon,
-              tileStyle: tileStyle,
-            )
-          : null;
+  BoringDrawerEntry? boringDrawerEntry(String fullPathPrefix) => !hideFromDrawer
+      ? BoringDrawerEntry(
+          path: "$fullPathPrefix/$path",
+          label: drawerLabel,
+          subEntries: _subDrawerEntries("$fullPathPrefix/$path"),
+          icon: icon)
+      : null;
 
   // @override
   // List<BoringEntry> get getDrawerEntries =>
@@ -72,7 +56,7 @@ class BoringPage implements BoringPageBase {
   Widget? buildDrawerEntry(
       BuildContext context, BoringDrawerTileStyle tileStyle,
       [String fullPathPrefix = ""]) {
-    return boringDrawerEntry(fullPathPrefix, tileStyle);
+    return boringDrawerEntry(fullPathPrefix);
   }
 
   @override
@@ -104,9 +88,6 @@ class BoringPage implements BoringPageBase {
 
   @override
   bool get isHiddenFromDrawer => hideFromDrawer;
-
-  @override
-  bool get maintainDrawer => maintainDrawerWhenHidden ?? true;
 
   @override
   List<BoringPage> getPagesWithEmptyPath() {

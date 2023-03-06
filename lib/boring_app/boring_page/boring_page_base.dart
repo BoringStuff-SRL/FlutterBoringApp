@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:boring_app/boring_app.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../style/boring_drawer_tile_style.dart';
 
@@ -11,7 +12,6 @@ abstract class BoringPageBase {
       [String fullPathPrefix]);
 
   bool get isHiddenFromDrawer;
-  bool get maintainDrawer;
 
   List<GoRoute> getRoutes(
       {bool addPrefix = false,
