@@ -45,10 +45,6 @@ class BoringDrawerEntry extends StatelessWidget {
           height: tileStyle.tileSpacing / 2,
         ),
         InkWell(
-          onTap: () {
-            GoRouter.of(context).go(path);
-            Scaffold.of(context).closeDrawer();
-          },
           onHover: (val) {
             if (!selectedIndex) {
               _isHover.value = val;
@@ -62,7 +58,10 @@ class BoringDrawerEntry extends StatelessWidget {
             builder: (BuildContext context, bool value, Widget? child) {
               return CustomBounce(
                 duration: const Duration(milliseconds: 150),
-                onPressed: () {},
+                onPressed: () {
+                  GoRouter.of(context).go(path);
+                  Scaffold.of(context).closeDrawer();
+                },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 150),
                   padding:
