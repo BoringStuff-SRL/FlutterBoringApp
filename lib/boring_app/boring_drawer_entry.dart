@@ -45,6 +45,7 @@ class BoringDrawerEntry extends StatelessWidget {
           height: tileStyle.tileSpacing / 2,
         ),
         InkWell(
+          onTap: () {},
           onHover: (val) {
             if (!selectedIndex) {
               _isHover.value = val;
