@@ -15,6 +15,8 @@ class BoringSection {
   final double drawerAndPageSpacing;
   final BoringDrawerStyle drawerStyle;
   final BoringDrawerTileStyle drawerTileStyle;
+  final List<int> dividersAtIndexes;
+  final Widget Function(BuildContext context)? dividerBuilder;
   final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
       redirect;
 
@@ -30,6 +32,8 @@ class BoringSection {
       this.defaultPath,
       this.redirect,
       this.drawerAndPageSpacing = 20,
+      this.dividerBuilder,
+      this.dividersAtIndexes = const [],
       this.drawerStyle = const BoringDrawerStyle(),
       this.drawerTileStyle = const BoringDrawerTileStyle()}) {
     _assertions();
@@ -67,6 +71,44 @@ class BoringSection {
     }
   }
 
+  late final BoringPage? noPathPage;
+
+  drawerWrap(Widget child) => Card(
+        margin: EdgeInsets.zero,
+        elevation: 0,
+        clipBehavior: Clip.hardEdge,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: child,
+      );
+
+  Drawer drawer(BuildContext context, {bool isMobile = false}) {
+    List<Widget> _children = children
+        .map((e) =>
+            e.buildDrawerEntry(context, drawerTileStyle, hasPath ? path! : ""))
+        .whereType<Widget>()
+        .toList();
+    int itemsAdded = 0;
+    for (var e in dividersAtIndexes) {
+      _children.insert(
+          e + itemsAdded, dividerBuilder?.call(context) ?? const Divider());
+      itemsAdded++;
+    }
+
+    return Drawer(
+      shape: RoundedRectangleBorder(
+          borderRadius: !isMobile
+              ? drawerStyle.drawerRadius
+              : drawerStyle.drawerRadius.copyWith(
+                  topLeft: Radius.circular(0), bottomLeft: Radius.circular(0))),
+      elevation: drawerStyle.drawerElevation,
+      child: drawerWrap(Column(
+        children: [
+          if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: drawerStyle.drawerContentPadding,
+              child: Column(
+                children: _children,
   Drawer drawer(BuildContext context, {bool isMobile = false}) => Drawer(
       width: drawerStyle.width,
       shape: RoundedRectangleBorder(
@@ -94,7 +136,16 @@ class BoringSection {
           ),
           if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
         ],
+      )),
+    );
+  }
+          ),
+          if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
+        ],
       ));
+
+  final GlobalKey<NavigatorState> _shellController =
+      GlobalKey<NavigatorState>();
 
   List<RouteBase> _getChildrenRoutes(bool hiddenFromDrawer) => children
       .where((element) => element.isHiddenFromDrawer == hiddenFromDrawer)
@@ -103,13 +154,13 @@ class BoringSection {
       .toList();
 
   List<ShellRoute> _shellRoute() {
-    print(children);
+    //print(children);
     final subRoutes = _getChildrenRoutes(false);
-    print(subRoutes);
+    //print(subRoutes);
     if (subRoutes.isEmpty) return [];
     return [
       ShellRoute(
-          navigatorKey: GlobalKey<NavigatorState>(),
+          navigatorKey: _shellController,
           builder: (context, state, child) {
             return HeroControllerScope(
               controller: MaterialApp.createMaterialHeroController(),
@@ -150,14 +201,15 @@ class BoringSection {
     assert(hasPath, "Can't have an empty path!");
     return GoRoute(
         parentNavigatorKey: parentNavigatorKey,
-        redirect: (context, state) =>
-            redirect?.call(context, state) ??
+        redirect: (context, state) async =>
+            await redirect?.call(context, state) ??
             ((state.fullpath == path) ? defaultPath : null),
         path: path!,
-        //TODO this is just a workaround! It should be fixed
         builder: (context, state) =>
-            noPathPage?.builder?.call(context, state) ?? const Placeholder(),
+            noPathPage?.builder?.call(context, state) ??
+            Container(
+              color: Colors.white,
+            ),
         routes: subRoutes());
   }
-//TODO add drawer header and footer
 }
