@@ -39,6 +39,9 @@ class BoringSection {
     _assertions();
   }
 
+  final GlobalKey<NavigatorState> _shellController =
+      GlobalKey<NavigatorState>();
+
   _assertions() {
     //assert(hasPath == ;
     final emptyPathPage = children
@@ -117,13 +120,13 @@ class BoringSection {
       .toList();
 
   List<ShellRoute> _shellRoute() {
-    print(children);
+    //print(children);
     final subRoutes = _getChildrenRoutes(false);
-    print(subRoutes);
+    //print(subRoutes);
     if (subRoutes.isEmpty) return [];
     return [
       ShellRoute(
-          navigatorKey: GlobalKey<NavigatorState>(),
+          navigatorKey: _shellController,
           builder: (context, state, child) {
             return HeroControllerScope(
               controller: MaterialApp.createMaterialHeroController(),
@@ -164,14 +167,15 @@ class BoringSection {
     assert(hasPath, "Can't have an empty path!");
     return GoRoute(
         parentNavigatorKey: parentNavigatorKey,
-        redirect: (context, state) =>
-            redirect?.call(context, state) ??
+        redirect: (context, state) async =>
+            await redirect?.call(context, state) ??
             ((state.fullpath == path) ? defaultPath : null),
         path: path!,
-        //TODO this is just a workaround! It should be fixed
         builder: (context, state) =>
-            noPathPage?.builder?.call(context, state) ?? const Placeholder(),
+            noPathPage?.builder?.call(context, state) ??
+            Container(
+              color: Colors.white,
+            ),
         routes: subRoutes());
   }
-//TODO add drawer header and footer
 }
