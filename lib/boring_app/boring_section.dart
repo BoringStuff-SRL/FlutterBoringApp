@@ -74,34 +74,42 @@ class BoringSection {
     }
   }
 
-  Drawer drawer(BuildContext context, {bool isMobile = false}) => Drawer(
-      width: drawerStyle.width,
-      shape: RoundedRectangleBorder(
-          borderRadius: !isMobile
-              ? drawerStyle.drawerRadius
-              : drawerStyle.drawerRadius.copyWith(
-                  topLeft: const Radius.circular(0),
-                  bottomLeft: const Radius.circular(0))),
-      elevation: drawerStyle.drawerElevation,
-      backgroundColor: drawerStyle.backgroundColor,
-      child: Column(
-        children: [
-          if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: drawerStyle.drawerContentPadding,
-              child: Column(
-                children: children
-                    .map((e) => e.buildDrawerEntry(
-                        context, drawerTileStyle, hasPath ? path! : ""))
-                    .whereType<Widget>()
-                    .toList(),
+  Drawer drawer(BuildContext context, {bool isMobile = false}) {
+    List<Widget> _children = children
+        .map((e) =>
+            e.buildDrawerEntry(context, drawerTileStyle, hasPath ? path! : ""))
+        .whereType<Widget>()
+        .toList();
+    int itemsAdded = 0;
+    dividersAtIndexes.forEach((e) {
+      _children.insert(
+          e + itemsAdded, dividerBuilder?.call(context) ?? const Divider());
+      itemsAdded++;
+    });
+
+    return Drawer(
+        width: drawerStyle.width,
+        shape: RoundedRectangleBorder(
+            borderRadius: !isMobile
+                ? drawerStyle.drawerRadius
+                : drawerStyle.drawerRadius.copyWith(
+                    topLeft: const Radius.circular(0),
+                    bottomLeft: const Radius.circular(0))),
+        elevation: drawerStyle.drawerElevation,
+        backgroundColor: drawerStyle.backgroundColor,
+        child: Column(
+          children: [
+            if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: drawerStyle.drawerContentPadding,
+                child: Column(children: _children),
               ),
             ),
-          ),
-          if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
-        ],
-      ));
+            if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
+          ],
+        ));
+  }
 
   List<RouteBase> _getChildrenRoutes(bool hiddenFromDrawer) => children
       .where((element) =>
