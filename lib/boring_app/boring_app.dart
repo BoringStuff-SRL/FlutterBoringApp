@@ -27,6 +27,7 @@ class BoringApp extends StatelessWidget {
       this.themeConfig = const BoringThemeConfig(),
       this.redirect,
       this.initialLocation,
+      required this.rootNavigator,
       this.localizationsDelegates,
       this.supportedLocales = const <Locale>[Locale('en', 'US')],
       this.locale,
@@ -46,7 +47,7 @@ class BoringApp extends StatelessWidget {
 
   final BoringThemeConfig themeConfig;
   final List<BoringSection> sections;
-  final _rootNavigator = GlobalKey<NavigatorState>();
+  final rootNavigator;
   final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
       redirect;
   final String? initialLocation;
@@ -66,12 +67,12 @@ class BoringApp extends StatelessWidget {
       initialLocation: initialLocation,
       redirect: redirect,
       refreshListenable: refreshListenable,
-      navigatorKey: _rootNavigator,
+      navigatorKey: rootNavigator,
       routes: [
         ...getRootRoutes,
         ...sections
             .where((element) => element.hasPath)
-            .map((e) => e.route(_rootNavigator))
+            .map((e) => e.route(rootNavigator))
             .toList()
       ]);
 
