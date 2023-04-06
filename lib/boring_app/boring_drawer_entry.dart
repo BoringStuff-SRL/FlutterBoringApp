@@ -8,10 +8,13 @@ class BoringDrawerEntry extends StatelessWidget {
   final String path;
   final String label;
   final Widget? icon;
+  final Widget isOpenedIcon;
+  final Widget isClosedIcon;
   final List<BoringDrawerEntry>? subEntries;
   final BoringDrawerTileStyle tileStyle;
 
   final ValueNotifier<bool> _isHover = ValueNotifier(false);
+  final ValueNotifier<bool> isExpanded = ValueNotifier(false);
 
   BoringDrawerEntry({
     super.key,
@@ -19,15 +22,17 @@ class BoringDrawerEntry extends StatelessWidget {
     required this.label,
     this.tileStyle = const BoringDrawerTileStyle(),
     this.icon,
+    this.isOpenedIcon = const Icon(Icons.arrow_drop_up),
+    this.isClosedIcon = const Icon(Icons.arrow_drop_down),
     this.subEntries,
   });
 
-  bool get _hasSubentries => subEntries != null && subEntries!.isNotEmpty;
+  bool get _hasSubEntries => subEntries != null && subEntries!.isNotEmpty;
 
   bool checkIfSelected(BuildContext context) {
     final loc = GoRouter.of(context).location;
     return path == loc ||
-        (!_hasSubentries && path != "/" && loc.contains(path));
+        (!_hasSubEntries && path != "/" && loc.contains(path));
   }
 
   @override
@@ -39,85 +44,123 @@ class BoringDrawerEntry extends StatelessWidget {
     } else {
       _isHover.value = false;
     }
-    return Column(
-      children: [
-        SizedBox(
-          height: tileStyle.tileSpacing / 2,
-        ),
-        InkWell(
-          onTap: () {},
-          onHover: (val) {
-            if (!selectedIndex) {
-              _isHover.value = val;
-            }
-          },
-          hoverColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          child: ValueListenableBuilder(
-            valueListenable: _isHover,
-            builder: (BuildContext context, bool value, Widget? child) {
-              return CustomBounce(
-                duration: const Duration(milliseconds: 150),
-                onPressed: () {
-                  GoRouter.of(context).go(path);
-                  Scaffold.of(context).closeDrawer();
+    return _hasSubEntries
+        ? ExpansionTile(
+            onExpansionChanged: (value) => isExpanded.value = value,
+            shape: const RoundedRectangleBorder(
+              side: BorderSide(color: Colors.transparent),
+            ),
+            tilePadding: const EdgeInsets.symmetric(horizontal: 15),
+            collapsedIconColor: tileStyle.unSelectedTextColor,
+            collapsedTextColor: tileStyle.unSelectedTextColor,
+            textColor: tileStyle.unSelectedTextColor,
+            iconColor: tileStyle.unSelectedTextColor,
+            collapsedBackgroundColor: Colors.white,
+            backgroundColor: Colors.white,
+            childrenPadding:
+                const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            trailing: Container(width: 1),
+            leading: ValueListenableBuilder(
+              valueListenable: isExpanded,
+              builder: (BuildContext context, bool value, Widget? child) {
+                if (value) return isOpenedIcon;
+
+                return isClosedIcon;
+              },
+            ),
+            title: Text(
+              label,
+              style: TextStyle(
+                  color: tileStyle.unSelectedTextColor,
+                  fontSize: tileStyle.fontSize,
+                  fontFamily: tileStyle.fontFamily ??
+                      Theme.of(context).textTheme.titleMedium?.fontFamily,
+                  fontWeight: FontWeight.w400),
+            ),
+            children: List.generate(subEntries!.length, (i) => subEntries![i]),
+          )
+        : Column(
+            children: [
+              SizedBox(
+                height: tileStyle.tileSpacing / 2,
+              ),
+              InkWell(
+                onTap: () {},
+                onHover: (val) {
+                  if (!selectedIndex) {
+                    _isHover.value = val;
+                  }
                 },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  width: 220,
-                  decoration: BoxDecoration(
-                    color: value ? tileStyle.selectedColor : Colors.transparent,
-                    borderRadius: tileStyle.tileRadius,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (icon != null)
-                        Row(
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                child: ValueListenableBuilder(
+                  valueListenable: _isHover,
+                  builder: (BuildContext context, bool value, Widget? child) {
+                    return CustomBounce(
+                      duration: const Duration(milliseconds: 150),
+                      onPressed: () {
+                        GoRouter.of(context).go(path);
+                        Scaffold.of(context).closeDrawer();
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        width: 220,
+                        decoration: BoxDecoration(
+                          color: value
+                              ? tileStyle.selectedColor
+                              : Colors.transparent,
+                          borderRadius: tileStyle.tileRadius,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            ColorFiltered(
-                                colorFilter: ColorFilter.mode(
-                                    value
-                                        ? tileStyle.selectedTextColor!
-                                        : tileStyle.unSelectedTextColor!,
-                                    BlendMode.srcIn),
-                                child: icon!),
-                            const SizedBox(
-                              width: 10,
-                            ),
+                            if (icon != null)
+                              Row(
+                                children: [
+                                  ColorFiltered(
+                                      colorFilter: ColorFilter.mode(
+                                          value
+                                              ? tileStyle.selectedTextColor!
+                                              : tileStyle.unSelectedTextColor!,
+                                          BlendMode.srcIn),
+                                      child: icon!),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                ],
+                              ),
+                            Text(
+                              label,
+                              style: TextStyle(
+                                  color: value
+                                      ? tileStyle.selectedTextColor
+                                      : tileStyle.unSelectedTextColor,
+                                  fontSize: tileStyle.fontSize,
+                                  fontFamily: tileStyle.fontFamily ??
+                                      Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.fontFamily,
+                                  fontWeight: value
+                                      ? FontWeight.w600
+                                      : FontWeight.w400),
+                            )
                           ],
                         ),
-                      Text(
-                        label,
-                        style: TextStyle(
-                            color: value
-                                ? tileStyle.selectedTextColor
-                                : tileStyle.unSelectedTextColor,
-                            fontSize: tileStyle.fontSize,
-                            fontFamily: tileStyle.fontFamily ??
-                                Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.fontFamily,
-                            fontWeight:
-                                value ? FontWeight.w600 : FontWeight.w400),
-                      )
-                    ],
-                  ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        ),
-        SizedBox(
-          height: tileStyle.tileSpacing / 2,
-        )
-      ],
-    );
+              ),
+              SizedBox(
+                height: tileStyle.tileSpacing / 2,
+              )
+            ],
+          );
   }
 }
 

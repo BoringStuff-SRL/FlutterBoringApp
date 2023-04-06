@@ -91,10 +91,10 @@ packages:
     dependency: transitive
     description:
       name: go_router
-      sha256: "22c1e44fced320c4a7dbdf16545cad71829dd617910fe2604449267f2c6c11ce"
+      sha256: feab99a20fd248c658c923ba98f4449ca6e575c3dee9fdf07146f4f33482c6bc
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.8"
+    version: "6.5.5"
   js:
     dependency: transitive
     description:
@@ -111,14 +111,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  local_hero:
-    dependency: transitive
-    description:
-      name: local_hero
-      sha256: "2dd2904c46d786dbc6f7179ba863e04f2be1fd603c530501a336a07744b60c7b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   logging:
     dependency: transitive
     description:

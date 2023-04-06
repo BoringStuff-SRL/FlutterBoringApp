@@ -47,8 +47,7 @@ class BoringPage implements BoringPageBase {
           String fullPathPrefix, BoringDrawerTileStyle tileStyle) =>
       showChildrenInDrawer
           ? subPages
-              ?.map((e) => e.boringDrawerEntry(fullPathPrefix, tileStyle))
-              .where((element) => element != null)
+              ?.map((e) => e.boringDrawerEntry(fullPathPrefix, tileStyle)!)
               .toList() as List<BoringDrawerEntry>
           : null;
 

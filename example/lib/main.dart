@@ -38,6 +38,29 @@ class MyApp extends StatelessWidget {
               builder: (context, state) {
                 return HomePage();
               },
+              showChildrenInDrawer: true,
+              subPages: [
+                BoringPage(
+                  drawerLabel: "Settings",
+                  path: "settings",
+                  builder: (context, state) {
+                    return HomePage();
+                  },
+                ),
+                BoringPage(
+                  path: "hidden",
+                  drawerLabel: "Aaaa",
+                  builder: (context, state) {
+                    return Scaffold(
+                      body: Column(
+                        children: [
+                          Text('This is the hidden page'),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ]
             ),
             BoringPage(
               drawerLabel: "Settings",
@@ -46,23 +69,10 @@ class MyApp extends StatelessWidget {
                 return HomePage();
               },
             ),
-            BoringPage(
-              path: "hidden",
-              hideFromDrawer: true,
-              maintainDrawerWhenHidden: true,
-              builder: (context, state) {
-                return Scaffold(
-                  body: Column(
-                    children: [
-                      Text('This is the hidden page'),
-                    ],
-                  ),
-                );
-              },
-            ),
           ],
         )
       ],
+      rootNavigator: GlobalKey<NavigatorState>(),
     );
   }
 }
