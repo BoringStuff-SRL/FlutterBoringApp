@@ -75,7 +75,7 @@ class BoringDrawerEntry extends StatelessWidget {
                   fontSize: tileStyle.fontSize,
                   fontFamily: tileStyle.fontFamily ??
                       Theme.of(context).textTheme.titleMedium?.fontFamily,
-                  fontWeight: FontWeight.w400),
+                  fontWeight: FontWeight.w500),
             ),
             children: List.generate(subEntries!.length, (i) => subEntries![i]),
           )
@@ -146,8 +146,8 @@ class BoringDrawerEntry extends StatelessWidget {
                                           .titleMedium
                                           ?.fontFamily,
                                   fontWeight: value
-                                      ? FontWeight.w600
-                                      : FontWeight.w400),
+                                      ? FontWeight.w700
+                                      : FontWeight.w500),
                             )
                           ],
                         ),
