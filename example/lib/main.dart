@@ -1,8 +1,8 @@
 import 'package:boring_app/boring_app.dart';
+import 'package:boring_app/boring_app/boring_app.dart';
 import 'package:boring_app/boring_app/style/boring_drawer_tile_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 
 void main(List<String> args) {
   runApp(MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return BoringApp(
       initialLocation: "/main",
       sections: [
-        BoringSection(
+        BoringAppSection(
           drawerFooterBuilder: (context) {
             return GestureDetector(
               onTap: () {

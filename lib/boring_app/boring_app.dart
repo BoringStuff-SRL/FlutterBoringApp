@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:boring_app/boring_app/boring_section.dart';
+import 'package:boring_app/boring_app/boring_app_section.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -46,7 +46,7 @@ class BoringApp extends StatelessWidget {
   }
 
   final BoringThemeConfig themeConfig;
-  final List<BoringSection> sections;
+  final List<BoringAppSection> sections;
   final rootNavigator;
   final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
       redirect;
