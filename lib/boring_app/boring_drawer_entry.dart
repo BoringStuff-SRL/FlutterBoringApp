@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:boring_app/boring_app/style/boring_drawer_tile_style.dart';
-import 'package:boring_app/boring_app/utils/boucing_animation.dart';
+import 'package:boring_app/boring_app/utils/boucing_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -97,8 +97,7 @@ class BoringDrawerEntry extends StatelessWidget {
                 child: ValueListenableBuilder(
                   valueListenable: _isHover,
                   builder: (BuildContext context, bool value, Widget? child) {
-                    return CustomBounce(
-                      duration: const Duration(milliseconds: 150),
+                    return DrawerBouncingButton(
                       onPressed: () {
                         GoRouter.of(context).go(path);
                         Scaffold.of(context).closeDrawer();
