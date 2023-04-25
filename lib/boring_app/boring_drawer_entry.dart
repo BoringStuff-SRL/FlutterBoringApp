@@ -84,16 +84,17 @@ class BoringDrawerEntry extends StatelessWidget {
               SizedBox(
                 height: tileStyle.tileSpacing / 2,
               ),
-              InkWell(
-                onTap: () {},
-                onHover: (val) {
+              MouseRegion(
+                onEnter: (val) {
                   if (!selectedIndex) {
-                    _isHover.value = val;
+                    _isHover.value = true;
                   }
                 },
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
+                onExit: (val) {
+                  if (!selectedIndex) {
+                    _isHover.value = false;
+                  }
+                },
                 child: ValueListenableBuilder(
                   valueListenable: _isHover,
                   builder: (BuildContext context, bool value, Widget? child) {
