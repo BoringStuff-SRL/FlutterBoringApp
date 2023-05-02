@@ -7,7 +7,7 @@ import 'package:boring_app/boring_app/style/boring_drawer_tile_style.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class BoringSection {
+class BoringAppSection {
   final String? path;
   final Widget Function(BuildContext context)? drawerHeaderBuilder;
   final Widget Function(BuildContext context)? drawerFooterBuilder;
@@ -24,7 +24,7 @@ class BoringSection {
   late final BoringPage? noPathPage;
   List<BoringPageBase> children;
 
-  BoringSection(
+  BoringAppSection(
       {this.path,
       required this.children,
       this.drawerHeaderBuilder,
