@@ -47,7 +47,7 @@ class BoringApp extends StatelessWidget {
 
   final BoringThemeConfig themeConfig;
   final List<BoringAppSection> sections;
-  final rootNavigator;
+  final GlobalKey<NavigatorState> rootNavigator;
   final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
       redirect;
   final String? initialLocation;
