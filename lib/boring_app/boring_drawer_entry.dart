@@ -8,13 +8,12 @@ class BoringDrawerEntry extends StatelessWidget {
   final String path;
   final String label;
   final Widget? icon;
-  final Widget isOpenedIcon;
-  final Widget isClosedIcon;
+
   final List<BoringDrawerEntry>? subEntries;
   final BoringDrawerTileStyle tileStyle;
 
   final ValueNotifier<bool> _isHover = ValueNotifier(false);
-  final ValueNotifier<bool> isExpanded = ValueNotifier(false);
+  late ValueNotifier<bool> isExpanded;
 
   BoringDrawerEntry({
     super.key,
@@ -22,10 +21,10 @@ class BoringDrawerEntry extends StatelessWidget {
     required this.label,
     this.tileStyle = const BoringDrawerTileStyle(),
     this.icon,
-    this.isOpenedIcon = const Icon(Icons.arrow_drop_up),
-    this.isClosedIcon = const Icon(Icons.arrow_drop_down),
     this.subEntries,
-  });
+  }) {
+    isExpanded = ValueNotifier(tileStyle.tileInitiallyExpanded);
+  }
 
   bool get _hasSubEntries => subEntries != null && subEntries!.isNotEmpty;
 
@@ -47,27 +46,34 @@ class BoringDrawerEntry extends StatelessWidget {
     return _hasSubEntries
         ? ExpansionTile(
             onExpansionChanged: (value) => isExpanded.value = value,
-            shape: const RoundedRectangleBorder(
-              side: BorderSide(color: Colors.transparent),
-            ),
-            tilePadding: const EdgeInsets.symmetric(horizontal: 15),
+            shape: tileStyle.tileShape ??
+                const RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.transparent),
+                ),
+            tilePadding: tileStyle.tilePadding ??
+                const EdgeInsets.symmetric(horizontal: 15),
             collapsedIconColor: tileStyle.unSelectedTextColor,
             collapsedTextColor: tileStyle.unSelectedTextColor,
             textColor: tileStyle.unSelectedTextColor,
             iconColor: tileStyle.unSelectedTextColor,
-            collapsedBackgroundColor: Colors.white,
-            backgroundColor: Colors.white,
-            childrenPadding:
+            collapsedBackgroundColor: tileStyle.backgroundColor,
+            backgroundColor: tileStyle.backgroundColor,
+            childrenPadding: tileStyle.tileChildrenPadding ??
                 const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             trailing: Container(width: 1),
+            initiallyExpanded: tileStyle.tileInitiallyExpanded,
             leading: ValueListenableBuilder(
               valueListenable: isExpanded,
               builder: (BuildContext context, bool value, Widget? child) {
-                if (value) return isOpenedIcon;
+                if (value) return tileStyle.isOpenedIcon;
 
-                return isClosedIcon;
+                return tileStyle.isClosedIcon;
               },
             ),
+            collapsedShape: tileStyle.tileShape ??
+                const RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.transparent),
+                ),
             title: Text(
               label,
               style: TextStyle(

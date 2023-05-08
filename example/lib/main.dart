@@ -3,7 +3,6 @@ import 'package:boring_app/boring_app/boring_app.dart';
 import 'package:boring_app/boring_app/style/boring_drawer_tile_style.dart';
 import 'package:flutter/material.dart';
 
-
 void main(List<String> args) {
   runApp(MyApp());
 }
@@ -26,42 +25,44 @@ class MyApp extends StatelessWidget {
             );
           },
           drawerTileStyle: BoringDrawerTileStyle(
-            selectedColor: Colors.red,
+            selectedColor: Colors.transparent,
             selectedTextColor: Colors.pink,
             fontFamily: "Montserrat",
+            isClosedIcon: Icon(Icons.abc),
+            isOpenedIcon: Icon(Icons.ac_unit_outlined),
+            tileInitiallyExpanded: true,
           ),
           children: [
             BoringPage(
-              icon: Text("TEST"),
-              drawerLabel: "Main",
-              path: "main",
-              builder: (context, state) {
-                return HomePage();
-              },
-              showChildrenInDrawer: true,
-              subPages: [
-                BoringPage(
-                  drawerLabel: "Settings",
-                  path: "settings",
-                  builder: (context, state) {
-                    return HomePage();
-                  },
-                ),
-                BoringPage(
-                  path: "hidden",
-                  drawerLabel: "Aaaa",
-                  builder: (context, state) {
-                    return Scaffold(
-                      body: Column(
-                        children: [
-                          Text('This is the hidden page'),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ]
-            ),
+                icon: Text("TEST"),
+                drawerLabel: "Main",
+                path: "main",
+                builder: (context, state) {
+                  return HomePage();
+                },
+                showChildrenInDrawer: true,
+                subPages: [
+                  BoringPage(
+                    drawerLabel: "Settings",
+                    path: "settings",
+                    builder: (context, state) {
+                      return HomePage();
+                    },
+                  ),
+                  BoringPage(
+                    path: "hidden",
+                    drawerLabel: "Aaaa",
+                    builder: (context, state) {
+                      return Scaffold(
+                        body: Column(
+                          children: [
+                            Text('This is the hidden page'),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ]),
             BoringPage(
               drawerLabel: "Settings",
               path: "settings",
