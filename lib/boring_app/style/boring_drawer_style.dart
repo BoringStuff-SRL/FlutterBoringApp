@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class BoringDrawerStyle {
@@ -18,4 +19,24 @@ class BoringDrawerStyle {
     this.drawerElevation = 0,
     this.drawerRadius = const BorderRadius.all(Radius.circular(20)),
   });
+
+  BoringDrawerStyle copyWith({
+    Color? backgroundColor,
+    BorderRadius? drawerRadius,
+    EdgeInsets? drawerContentPadding,
+    EdgeInsets? drawerForeignPadding,
+    Widget? drawerIcon,
+    double? width,
+    double? drawerElevation,
+  }) {
+    return BoringDrawerStyle(
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      drawerRadius: drawerRadius ?? this.drawerRadius,
+      drawerContentPadding: drawerContentPadding ?? this.drawerContentPadding,
+      drawerForeignPadding: drawerForeignPadding ?? this.drawerForeignPadding,
+      drawerIcon: drawerIcon ?? this.drawerIcon,
+      width: width ?? this.width,
+      drawerElevation: drawerElevation ?? this.drawerElevation,
+    );
+  }
 }

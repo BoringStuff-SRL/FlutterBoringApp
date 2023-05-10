@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class BoringDrawerTileStyle {
@@ -38,4 +39,43 @@ class BoringDrawerTileStyle {
     this.tileChildrenPadding,
     this.backgroundColor,
   });
+
+  BoringDrawerTileStyle copyWith({
+    BorderRadius? tileRadius,
+    double? tileSpacing,
+    Color? selectedColor,
+    String? fontFamily,
+    double? fontSize,
+    Color? selectedTextColor,
+    Color? unSelectedTextColor,
+    Color? selectedIconColor,
+    Color? unSelectedIconColor,
+    Widget? isOpenedIcon,
+    Widget? isClosedIcon,
+    bool? tileInitiallyExpanded,
+    ShapeBorder? tileShape,
+    EdgeInsets? tilePadding,
+    EdgeInsets? tileChildrenPadding,
+    Color? backgroundColor,
+  }) {
+    return BoringDrawerTileStyle(
+      tileRadius: tileRadius ?? this.tileRadius,
+      tileSpacing: tileSpacing ?? this.tileSpacing,
+      selectedColor: selectedColor ?? this.selectedColor,
+      fontFamily: fontFamily ?? this.fontFamily,
+      fontSize: fontSize ?? this.fontSize,
+      selectedTextColor: selectedTextColor ?? this.selectedTextColor,
+      unSelectedTextColor: unSelectedTextColor ?? this.unSelectedTextColor,
+      selectedIconColor: selectedIconColor ?? this.selectedIconColor,
+      unSelectedIconColor: unSelectedIconColor ?? this.unSelectedIconColor,
+      isOpenedIcon: isOpenedIcon ?? this.isOpenedIcon,
+      isClosedIcon: isClosedIcon ?? this.isClosedIcon,
+      tileInitiallyExpanded:
+          tileInitiallyExpanded ?? this.tileInitiallyExpanded,
+      tileShape: tileShape ?? this.tileShape,
+      tilePadding: tilePadding ?? this.tilePadding,
+      tileChildrenPadding: tileChildrenPadding ?? this.tileChildrenPadding,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+    );
+  }
 }
