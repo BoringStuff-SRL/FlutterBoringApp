@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
-import 'package:boring_app/boring_app/style/boring_drawer_style.dart';
 import 'package:boring_app/boring_app/boring_page/boring_page.dart';
+import 'package:boring_app/boring_app/style/boring_drawer_style.dart';
 import 'package:boring_app/boring_app/style/boring_drawer_tile_style.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -75,17 +75,17 @@ class BoringAppSection {
   }
 
   Drawer drawer(BuildContext context, {bool isMobile = false}) {
-    List<Widget> _children = children
+    List<Widget> ch = children
         .map((e) =>
             e.buildDrawerEntry(context, drawerTileStyle, hasPath ? path! : ""))
         .whereType<Widget>()
         .toList();
     int itemsAdded = 0;
-    dividersAtIndexes.forEach((e) {
-      _children.insert(
+    for (var e in dividersAtIndexes) {
+      ch.insert(
           e + itemsAdded, dividerBuilder?.call(context) ?? const Divider());
       itemsAdded++;
-    });
+    }
 
     return Drawer(
         width: drawerStyle.width,
@@ -103,7 +103,7 @@ class BoringAppSection {
             Expanded(
               child: SingleChildScrollView(
                 padding: drawerStyle.drawerContentPadding,
-                child: Column(children: _children),
+                child: Column(children: ch),
               ),
             ),
             if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
@@ -169,7 +169,7 @@ class BoringAppSection {
         parentNavigatorKey: parentNavigatorKey,
         redirect: (context, state) async =>
             await redirect?.call(context, state) ??
-            ((state.fullpath == path) ? defaultPath : null),
+            ((state.fullPath == path) ? defaultPath : null),
         path: path!,
         builder: (context, state) =>
             noPathPage?.builder?.call(context, state) ??

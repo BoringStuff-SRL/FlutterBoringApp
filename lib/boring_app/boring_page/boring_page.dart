@@ -89,7 +89,11 @@ class BoringPage implements BoringPageBase {
             routes: _getSubRoutes(subPages),
             pageBuilder: builder != null
                 ? (context, state) =>
-                    NoTransitionPage(child: builder!(context, state))
+                    NoTransitionPage(
+                    child: Title(
+                        color: Theme.of(context).primaryColor,
+                        title: drawerLabel,
+                        child: builder!(context, state)))
                 : null)
     ];
   }
