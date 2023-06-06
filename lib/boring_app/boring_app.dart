@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:boring_app/boring_app/boring_app_section.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 class BoringThemeConfig {
   final ThemeData? theme;
@@ -95,7 +96,10 @@ class BoringApp extends StatelessWidget {
       // routeInformationParser: _goRouter.routeInformationParser,
       // routeInformationProvider: _goRouter.routeInformationProvider,
       // routerDelegate: _goRouter.routerDelegate,
-      localizationsDelegates: localizationsDelegates,
+      localizationsDelegates: [
+        SfGlobalLocalizations.delegate,
+        ...?localizationsDelegates
+      ],
       supportedLocales: supportedLocales,
       locale: locale,
       debugShowCheckedModeBanner: false,
