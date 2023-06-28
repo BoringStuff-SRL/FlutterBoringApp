@@ -74,16 +74,14 @@ class BoringDrawerEntry extends StatelessWidget {
                 const RoundedRectangleBorder(
                   side: BorderSide(color: Colors.transparent),
                 ),
-            title: Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                    color: tileStyle.unSelectedTextColor,
-                    fontSize: tileStyle.fontSize,
-                    fontFamily: tileStyle.fontFamily ??
-                        Theme.of(context).textTheme.titleMedium?.fontFamily,
-                    fontWeight: FontWeight.w500),
-              ),
+            title: Text(
+              label,
+              style: TextStyle(
+                  color: tileStyle.unSelectedTextColor,
+                  fontSize: tileStyle.fontSize,
+                  fontFamily: tileStyle.fontFamily ??
+                      Theme.of(context).textTheme.titleMedium?.fontFamily,
+                  fontWeight: FontWeight.w500),
             ),
             children: List.generate(subEntries!.length, (i) => subEntries![i]),
           )
