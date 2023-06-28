@@ -74,14 +74,16 @@ class BoringDrawerEntry extends StatelessWidget {
                 const RoundedRectangleBorder(
                   side: BorderSide(color: Colors.transparent),
                 ),
-            title: Text(
-              label,
-              style: TextStyle(
-                  color: tileStyle.unSelectedTextColor,
-                  fontSize: tileStyle.fontSize,
-                  fontFamily: tileStyle.fontFamily ??
-                      Theme.of(context).textTheme.titleMedium?.fontFamily,
-                  fontWeight: FontWeight.w500),
+            title: Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                    color: tileStyle.unSelectedTextColor,
+                    fontSize: tileStyle.fontSize,
+                    fontFamily: tileStyle.fontFamily ??
+                        Theme.of(context).textTheme.titleMedium?.fontFamily,
+                    fontWeight: FontWeight.w500),
+              ),
             ),
             children: List.generate(subEntries!.length, (i) => subEntries![i]),
           )
@@ -139,21 +141,23 @@ class BoringDrawerEntry extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            Text(
-                              label,
-                              style: TextStyle(
-                                  color: value
-                                      ? tileStyle.selectedTextColor
-                                      : tileStyle.unSelectedTextColor,
-                                  fontSize: tileStyle.fontSize,
-                                  fontFamily: tileStyle.fontFamily ??
-                                      Theme.of(context)
-                                          .textTheme
-                                          .titleMedium
-                                          ?.fontFamily,
-                                  fontWeight: value
-                                      ? FontWeight.w700
-                                      : FontWeight.w500),
+                            Expanded(
+                              child: Text(
+                                label,
+                                style: TextStyle(
+                                    color: value
+                                        ? tileStyle.selectedTextColor
+                                        : tileStyle.unSelectedTextColor,
+                                    fontSize: tileStyle.fontSize,
+                                    fontFamily: tileStyle.fontFamily ??
+                                        Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.fontFamily,
+                                    fontWeight: value
+                                        ? FontWeight.w700
+                                        : FontWeight.w500),
+                              ),
                             )
                           ],
                         ),
