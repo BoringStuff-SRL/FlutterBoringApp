@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:boring_app/boring_app.dart';
 import 'package:boring_app/boring_app/boring_page/boring_page.dart';
 import 'package:boring_app/boring_app/style/boring_drawer_style.dart';
 import 'package:boring_app/boring_app/style/boring_drawer_tile_style.dart';
@@ -74,6 +75,29 @@ class BoringAppSection {
     }
   }
 
+  BottomNavigationBar navBar(BuildContext context) {
+    List<BoringDrawerEntry> ch = children
+        .map((e) =>
+            e.buildDrawerEntry(context, drawerTileStyle, hasPath ? path! : ""))
+        .whereType<BoringDrawerEntry>()
+        .toList();
+
+    return BottomNavigationBar(
+        onTap: (value) {
+          GoRouter.of(context).go(ch[value].path);
+        },
+        currentIndex:
+            ch.indexWhere((element) => element.checkIfSelected(context)),
+        items: ch
+            .map(
+              (e) => BottomNavigationBarItem(
+                icon: e.icon!,
+                label: e.label,
+              ),
+            )
+            .toList());
+  }
+
   Drawer drawer(BuildContext context, {bool isMobile = false}) {
     List<Widget> ch = children
         .map((e) =>
@@ -133,17 +157,26 @@ class BoringAppSection {
               child: LayoutBuilder(builder: (context, constraints) {
                 return Scaffold(
                   key: _drawerKey,
-                  drawer: constraints.maxWidth > 750
+                  drawer: constraints.maxWidth > 750 ||
+                          drawerStyle.sectionNavigator ==
+                              SectionNavigator.navBar
                       ? null
                       : drawer(context, isMobile: true),
+                  bottomNavigationBar:
+                      drawerStyle.sectionNavigator == SectionNavigator.navBar
+                          ? navBar(context)
+                          : null,
                   body: constraints.maxWidth > 750
                       ? Padding(
                           padding: drawerStyle.drawerForeignPadding,
                           child: Row(children: [
-                            drawer(context),
-                            SizedBox(
-                              width: drawerAndPageSpacing,
-                            ),
+                            if (drawerStyle.sectionNavigator ==
+                                SectionNavigator.drawer) ...[
+                              drawer(context),
+                              SizedBox(
+                                width: drawerAndPageSpacing,
+                              ),
+                            ],
                             Expanded(child: child)
                           ]),
                         )

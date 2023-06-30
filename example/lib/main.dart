@@ -24,6 +24,8 @@ class MyApp extends StatelessWidget {
               child: Text('Go to hidden'),
             );
           },
+          drawerStyle:
+              BoringDrawerStyle(sectionNavigator: SectionNavigator.navBar),
           drawerTileStyle: BoringDrawerTileStyle(
             selectedColor: Colors.transparent,
             selectedTextColor: Colors.pink,
@@ -34,38 +36,19 @@ class MyApp extends StatelessWidget {
           ),
           children: [
             BoringPage(
-                icon: Text("TEST"),
-                drawerLabel: "Main",
-                path: "main",
-                builder: (context, state) {
-                  return HomePage();
-                },
-                showChildrenInDrawer: true,
-                subPages: [
-                  BoringPage(
-                    drawerLabel: "Settings",
-                    path: "settings",
-                    builder: (context, state) {
-                      return HomePage();
-                    },
-                  ),
-                  BoringPage(
-                    path: "hidden",
-                    drawerLabel: "Aaaa",
-                    builder: (context, state) {
-                      return Scaffold(
-                        body: Column(
-                          children: [
-                            Text('This is the hidden page'),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ]),
+              icon: Icon(Icons.abc),
+              drawerLabel: "Main",
+              path: "main",
+              builder: (context, state) {
+                return Placeholder(
+                  color: Colors.red,
+                );
+              },
+            ),
             BoringPage(
               drawerLabel: "Settings",
               path: "settings",
+              icon: Icon(Icons.question_answer),
               builder: (context, state) {
                 return HomePage();
               },
