@@ -15,6 +15,7 @@ class BoringDrawerStyle {
   final double width;
   final double drawerElevation;
   final SectionNavigator sectionNavigator;
+  
 
   const BoringDrawerStyle({
     this.backgroundColor,
