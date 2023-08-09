@@ -88,10 +88,9 @@ class BoringPage implements BoringPageBase {
                 redirect?.call(context, state),
             routes: _getSubRoutes(subPages),
             pageBuilder: builder != null
-                ? (context, state) =>
-                    NoTransitionPage(
+                ? (context, state) => NoTransitionPage(
                     child: Title(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).primaryColor.withAlpha(0xFF),
                         title: drawerLabel,
                         child: builder!(context, state)))
                 : null)

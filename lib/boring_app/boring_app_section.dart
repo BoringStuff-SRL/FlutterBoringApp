@@ -86,6 +86,7 @@ class BoringAppSection {
         onTap: (value) {
           GoRouter.of(context).go(ch[value].path);
         },
+        
         selectedItemColor: drawerTileStyle.selectedIconColor,
         unselectedItemColor: drawerTileStyle.unSelectedIconColor,
         currentIndex:

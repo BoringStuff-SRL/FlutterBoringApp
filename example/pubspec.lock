@@ -200,18 +200,18 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "8db8f55c77f56968681447d3837c10f27a9e861e238a898fda116c7531def979"
+      sha256: "33a2e8a86ac013c7929ed2cffa83c44f45ff256e38122de97f3154cb04324a74"
       url: "https://pub.dev"
     source: hosted
-    version: "21.2.10"
+    version: "22.2.8"
   syncfusion_localizations:
     dependency: transitive
     description:
       name: syncfusion_localizations
-      sha256: c0a80f83fde67c046047d01599aa97148438c9ae489dfff98034b9f29cdf477d
+      sha256: "81b9038342d3eb657ef59f5dd31c2f9b9c40a94da32f5eda7e12805780368a03"
       url: "https://pub.dev"
     source: hosted
-    version: "21.2.10"
+    version: "22.2.8"
   term_glyph:
     dependency: transitive
     description:
