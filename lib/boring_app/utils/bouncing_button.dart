@@ -1,8 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-class DrawerBouncingButton extends StatelessWidget {
-  DrawerBouncingButton({
+class BoringBouncingButton extends StatelessWidget {
+  BoringBouncingButton({
     super.key,
     required this.onPressed,
     required this.child,
