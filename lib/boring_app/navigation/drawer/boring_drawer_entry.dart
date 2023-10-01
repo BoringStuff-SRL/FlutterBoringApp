@@ -10,7 +10,7 @@ import 'package:go_router/go_router.dart';
 
 class BoringDrawerEntry extends StatelessWidget {
   final String path;
-  final String label;
+  final String? label;
   final Widget? icon;
   final bool isSelected;
   final List<BoringDrawerEntry> subEntries;
@@ -21,7 +21,7 @@ class BoringDrawerEntry extends StatelessWidget {
   BoringDrawerEntry({
     super.key,
     required this.path,
-    required this.label,
+    this.label,
     this.icon,
     required this.isSelected,
     this.tileStyle = const BoringDrawerTileStyle(),
@@ -70,7 +70,7 @@ class BoringDrawerEntry extends StatelessWidget {
                     ),
                   Expanded(
                     child: Text(
-                      label,
+                      label ?? "",
                       style: TextStyle(
                           color: (isHover || isSelected)
                               ? tileStyle.selectedTextColor

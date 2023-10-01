@@ -6,11 +6,11 @@ import 'package:go_router/go_router.dart';
 
 class BoringNavigationEntry {
   final String path;
-  final String label;
+  final String? label;
   final Widget? icon;
   BoringNavigationEntry(
     this.path, {
-    required this.label,
+    this.label,
     this.icon,
   });
   BoringNavigationEntry copyWithPath(String path) =>
@@ -19,7 +19,7 @@ class BoringNavigationEntry {
 
 class BoringNavigationEntryWithSubEntries {
   final String path;
-  final String label;
+  final String? label;
   final Widget? icon;
   final bool hideInNav;
   final bool giftSelection;
@@ -52,7 +52,7 @@ class BoringNavigationEntryWithSubEntries {
 
 class BoringNavigationEntryWithSelection {
   final String path;
-  final String label;
+  final String? label;
   final Widget? icon;
   final bool selected;
   final bool hideInNav;
