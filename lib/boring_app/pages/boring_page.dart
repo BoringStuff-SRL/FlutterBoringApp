@@ -22,7 +22,9 @@ class BoringPage {
 
   GoRoute get route => GoRoute(
       path: _navigationEntry.path,
-      builder: builder,
+      // builder: builder,
+      pageBuilder: (context, state) =>
+          NoTransitionPage(child: builder(context, state)),
       redirect: redirect,
       routes: subPages.map((e) => e.route).toList());
 
