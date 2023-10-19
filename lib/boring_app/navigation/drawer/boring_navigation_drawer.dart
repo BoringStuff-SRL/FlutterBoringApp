@@ -19,7 +19,9 @@ class BoringNavigationDrawer extends BoringNavigation {
       this.drawerHeaderBuilder,
       this.drawerFooterBuilder,
       this.drawerStyle = const BoringDrawerStyle(),
-      this.overrideDrawerStyle});
+      this.overrideDrawerStyle,
+      super.appBarNotifier,
+      super.appBarBuilder});
 
   @override
   BoringNavigationPosition get navigationPosition =>

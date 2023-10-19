@@ -12,9 +12,13 @@ extension BoringNavigationPositionUtils on BoringNavigationPosition {
       this == BoringNavigationPosition.right;
 }
 
-abstract class BoringNavigation {
+abstract class BoringNavigation<T> {
   abstract final bool embraceAppBar;
   abstract final BoringNavigationPosition navigationPosition;
+  final ValueNotifier<T>? appBarNotifier;
+  final AppBar? Function(
+      BuildContext context, ValueNotifier<T>? appBarNotifier)? appBarBuilder;
+  BoringNavigation({this.appBarNotifier, this.appBarBuilder});
   Widget builder(
       BuildContext context,
       List<BoringNavigationGroupWithSelection> navigationGroups,
@@ -57,14 +61,25 @@ abstract class BoringNavigation {
       navigationPosition.isSide &&
       constraints.maxWidth > persistentSide;
 
-  AppBar? _appBar(
-      BuildContext context, BoxConstraints constraints, AppBar appBar) {
-    return _appBarShouldGoWithContent(constraints) ? null : appBar;
+  AppBar? _appBarBuilder() {
+    final AppBar appBar = AppBar(
+      title: const Text("APPBAR"),
+    );
+    return appBar;
+  }
+
+  AppBar? _topAppBar(
+      BuildContext context, BoxConstraints constraints, AppBar? appBar) {
+    return (appBar == null || _appBarShouldGoWithContent(constraints))
+        ? null
+        : appBar;
   }
 
   AppBar? _contentAppBar(
-      BuildContext context, BoxConstraints constraints, AppBar appBar) {
-    return _appBarShouldGoWithContent(constraints) ? appBar : null;
+      BuildContext context, BoxConstraints constraints, AppBar? appBar) {
+    return (appBar != null && _appBarShouldGoWithContent(constraints))
+        ? appBar
+        : null;
   }
 
   Widget buildWithContent(
@@ -77,14 +92,12 @@ abstract class BoringNavigation {
       final navGroups = navigationGroups.withSelection(state);
       final drawer = _drawer(context, navGroups, constraints);
       final endDrawer = _endDrawer(context, navGroups, constraints);
-      final AppBar appBar = AppBar(
-        title: const Text("APPBAR"),
-      );
+      final appBar = _appBarBuilder();
       return Scaffold(
         drawer:
             constraints.maxWidth < persistentSide ? drawer : null, //_drawer(),
         endDrawer: constraints.maxWidth < persistentSide ? endDrawer : null,
-        appBar: _appBar(context, constraints, appBar),
+        appBar: _topAppBar(context, constraints, appBar),
         bottomNavigationBar: _bottomNav(context, navGroups, constraints),
         body: _child(context, constraints, child, drawer ?? endDrawer,
             _contentAppBar(context, constraints, appBar)),
@@ -93,30 +106,30 @@ abstract class BoringNavigation {
   }
 }
 
-class CustomBoringNavigation extends BoringNavigation {
-  @override
-  final BoringNavigationPosition navigationPosition;
-  final Widget Function(
-      BuildContext context,
-      List<BoringNavigationGroupWithSelection> navigationGroups,
-      BoxConstraints constraints) _customBuilder;
-  CustomBoringNavigation({
-    this.embraceAppBar = true,
-    required this.navigationPosition,
-    required Widget Function(
-            BuildContext context,
-            List<BoringNavigationGroupWithSelection> navigationGroups,
-            BoxConstraints constraints)
-        builder,
-  }) : _customBuilder = builder;
+// class CustomBoringNavigation extends BoringNavigation {
+//   @override
+//   final BoringNavigationPosition navigationPosition;
+//   final Widget Function(
+//       BuildContext context,
+//       List<BoringNavigationGroupWithSelection> navigationGroups,
+//       BoxConstraints constraints) _customBuilder;
+//   CustomBoringNavigation({
+//     this.embraceAppBar = true,
+//     required this.navigationPosition,
+//     required Widget Function(
+//             BuildContext context,
+//             List<BoringNavigationGroupWithSelection> navigationGroups,
+//             BoxConstraints constraints)
+//         builder,
+//   }) : _customBuilder = builder;
 
-  @override
-  Widget builder(
-          BuildContext context,
-          List<BoringNavigationGroupWithSelection> navigationGroups,
-          BoxConstraints constraints) =>
-      _customBuilder(context, navigationGroups, constraints);
+//   @override
+//   Widget builder(
+//           BuildContext context,
+//           List<BoringNavigationGroupWithSelection> navigationGroups,
+//           BoxConstraints constraints) =>
+//       _customBuilder(context, navigationGroups, constraints);
 
-  @override
-  final bool embraceAppBar;
-}
+//   @override
+//   final bool embraceAppBar;
+// }

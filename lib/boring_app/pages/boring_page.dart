@@ -45,6 +45,6 @@ class BoringPage {
 extension on String {
   String pathAppend(String other) {
     if (isEmpty) return other;
-    return "$this/$other";
+    return "$this/$other".replaceAll("//", "/");
   }
 }

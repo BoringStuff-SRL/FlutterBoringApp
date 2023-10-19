@@ -57,6 +57,7 @@ class BoringApp extends StatelessWidget {
         redirect: redirect,
         refreshListenable: refreshListenable,
         navigatorKey: rootNavigator,
+        initialLocation: initialLocation,
         routes: [_shellRoute()],
       );
 
