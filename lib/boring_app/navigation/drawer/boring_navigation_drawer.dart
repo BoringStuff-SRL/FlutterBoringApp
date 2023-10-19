@@ -5,7 +5,7 @@ import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_tile
 import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
 import 'package:flutter/material.dart';
 
-class BoringNavigationDrawer extends BoringNavigation {
+class BoringNavigationDrawer<T> extends BoringNavigation<T> {
   final BoringDrawerStyle drawerStyle;
   final BoringDrawerStyle? Function(
           BoringDrawerStyle drawerStyle, BoxConstraints constraints)?
