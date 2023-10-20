@@ -92,10 +92,10 @@ class BoringApp extends StatelessWidget {
     //printRoutes(_goRouter.routeConfiguration.routes, 0);
 
     return MaterialApp.router(
-      routerConfig: _goRouter,
-      // routeInformationParser: _goRouter.routeInformationParser,
-      // routeInformationProvider: _goRouter.routeInformationProvider,
-      // routerDelegate: _goRouter.routerDelegate,
+      //routerConfig: _goRouter,
+      routeInformationParser: _goRouter.routeInformationParser,
+      routeInformationProvider: _goRouter.routeInformationProvider,
+      routerDelegate: _goRouter.routerDelegate,
       localizationsDelegates: [
         SfGlobalLocalizations.delegate,
         ...?localizationsDelegates
