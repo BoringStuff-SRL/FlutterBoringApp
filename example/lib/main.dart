@@ -41,8 +41,20 @@ class MyApp extends StatelessWidget {
                 path: "a",
                 builder: (context, state) {
                   print('BUILD A');
-                  return Placeholder(
-                    color: Colors.red,
+                  return Column(
+                    children: [
+                      Text("A"),
+                      ElevatedButton(
+                          onPressed: () {
+                            context.go('/a/a1');
+                          },
+                          child: Text('GO A1')),
+                      ElevatedButton(
+                          onPressed: () {
+                            context.go('/b');
+                          },
+                          child: Text('GO B'))
+                    ],
                   );
                 },
                 subPages: [
@@ -52,9 +64,7 @@ class MyApp extends StatelessWidget {
                       path: ":pippo",
                       builder: (context, state) {
                         print('BUILD A1 -> ${state.pathParameters['pippo']}');
-                        return Placeholder(
-                          color: Colors.red,
-                        );
+                        return Text("A1");
                       },
                       subPages: [
                         BoringPage(
@@ -64,9 +74,7 @@ class MyApp extends StatelessWidget {
                           builder: (context, state) {
                             print(
                                 'BUILD MEZZO -> ${state.pathParameters['pippo']}');
-                            return Placeholder(
-                              color: Colors.red,
-                            );
+                            return Text("MEZZO");
                           },
                           subPages: [
                             BoringPage(
@@ -76,15 +84,26 @@ class MyApp extends StatelessWidget {
                               builder: (context, state) {
                                 print(
                                     'BUILD A2 -> ${state.pathParameters['id']} -> ${state.pathParameters['pippo']}');
-                                return Placeholder(
-                                  color: Colors.red,
-                                );
+                                return Text("A2");
                               },
                             )
                           ],
                         ),
                       ])
                 ]),
+            BoringPage(
+              path: 'b',
+              builder: (context, state) => Column(
+                children: [
+                  Text('B'),
+                  ElevatedButton(
+                      onPressed: () {
+                        context.go('/a');
+                      },
+                      child: Text('GO A'))
+                ],
+              ),
+            ),
           ],
         )
       ],
