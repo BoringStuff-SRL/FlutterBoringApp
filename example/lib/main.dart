@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BoringApp(
-      initialLocation: "/main",
+      initialLocation: "/a",
       sections: [
         BoringAppSection(
           drawerFooterBuilder: (context) {
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
             );
           },
           drawerStyle:
-              BoringDrawerStyle(sectionNavigator: SectionNavigator.navBar),
+              BoringDrawerStyle(sectionNavigator: SectionNavigator.drawer),
           drawerTileStyle: BoringDrawerTileStyle(
             selectedColor: Colors.transparent,
             selectedTextColor: Colors.pink,
@@ -36,23 +36,55 @@ class MyApp extends StatelessWidget {
           ),
           children: [
             BoringPage(
-              icon: Icon(Icons.abc),
-              drawerLabel: "Main",
-              path: "main",
-              builder: (context, state) {
-                return Placeholder(
-                  color: Colors.red,
-                );
-              },
-            ),
-            BoringPage(
-              drawerLabel: "Settings",
-              path: "settings",
-              icon: Icon(Icons.question_answer),
-              builder: (context, state) {
-                return HomePage();
-              },
-            ),
+                icon: Icon(Icons.abc),
+                drawerLabel: "A",
+                path: "a",
+                builder: (context, state) {
+                  print('BUILD A');
+                  return Placeholder(
+                    color: Colors.red,
+                  );
+                },
+                subPages: [
+                  BoringPage(
+                      icon: Icon(Icons.abc),
+                      drawerLabel: "A1",
+                      path: ":pippo",
+                      builder: (context, state) {
+                        print('BUILD A1 -> ${state.pathParameters['pippo']}');
+                        return Placeholder(
+                          color: Colors.red,
+                        );
+                      },
+                      subPages: [
+                        BoringPage(
+                          path: 'mezzo',
+                          icon: Icon(Icons.abc),
+                          drawerLabel: "A1",
+                          builder: (context, state) {
+                            print(
+                                'BUILD MEZZO -> ${state.pathParameters['pippo']}');
+                            return Placeholder(
+                              color: Colors.red,
+                            );
+                          },
+                          subPages: [
+                            BoringPage(
+                              icon: Icon(Icons.abc),
+                              drawerLabel: "A2",
+                              path: ":id",
+                              builder: (context, state) {
+                                print(
+                                    'BUILD A2 -> ${state.pathParameters['id']} -> ${state.pathParameters['pippo']}');
+                                return Placeholder(
+                                  color: Colors.red,
+                                );
+                              },
+                            )
+                          ],
+                        ),
+                      ])
+                ]),
           ],
         )
       ],
