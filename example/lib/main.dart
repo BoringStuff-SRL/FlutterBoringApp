@@ -1,10 +1,19 @@
 import 'package:boring_app/boring_app.dart';
-import 'package:boring_app/boring_app/boring_app.dart';
-import 'package:boring_app/boring_app/style/boring_drawer_tile_style.dart';
 import 'package:flutter/material.dart';
 
 void main(List<String> args) {
   runApp(MyApp());
+}
+
+class A1 extends StatelessWidget {
+  A1({super.key, required this.id});
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text("$id");
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -46,7 +55,7 @@ class MyApp extends StatelessWidget {
                       Text("A"),
                       ElevatedButton(
                           onPressed: () {
-                            context.go('/a/a1');
+                            context.go('/a/123');
                           },
                           child: Text('GO A1')),
                       ElevatedButton(
@@ -64,7 +73,7 @@ class MyApp extends StatelessWidget {
                       path: ":pippo",
                       builder: (context, state) {
                         print('BUILD A1 -> ${state.pathParameters['pippo']}');
-                        return Text("A1");
+                        return A1(id: state.pathParameters['pippo'] ?? '');
                       },
                       subPages: [
                         BoringPage(

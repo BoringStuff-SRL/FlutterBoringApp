@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:boring_app/boring_app/boring_app_state.dart';
 import 'package:boring_app/boring_app/boring_drawer_entry.dart';
 import 'package:boring_app/boring_app/boring_page/boring_page_base.dart';
 import 'package:flutter/material.dart';
@@ -89,8 +90,6 @@ class BoringPage implements BoringPageBase {
             routes: _getSubRoutes(subPages),
             pageBuilder: builder != null
                 ? (context, state) {
-                    //print(state.fullPath);
-
                     final split = state.fullPath!.split('/');
                     String subpath = '';
                     final fullPath = state.fullPath;
@@ -103,8 +102,8 @@ class BoringPage implements BoringPageBase {
                     subpath = subpath.substring(0, subpath.length - 1);
 
                     final buildBuilder = fullPath == subpath;
-                    // print("FULL PATH: $fullPath");
-                    // print("SUB PATH: $subpath");
+
+                    BoringAppState.state = state;
 
                     return NoTransitionPage(
                         child: Title(
