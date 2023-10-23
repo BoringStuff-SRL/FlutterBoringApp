@@ -17,5 +17,5 @@ class BoringPageGroup {
         entries: pages.map((e) => e.navigationEntryWithSubentries()).toList());
   }
 
-  List<RouteBase> get routes => pages.map((e) => e.route).toList();
+  List<RouteBase> get routes => pages.map((e) => e.route("")).toList();
 }

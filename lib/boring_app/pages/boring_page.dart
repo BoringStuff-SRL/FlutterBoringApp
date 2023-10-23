@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 class BoringPage {
   final BoringNavigationEntry _navigationEntry;
-  Widget Function(BuildContext, GoRouterState) builder;
+  Widget Function(BuildContext context, GoRouterState state) builder;
   final bool hideFromNavigation;
   final bool giftSelectionWhenHidden;
   Future<String?> Function(BuildContext, GoRouterState)? redirect;
@@ -20,13 +20,19 @@ class BoringPage {
       this.redirect})
       : _navigationEntry = navigationEntry;
 
-  GoRoute get route => GoRoute(
-      path: _navigationEntry.path,
-      // builder: builder,
-      pageBuilder: (context, state) =>
-          NoTransitionPage(child: builder(context, state)),
-      redirect: redirect,
-      routes: subPages.map((e) => e.route).toList());
+  GoRoute route(String prefix) {
+    final currentFullPath = prefix.pathAppend(_navigationEntry.path);
+    return GoRoute(
+        path: _navigationEntry.path,
+        pageBuilder: (context, state) {
+          if (state.fullPath != currentFullPath) {
+            return NoTransitionPage(child: Container());
+          }
+          return NoTransitionPage(child: builder(context, state));
+        },
+        redirect: redirect,
+        routes: subPages.map((e) => e.route(currentFullPath)).toList());
+  }
 
   BoringNavigationEntryWithSubEntries navigationEntryWithSubentries(
           {String initPath = ""}) =>
