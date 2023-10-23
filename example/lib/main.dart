@@ -13,63 +13,79 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BoringApp(boringNavigation: BoringNavigationDrawer(), pages: [
-      BoringPage(
-          navigationEntry:
-              BoringNavigationEntry("/a", icon: const Icon(Icons.abc)),
-          builder: (p0, p1) {
-            return const Center(
-              child: Text("A"),
-            );
-          },
-          subPages: [
-            BoringPage(
-              navigationEntry: BoringNavigationEntry("a1",
-                  label: "A1", icon: const Icon(Icons.abc)),
+    return BoringApp(
+        initialLocation: "/a",
+        boringNavigation: BoringNavigationDrawer(),
+        pages: [
+          BoringPage(
+              navigationEntry:
+                  BoringNavigationEntry("/a", icon: const Icon(Icons.abc)),
               builder: (p0, p1) {
+                print("BUILDING A");
                 return const Center(
-                  child: Text("A1"),
+                  child: Text("A"),
                 );
               },
-            ),
-            BoringPage(
-              navigationEntry: BoringNavigationEntry("a2", label: "A2"),
-              builder: (p0, p1) {
-                return const Center(
-                  child: Text("A2"),
-                );
-              },
-            ),
-            BoringPage(
-              hideFromNavigation: true,
-              giftSelectionWhenHidden: true,
-              navigationEntry: BoringNavigationEntry("a3", label: "A3"),
-              builder: (p0, p1) {
-                return const Center(
-                  child: Text("A3"),
-                );
-              },
-            ),
-          ]),
-      BoringPage(
-        navigationEntry: BoringNavigationEntry("/b",
-            label: "B", icon: const Icon(Icons.add_chart_sharp)),
-        builder: (p0, p1) {
-          return const Center(
-            child: Text("B"),
-          );
-        },
-      ),
-      BoringPage(
-        hideFromNavigation: true,
-        navigationEntry: BoringNavigationEntry("/c", label: "C"),
-        builder: (p0, p1) {
-          return const Center(
-            child: Text("C"),
-          );
-        },
-      ),
-    ]);
+              subPages: [
+                BoringPage(
+                    navigationEntry: BoringNavigationEntry(":id",
+                        label: "A1", icon: const Icon(Icons.abc)),
+                    builder: (context, state) {
+                      print("BUILDING A1");
+                      return const Center(
+                        child: Text("A1"),
+                      );
+                    },
+                    subPages: [
+                      BoringPage(
+                        navigationEntry: BoringNavigationEntry("ciao",
+                            label: "A1", icon: const Icon(Icons.abc)),
+                        builder: (p0, p1) {
+                          print("BUILDING A11");
+                          return const Center(
+                            child: Text("A11"),
+                          );
+                        },
+                      ),
+                    ]),
+                BoringPage(
+                  navigationEntry: BoringNavigationEntry("a2", label: "A2"),
+                  builder: (p0, p1) {
+                    return const Center(
+                      child: Text("A2"),
+                    );
+                  },
+                ),
+                BoringPage(
+                  hideFromNavigation: true,
+                  giftSelectionWhenHidden: true,
+                  navigationEntry: BoringNavigationEntry("a3", label: "A3"),
+                  builder: (p0, p1) {
+                    return const Center(
+                      child: Text("A3"),
+                    );
+                  },
+                ),
+              ]),
+          BoringPage(
+            navigationEntry: BoringNavigationEntry("/b",
+                label: "B", icon: const Icon(Icons.add_chart_sharp)),
+            builder: (p0, p1) {
+              return const Center(
+                child: Text("B"),
+              );
+            },
+          ),
+          BoringPage(
+            hideFromNavigation: true,
+            navigationEntry: BoringNavigationEntry("/c", label: "C"),
+            builder: (p0, p1) {
+              return const Center(
+                child: Text("C"),
+              );
+            },
+          ),
+        ]);
   }
 }
 

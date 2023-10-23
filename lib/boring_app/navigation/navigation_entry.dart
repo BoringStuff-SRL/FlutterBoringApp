@@ -74,8 +74,8 @@ class BoringNavigationEntryWithSelection {
     final subentries = navigationEntry.subEntries
         .map((e) => BoringNavigationEntryWithSelection.from(e, state))
         .toList();
-    print(
-        "CURRENT PATH ${navigationEntry.path} - HIDDEN : ${navigationEntry.hideInNav}");
+    // print(
+    //     "CURRENT PATH ${navigationEntry.path} - HIDDEN : ${navigationEntry.hideInNav}");
     final inheritSelection =
         subentries.any((e) => e.selected && e.hideInNav && e.giftSelection);
     return BoringNavigationEntryWithSelection(navigationEntry.path,
