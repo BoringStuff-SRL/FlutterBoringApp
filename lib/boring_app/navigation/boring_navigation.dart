@@ -10,6 +10,8 @@ extension BoringNavigationPositionUtils on BoringNavigationPosition {
   bool get isSide =>
       this == BoringNavigationPosition.left ||
       this == BoringNavigationPosition.right;
+  bool get isRight => this == BoringNavigationPosition.right;
+  bool get isLeft => this == BoringNavigationPosition.left;
 }
 
 abstract class BoringNavigation<T> {
@@ -23,26 +25,13 @@ abstract class BoringNavigation<T> {
       BuildContext context,
       List<BoringNavigationGroupWithSelection> navigationGroups,
       BoxConstraints constraints);
-  // BoringNavigation({
-  //   required this.navigationPosition,
-  //   required this.builder,
-  // }) : assert(navigationPosition != BoringNavigationPosition.top,
-  //           "TOP NAV STILL NOT ALLOWED");
 
   Widget? _drawer(
           BuildContext context,
           List<BoringNavigationGroupWithSelection> navigationGroups,
           BoxConstraints constraints) =>
-      navigationPosition == BoringNavigationPosition.left
-          ? builder(context, navigationGroups, constraints)
-          : null;
-  Widget? _endDrawer(
-          BuildContext context,
-          List<BoringNavigationGroupWithSelection> navigationGroups,
-          BoxConstraints constraints) =>
-      navigationPosition == BoringNavigationPosition.right
-          ? builder(context, navigationGroups, constraints)
-          : null;
+      builder(context, navigationGroups, constraints);
+
   Widget? _bottomNav(
           BuildContext context,
           List<BoringNavigationGroupWithSelection> navigationGroups,
@@ -82,6 +71,9 @@ abstract class BoringNavigation<T> {
         : null;
   }
 
+  bool isDrawerVisible(BoxConstraints constraints) =>
+      constraints.maxWidth > persistentSide;
+
   Widget buildWithContent(
     GoRouterState state,
     Widget child,
@@ -89,47 +81,19 @@ abstract class BoringNavigation<T> {
     BuildContext context,
   ) {
     return LayoutBuilder(builder: (context, constraints) {
+      final bool drawerVisible = isDrawerVisible(constraints);
       final navGroups = navigationGroups.withSelection(state);
       final drawer = _drawer(context, navGroups, constraints);
-      final endDrawer = _endDrawer(context, navGroups, constraints);
       final appBar = _appBarBuilder();
       return Scaffold(
-        drawer:
-            constraints.maxWidth < persistentSide ? drawer : null, //_drawer(),
-        endDrawer: constraints.maxWidth < persistentSide ? endDrawer : null,
+        drawer: (!drawerVisible && navigationPosition.isRight) ? drawer : null,
+        endDrawer:
+            (!drawerVisible && navigationPosition.isRight) ? drawer : null,
         appBar: _topAppBar(context, constraints, appBar),
         bottomNavigationBar: _bottomNav(context, navGroups, constraints),
-        body: _child(context, constraints, child, drawer ?? endDrawer,
+        body: _child(context, constraints, child, drawer,
             _contentAppBar(context, constraints, appBar)),
       );
     });
   }
 }
-
-// class CustomBoringNavigation extends BoringNavigation {
-//   @override
-//   final BoringNavigationPosition navigationPosition;
-//   final Widget Function(
-//       BuildContext context,
-//       List<BoringNavigationGroupWithSelection> navigationGroups,
-//       BoxConstraints constraints) _customBuilder;
-//   CustomBoringNavigation({
-//     this.embraceAppBar = true,
-//     required this.navigationPosition,
-//     required Widget Function(
-//             BuildContext context,
-//             List<BoringNavigationGroupWithSelection> navigationGroups,
-//             BoxConstraints constraints)
-//         builder,
-//   }) : _customBuilder = builder;
-
-//   @override
-//   Widget builder(
-//           BuildContext context,
-//           List<BoringNavigationGroupWithSelection> navigationGroups,
-//           BoxConstraints constraints) =>
-//       _customBuilder(context, navigationGroups, constraints);
-
-//   @override
-//   final bool embraceAppBar;
-// }

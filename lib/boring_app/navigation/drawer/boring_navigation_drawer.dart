@@ -20,12 +20,16 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
       this.drawerFooterBuilder,
       this.drawerStyle = const BoringDrawerStyle(),
       this.overrideDrawerStyle,
+      this.rightPosition = false,
       super.appBarNotifier,
       super.appBarBuilder});
 
+  final bool rightPosition;
+
   @override
-  BoringNavigationPosition get navigationPosition =>
-      BoringNavigationPosition.right;
+  BoringNavigationPosition get navigationPosition => rightPosition
+      ? BoringNavigationPosition.right
+      : BoringNavigationPosition.left;
 
   @override
   Widget builder(
