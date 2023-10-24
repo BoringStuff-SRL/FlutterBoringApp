@@ -19,7 +19,10 @@ abstract class BoringNavigation<T> {
   abstract final BoringNavigationPosition navigationPosition;
   final ValueNotifier<T>? appBarNotifier;
   final AppBar? Function(
-      BuildContext context, ValueNotifier<T>? appBarNotifier)? appBarBuilder;
+      BuildContext context,
+      GoRouterState state,
+      List<BoringNavigationGroupWithSelection> navGroups,
+      ValueNotifier<T>? appBarNotifier)? appBarBuilder;
   BoringNavigation({this.appBarNotifier, this.appBarBuilder});
   Widget builder(
       BuildContext context,
@@ -50,13 +53,6 @@ abstract class BoringNavigation<T> {
       navigationPosition.isSide &&
       constraints.maxWidth > persistentSide;
 
-  AppBar? _appBarBuilder() {
-    final AppBar appBar = AppBar(
-      title: const Text("APPBAR"),
-    );
-    return appBar;
-  }
-
   AppBar? _topAppBar(
       BuildContext context, BoxConstraints constraints, AppBar? appBar) {
     return (appBar == null || _appBarShouldGoWithContent(constraints))
@@ -84,7 +80,8 @@ abstract class BoringNavigation<T> {
       final bool drawerVisible = isDrawerVisible(constraints);
       final navGroups = navigationGroups.withSelection(state);
       final drawer = _drawer(context, navGroups, constraints);
-      final appBar = _appBarBuilder();
+      final appBar =
+          appBarBuilder?.call(context, state, navGroups, appBarNotifier);
       return Scaffold(
         drawer: (!drawerVisible && navigationPosition.isRight) ? drawer : null,
         endDrawer:
