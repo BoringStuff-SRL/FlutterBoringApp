@@ -9,6 +9,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../boring_app.dart';
+
 class BoringStaticRouter {
   static GoRouter? goRouter;
 }
@@ -22,6 +24,7 @@ class BoringApp extends StatelessWidget {
       this.redirect,
       this.initialLocation,
       this.rootNavigator,
+        this.localizationsDelegates,
       this.supportedLocales = const <Locale>[Locale('en', 'US')],
       this.locale,
       this.refreshListenable,
@@ -40,7 +43,7 @@ class BoringApp extends StatelessWidget {
   final Iterable<Locale> supportedLocales;
   final Locale? locale;
   final bool debug;
-
+  Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
   List<RouteBase> get _routes =>
       _pageGroups.map((e) => e.routes).expand((element) => element).toList();
 
@@ -71,6 +74,10 @@ class BoringApp extends StatelessWidget {
     _computeRouter();
     return MaterialApp.router(
       //routerConfig: _goRouter,
+      localizationsDelegates: [
+        SfGlobalLocalizations.delegate,
+        ...?localizationsDelegates
+      ],
       routeInformationParser:
           BoringStaticRouter.goRouter!.routeInformationParser,
       routeInformationProvider:
