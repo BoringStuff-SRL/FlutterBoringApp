@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
               },
               subPages: [
                 BoringPage(
-                    navigationEntry: BoringNavigationEntry(":id",
+                    navigationEntry: BoringNavigationEntry("a1",
                         label: "A1", icon: const Icon(Icons.abc)),
                     builder: (context, state) {
                       print("BUILDING A1");

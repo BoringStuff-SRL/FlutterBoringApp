@@ -9,6 +9,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+class BoringStaticRouter {
+  static GoRouter? goRouter;
+}
+
 class BoringApp extends StatelessWidget {
   BoringApp(
       {super.key,
@@ -52,19 +56,26 @@ class BoringApp extends StatelessWidget {
   }
 
   // GoRouter configuration
-  GoRouter _router() => GoRouter(
+  void _computeRouter() {
+    BoringStaticRouter.goRouter ??= GoRouter(
         debugLogDiagnostics: debug,
+        initialLocation: initialLocation,
         redirect: redirect,
         refreshListenable: refreshListenable,
         navigatorKey: rootNavigator,
-        initialLocation: initialLocation,
-        routes: [_shellRoute()],
-      );
+        routes: [_shellRoute()]);
+  }
 
   @override
   Widget build(BuildContext context) {
+    _computeRouter();
     return MaterialApp.router(
-      routerConfig: _router(),
+      //routerConfig: _goRouter,
+      routeInformationParser:
+          BoringStaticRouter.goRouter!.routeInformationParser,
+      routeInformationProvider:
+          BoringStaticRouter.goRouter!.routeInformationProvider,
+      routerDelegate: BoringStaticRouter.goRouter!.routerDelegate,
       supportedLocales: supportedLocales,
       locale: locale,
       debugShowCheckedModeBanner: debug,
