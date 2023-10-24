@@ -31,6 +31,9 @@ class MyApp extends StatelessWidget {
                     navigationEntry: BoringNavigationEntry("a1",
                         label: "A1", icon: const Icon(Icons.abc)),
                     builder: (context, state) {
+
+
+
                       print("BUILDING A1");
                       return const Center(
                         child: Text("A1"),
@@ -38,12 +41,13 @@ class MyApp extends StatelessWidget {
                     },
                     subPages: [
                       BoringPage(
-                        navigationEntry: BoringNavigationEntry("ciao",
+                        navigationEntry: BoringNavigationEntry(":nome",
                             label: "A1", icon: const Icon(Icons.abc)),
                         builder: (p0, p1) {
+
                           print("BUILDING A11");
                           return const Center(
-                            child: Text("A11"),
+                            child: Text('saddsa'),
                           );
                         },
                       ),
