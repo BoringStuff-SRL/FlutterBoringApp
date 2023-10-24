@@ -1,13 +1,8 @@
 import 'dart:async';
 
-import 'package:boring_app/boring_app/navigation/boring_navigation.dart';
-import 'package:boring_app/boring_app/navigation/drawer/boring_navigation_drawer.dart';
-import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
-import 'package:boring_app/boring_app/pages/boring_page.dart';
 import 'package:boring_app/boring_app/pages/boring_page_group.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../boring_app.dart';
 
