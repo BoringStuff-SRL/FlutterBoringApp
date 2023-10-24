@@ -69,10 +69,7 @@ class BoringApp extends StatelessWidget {
     _computeRouter();
     return MaterialApp.router(
       //routerConfig: _goRouter,
-      localizationsDelegates: [
-        SfGlobalLocalizations.delegate,
-        ...?localizationsDelegates
-      ],
+      localizationsDelegates: localizationsDelegates,
       routeInformationParser:
           BoringStaticRouter.goRouter!.routeInformationParser,
       routeInformationProvider:

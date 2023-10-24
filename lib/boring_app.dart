@@ -7,4 +7,3 @@ export 'package:boring_app/boring_app/pages/boring_page.dart';
 export 'package:boring_app/boring_app/navigation/navigation_entry.dart';
 export 'package:boring_app/boring_app/navigation/boring_navigation.dart';
 export 'package:boring_app/boring_app/navigation/drawer/boring_navigation_drawer.dart';
-export 'package:syncfusion_localizations/syncfusion_localizations.dart';
