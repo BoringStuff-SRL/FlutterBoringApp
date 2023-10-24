@@ -19,7 +19,7 @@ class BoringApp extends StatelessWidget {
       this.redirect,
       this.initialLocation,
       this.rootNavigator,
-        this.localizationsDelegates,
+      this.localizationsDelegates,
       this.supportedLocales = const <Locale>[Locale('en', 'US')],
       this.locale,
       this.refreshListenable,
@@ -39,6 +39,7 @@ class BoringApp extends StatelessWidget {
   final Locale? locale;
   final bool debug;
   Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
+
   List<RouteBase> get _routes =>
       _pageGroups.map((e) => e.routes).expand((element) => element).toList();
 
@@ -48,8 +49,12 @@ class BoringApp extends StatelessWidget {
   ShellRoute _shellRoute() {
     return ShellRoute(
       routes: _routes,
-      builder: (context, state, child) => boringNavigation.buildWithContent(
-          state, child, navigationGroups, context),
+      builder: (context, state, child) => Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        padding: EdgeInsets.all(themeConfig.appPadding),
+        child: boringNavigation.buildWithContent(
+            state, child, navigationGroups, context, themeConfig),
+      ),
     );
   }
 
@@ -93,12 +98,15 @@ class BoringThemeConfig {
   final ThemeData? highContrastTheme;
   final ThemeData? highContrastDarkTheme;
   final ThemeMode? themeMode;
+  final double appPadding;
+  final double widthSpace;
 
-  const BoringThemeConfig({
-    this.theme,
-    this.darkTheme,
-    this.highContrastTheme,
-    this.highContrastDarkTheme,
-    this.themeMode = ThemeMode.system,
-  });
+  const BoringThemeConfig(
+      {this.theme,
+      this.darkTheme,
+      this.highContrastTheme,
+      this.highContrastDarkTheme,
+      this.themeMode = ThemeMode.system,
+      this.appPadding = 20,
+      this.widthSpace = 20});
 }

@@ -4,13 +4,17 @@ import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../boring_app.dart';
+
 enum BoringNavigationPosition { top, bottom, left, right }
 
 extension BoringNavigationPositionUtils on BoringNavigationPosition {
   bool get isSide =>
       this == BoringNavigationPosition.left ||
       this == BoringNavigationPosition.right;
+
   bool get isRight => this == BoringNavigationPosition.right;
+
   bool get isLeft => this == BoringNavigationPosition.left;
 }
 
@@ -23,7 +27,9 @@ abstract class BoringNavigation<T> {
       GoRouterState state,
       List<BoringNavigationGroupWithSelection> navGroups,
       ValueNotifier<T>? appBarNotifier)? appBarBuilder;
+
   BoringNavigation({this.appBarNotifier, this.appBarBuilder});
+
   Widget builder(
       BuildContext context,
       List<BoringNavigationGroupWithSelection> navigationGroups,
@@ -42,10 +48,11 @@ abstract class BoringNavigation<T> {
       navigationPosition == BoringNavigationPosition.bottom
           ? builder(context, navigationGroups, constraints)
           : null;
+
   Widget _child(BuildContext context, BoxConstraints constraints, Widget child,
-      Widget? navigationWidget, AppBar? appBar) {
+      Widget? navigationWidget, AppBar? appBar, BoringThemeConfig theme) {
     return content(context, child, navigationPosition, constraints,
-        navigationWidget, appBar);
+        navigationWidget, appBar, theme);
   }
 
   bool _appBarShouldGoWithContent(BoxConstraints constraints) =>
@@ -75,6 +82,7 @@ abstract class BoringNavigation<T> {
     Widget child,
     List<BoringNavigationGroup> navigationGroups,
     BuildContext context,
+    BoringThemeConfig theme,
   ) {
     return LayoutBuilder(builder: (context, constraints) {
       final bool drawerVisible = isDrawerVisible(constraints);
@@ -89,7 +97,7 @@ abstract class BoringNavigation<T> {
         appBar: _topAppBar(context, constraints, appBar),
         bottomNavigationBar: _bottomNav(context, navGroups, constraints),
         body: _child(context, constraints, child, drawer,
-            _contentAppBar(context, constraints, appBar)),
+            _contentAppBar(context, constraints, appBar), theme),
       );
     });
   }

@@ -1,5 +1,6 @@
 import 'package:boring_app/boring_app/boring_app.dart';
 import 'package:boring_app/boring_app/navigation/drawer/boring_navigation_drawer.dart';
+import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_style.dart';
 import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
 import 'package:boring_app/boring_app/pages/boring_page.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,35 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BoringApp(
         initialLocation: "/a",
-        boringNavigation: BoringNavigationDrawer(),
+        themeConfig: BoringThemeConfig(theme: ThemeData(
+            fontFamily: 'Inter',
+            visualDensity: VisualDensity.standard,
+            brightness: Brightness.light,
+            scaffoldBackgroundColor: Colors.grey[100],
+            primaryColor:  Colors.green,
+            timePickerTheme: const TimePickerThemeData(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)))),
+            dialogTheme: const DialogTheme(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)))),
+   /*
+   colorScheme: ThemeData().colorScheme.copyWith(
+              primary: mainColor,
+              secondary: accentColor,
+              onPrimary: Colors.white,
+              onSurface: dialogTitleColor,
+            )
+    */
+
+            )),
+        boringNavigation: BoringNavigationDrawer(drawerStyle: BoringDrawerStyle(
+            width: 230,
+            backgroundColor: Colors.white,
+            drawerContentPadding: EdgeInsets.symmetric(horizontal: 25),
+            drawerRadius: BorderRadius.all(Radius.circular(10))), appBarBuilder: (context, state, navGroups, value) {
+          return AppBar();
+        }),
         pages: [
           BoringPage(
               navigationEntry:
