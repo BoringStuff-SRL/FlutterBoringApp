@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:boring_app/boring_app/boring_app_section.dart';
+import 'package:boring_app/boring_app/boring_router.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
@@ -63,19 +64,7 @@ class BoringApp extends StatelessWidget {
       .expand((element) => element)
       .toList();
 
-  late final GoRouter _goRouter = GoRouter(
-      debugLogDiagnostics: false,
-      initialLocation: initialLocation,
-      redirect: redirect,
-      refreshListenable: refreshListenable,
-      navigatorKey: rootNavigator,
-      routes: [
-        ...getRootRoutes,
-        ...sections
-            .where((element) => element.hasPath)
-            .map((e) => e.route(rootNavigator))
-            .toList()
-      ]);
+  //static final GoRouter _goRouter =
 
   printRoutes(List<RouteBase> routes, int indent) {
     if (routes.isEmpty) {
@@ -87,15 +76,31 @@ class BoringApp extends StatelessWidget {
     }
   }
 
+  static String example = 'asdasd';
+
   @override
   Widget build(BuildContext context) {
-    //printRoutes(_goRouter.routeConfiguration.routes, 0);
+    BoringStaticRouter.goRouter ??= GoRouter(
+        debugLogDiagnostics: false,
+        initialLocation: initialLocation,
+        redirect: redirect,
+        refreshListenable: refreshListenable,
+        navigatorKey: rootNavigator,
+        routes: [
+          ...getRootRoutes,
+          ...sections
+              .where((element) => element.hasPath)
+              .map((e) => e.route(rootNavigator))
+              .toList()
+        ]);
 
     return MaterialApp.router(
-      routerConfig: _goRouter,
-      // routeInformationParser: _goRouter.routeInformationParser,
-      // routeInformationProvider: _goRouter.routeInformationProvider,
-      // routerDelegate: _goRouter.routerDelegate,
+      //routerConfig: _goRouter,
+      routeInformationParser:
+          BoringStaticRouter.goRouter!.routeInformationParser,
+      routeInformationProvider:
+          BoringStaticRouter.goRouter!.routeInformationProvider,
+      routerDelegate: BoringStaticRouter.goRouter!.routerDelegate,
       localizationsDelegates: [
         SfGlobalLocalizations.delegate,
         ...?localizationsDelegates

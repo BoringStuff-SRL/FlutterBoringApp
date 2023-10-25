@@ -86,7 +86,6 @@ class BoringAppSection {
         onTap: (value) {
           GoRouter.of(context).go(ch[value].path);
         },
-        
         selectedItemColor: drawerTileStyle.selectedIconColor,
         unselectedItemColor: drawerTileStyle.unSelectedIconColor,
         currentIndex:
@@ -142,7 +141,9 @@ class BoringAppSection {
       .where((element) =>
           element.isHiddenFromDrawer == hiddenFromDrawer ||
           element.maintainDrawer)
-      .map((e) => e.getRoutes(addPrefix: !hasPath, redirectInjection: redirect))
+      .map((e) {
+        return e.getRoutes(addPrefix: !hasPath, redirectInjection: redirect);
+      })
       .expand((element) => element)
       .toList();
 
