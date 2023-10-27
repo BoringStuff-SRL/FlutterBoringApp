@@ -38,7 +38,7 @@ class BoringApp extends StatelessWidget {
   final Iterable<Locale> supportedLocales;
   final Locale? locale;
   final bool debug;
-  Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
+  final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
 
   List<RouteBase> get _routes =>
       _pageGroups.map((e) => e.routes).expand((element) => element).toList();
