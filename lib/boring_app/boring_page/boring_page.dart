@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:boring_app/boring_app/boring_app_state.dart';
 import 'package:boring_app/boring_app/boring_drawer_entry.dart';
 import 'package:boring_app/boring_app/boring_page/boring_page_base.dart';
 import 'package:flutter/material.dart';
@@ -88,11 +89,31 @@ class BoringPage implements BoringPageBase {
                 redirect?.call(context, state),
             routes: _getSubRoutes(subPages),
             pageBuilder: builder != null
-                ? (context, state) => NoTransitionPage(
-                    child: Title(
-                        color: Theme.of(context).primaryColor.withAlpha(0xFF),
-                        title: drawerLabel,
-                        child: builder!(context, state)))
+                ? (context, state) {
+                    final split = state.fullPath!.split('/');
+                    String subpath = '';
+                    final fullPath = state.fullPath;
+                    for (final section in split) {
+                      subpath += '$section/';
+                      if (section == path) {
+                        break;
+                      }
+                    }
+                    subpath = subpath.substring(0, subpath.length - 1);
+
+                    final buildBuilder = fullPath == subpath;
+
+                    BoringAppState.state = state;
+
+                    return NoTransitionPage(
+                        child: Title(
+                            color:
+                                Theme.of(context).primaryColor.withAlpha(0xFF),
+                            title: drawerLabel,
+                            child: buildBuilder
+                                ? builder!(context, state)
+                                : Container()));
+                  }
                 : null)
     ];
   }
