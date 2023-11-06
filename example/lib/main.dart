@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
             );
           },
           drawerStyle:
-              BoringDrawerStyle(sectionNavigator: SectionNavigator.drawer),
+              BoringDrawerStyle(sectionNavigator: SectionNavigator.navBar),
           drawerTileStyle: BoringDrawerTileStyle(
             selectedColor: Colors.transparent,
             selectedTextColor: Colors.pink,
@@ -102,9 +102,24 @@ class MyApp extends StatelessWidget {
                 ]),
             BoringPage(
               path: 'b',
+              icon: Icon(Icons.abc),
               builder: (context, state) => Column(
                 children: [
                   Text('B'),
+                  ElevatedButton(
+                      onPressed: () {
+                        context.go('/a');
+                      },
+                      child: Text('GO A'))
+                ],
+              ),
+            ),
+            BoringPage(
+              path: 'c',
+              icon: Icon(Icons.abc),
+              builder: (context, state) => Column(
+                children: [
+                  Text('C'),
                   ElevatedButton(
                       onPressed: () {
                         context.go('/a');
