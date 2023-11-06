@@ -29,7 +29,7 @@ class BoringDrawerEntry extends StatelessWidget {
   bool get _hasSubEntries => subEntries != null && subEntries!.isNotEmpty;
 
   bool checkIfSelected(BuildContext context) {
-    final loc = GoRouterState.of(context).matchedLocation;
+    final loc = GoRouter.of(context).location;
     return path == loc ||
         (!_hasSubEntries && path != "/" && loc.contains(path));
   }
