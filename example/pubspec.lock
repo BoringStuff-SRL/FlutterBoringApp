@@ -91,10 +91,10 @@ packages:
     dependency: transitive
     description:
       name: go_router
-      sha256: "00d1b67d6e9fa443331da229084dd3eb04407f5a2dff22940bd7bba6af5722c3"
+      sha256: "5098760d7478aabfe682a462bf121d61bc5dbe5df5aac8dad733564a0aee33bc"
       url: "https://pub.dev"
     source: hosted
-    version: "7.1.1"
+    version: "12.1.0"
   intl:
     dependency: transitive
     description:
@@ -192,18 +192,18 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "9f0a4593f7642b2f106e329734d0e5fc746baf8d0a59495eec586cd0d9ba7d02"
+      sha256: c5524fee9d3c76726ed081a4ef7ac058a827b510b98c19c4c33afb7ac650d205
       url: "https://pub.dev"
     source: hosted
-    version: "22.2.12"
+    version: "23.1.43"
   syncfusion_localizations:
     dependency: transitive
     description:
       name: syncfusion_localizations
-      sha256: cbed6be76a708beabf380a2b98843ee636bb5f660596ec5ab8ffccc9f859b3cc
+      sha256: ebbf6afd639f8e365976436f142eb93a7347197ef81bb75b685999247c22d9c7
       url: "https://pub.dev"
     source: hosted
-    version: "22.2.12"
+    version: "23.1.43"
   term_glyph:
     dependency: transitive
     description:
@@ -238,4 +238,4 @@ packages:
     version: "0.1.4-beta"
 sdks:
   dart: ">=3.1.0-185.0.dev <4.0.0"
-  flutter: ">=3.3.0"
+  flutter: ">=3.7.0"

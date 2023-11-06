@@ -22,9 +22,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BoringApp(
-      initialLocation: "/a",
+      initialLocation: "/backoffice/a",
       sections: [
         BoringAppSection(
+          path: '/backoffice',
+          defaultPath: '/backoffice/a',
           drawerFooterBuilder: (context) {
             return GestureDetector(
               onTap: () {
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
             );
           },
           drawerStyle:
-              BoringDrawerStyle(sectionNavigator: SectionNavigator.navBar),
+              BoringDrawerStyle(sectionNavigator: SectionNavigator.drawer),
           drawerTileStyle: BoringDrawerTileStyle(
             selectedColor: Colors.transparent,
             selectedTextColor: Colors.pink,
