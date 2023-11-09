@@ -3,27 +3,60 @@ import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-class BoringPage {
-  final BoringNavigationEntry _navigationEntry;
-  Widget Function(BuildContext context, GoRouterState state) builder;
+class BoringPageWidget extends BoringPage {
+  final Widget Function(BuildContext context, GoRouterState state)
+      _widgetBuilder;
+  final BoringNavigationEntry _widgetNavigationEntry;
+  BoringPageWidget(
+      {required BoringNavigationEntry navigationEntry,
+      required Widget Function(BuildContext context, GoRouterState state)
+          builder,
+      super.subPages,
+      super.hideFromNavigation = false,
+      super.giftSelectionWhenHidden = true,
+      super.redirect,
+      super.preventNavigationDisplay})
+      : _widgetNavigationEntry = navigationEntry,
+        _widgetBuilder = builder;
+
+  @override
+  Widget builder(BuildContext context, GoRouterState state) =>
+      _widgetBuilder(context, state);
+
+  @override
+  BoringNavigationEntry get _navigationEntry => _widgetNavigationEntry;
+}
+
+abstract class BoringPage {
+  abstract final BoringNavigationEntry _navigationEntry;
+  Widget builder(BuildContext context, GoRouterState state);
+
   final bool hideFromNavigation;
   final bool giftSelectionWhenHidden;
-  Future<String?> Function(BuildContext, GoRouterState)? redirect;
-
-  List<BoringPage> subPages;
+  final Future<String?> Function(BuildContext, GoRouterState)? redirect;
+  final List<BoringPage> subPages;
+  final bool preventNavigationDisplay;
   BoringPage(
-      {required BoringNavigationEntry navigationEntry,
-      required this.builder,
-      this.subPages = const [],
+      {this.subPages = const [],
       this.hideFromNavigation = false,
       this.giftSelectionWhenHidden = true,
-      this.redirect})
-      : _navigationEntry = navigationEntry;
+      this.redirect,
+      this.preventNavigationDisplay = false});
 
-  GoRoute route(String prefix) {
-    final currentFullPath = prefix.pathAppend(_navigationEntry.path);
+  GoRoute route(GlobalKey<NavigatorState> rootNavigatorKey,
+      {String prefix = "", String? rootPrefix}) {
+    String path = _navigationEntry.path;
+    String currentFullPath = prefix.pathAppend(path);
+    if (rootPrefix != null) {
+      currentFullPath =
+          rootPrefix.pathAppend(currentFullPath, mustStartWithSlash: true);
+      path = rootPrefix.pathAppend(path, mustStartWithSlash: true);
+    }
+    //PATH = {rootPrefix}/{_navigationEntry.path}
+    //FULL_PATH = {rootPrefix}/{prefix}/{_navigationEntry.path}
     return GoRoute(
-        path: _navigationEntry.path,
+        parentNavigatorKey: preventNavigationDisplay ? rootNavigatorKey : null,
+        path: path,
         pageBuilder: (context, state) {
           if (state.fullPath != currentFullPath) {
             return NoTransitionPage(child: Container());
@@ -31,26 +64,48 @@ class BoringPage {
           return NoTransitionPage(child: builder(context, state));
         },
         redirect: redirect,
-        routes: subPages.map((e) => e.route(currentFullPath)).toList());
+        routes: subPages
+            .map((e) => e.route(rootNavigatorKey, prefix: currentFullPath))
+            .toList());
   }
 
   BoringNavigationEntryWithSubEntries navigationEntryWithSubentries(
           {String initPath = ""}) =>
       BoringNavigationEntryWithSubEntries.from(
-          _navigationEntry
-              .copyWithPath(initPath.pathAppend(_navigationEntry.path)),
+          _navigationEntry.copyWithPath(initPath
+              .pathAppend(_navigationEntry.path, mustStartWithSlash: true)),
           subPages
               // .where((element) => !element.hideFromNavigation)
               .map((e) => e.navigationEntryWithSubentries(
-                  initPath: initPath.pathAppend(_navigationEntry.path)))
+                  initPath: initPath.pathAppend(_navigationEntry.path,
+                      mustStartWithSlash: true)))
               .toList(),
           hideFromNavigation,
           giftSelectionWhenHidden);
 }
 
+class MyPage extends BoringPage {
+  @override
+  // TODO: implement _navigationEntry
+  BoringNavigationEntry get _navigationEntry => throw UnimplementedError();
+
+  @override
+  Widget builder(BuildContext context, GoRouterState state) {
+    // TODO: implement builder
+    throw UnimplementedError();
+  }
+}
+
 extension on String {
-  String pathAppend(String other) {
+  String pathAppend(String other, {bool mustStartWithSlash = false}) {
     if (isEmpty) return other;
-    return "$this/$other".replaceAll("//", "/");
+    String res = "$this/$other".replaceAll("//", "/").trim();
+    if (res.endsWith("/")) {
+      res = res.substring(0, res.length - 1);
+    }
+    if (mustStartWithSlash && !res.startsWith("/")) {
+      res = "/$res";
+    }
+    return res;
   }
 }
