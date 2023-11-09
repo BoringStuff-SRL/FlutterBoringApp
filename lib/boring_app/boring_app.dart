@@ -27,6 +27,22 @@ class BoringApp extends StatelessWidget {
       : _pageGroups = [BoringPageGroup(pages: pages)],
         boringNavigation = boringNavigation ?? BoringNavigationDrawer();
 
+  BoringApp.withGroups(
+      {super.key,
+      BoringNavigation? boringNavigation,
+      required List<BoringPageGroup> pageGroups,
+      this.themeConfig = const BoringThemeConfig(),
+      this.redirect,
+      this.initialLocation,
+      this.rootNavigator,
+      this.localizationsDelegates,
+      this.supportedLocales = const <Locale>[Locale('en', 'US')],
+      this.locale,
+      this.refreshListenable,
+      this.debug = kDebugMode})
+      : _pageGroups = pageGroups,
+        boringNavigation = boringNavigation ?? BoringNavigationDrawer();
+
   final BoringNavigation boringNavigation;
   final List<BoringPageGroup> _pageGroups;
   final BoringThemeConfig themeConfig;
