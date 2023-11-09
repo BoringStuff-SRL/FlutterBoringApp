@@ -15,38 +15,32 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BoringApp(
-        initialLocation: "/a",
-        themeConfig: BoringThemeConfig(theme: ThemeData(
-            fontFamily: 'Inter',
-            visualDensity: VisualDensity.standard,
-            brightness: Brightness.light,
-            scaffoldBackgroundColor: Colors.grey[100],
-            primaryColor:  Colors.green,
-            timePickerTheme: const TimePickerThemeData(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)))),
-            dialogTheme: const DialogTheme(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)))),
-   /*
-   colorScheme: ThemeData().colorScheme.copyWith(
-              primary: mainColor,
-              secondary: accentColor,
-              onPrimary: Colors.white,
-              onSurface: dialogTitleColor,
-            )
-    */
-
-            )),
-        boringNavigation: BoringNavigationDrawer(drawerStyle: BoringDrawerStyle(
-            width: 230,
-            backgroundColor: Colors.white,
-            drawerContentPadding: EdgeInsets.symmetric(horizontal: 25),
-            drawerRadius: BorderRadius.all(Radius.circular(10))), appBarBuilder: (context, state, navGroups, value) {
-          return AppBar();
-        }),
+        initialLocation: "/pippo/a",
+        themeConfig: BoringThemeConfig(
+            theme: ThemeData(
+          fontFamily: 'Inter',
+          visualDensity: VisualDensity.standard,
+          brightness: Brightness.light,
+          scaffoldBackgroundColor: Colors.grey[100],
+          primaryColor: Colors.green,
+          timePickerTheme: const TimePickerThemeData(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15)))),
+          dialogTheme: const DialogTheme(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15)))),
+        )),
+        boringNavigation: BoringNavigationDrawer(
+            drawerStyle: const BoringDrawerStyle(
+                width: 230,
+                backgroundColor: Colors.white,
+                drawerContentPadding: EdgeInsets.symmetric(horizontal: 25),
+                drawerRadius: BorderRadius.all(Radius.circular(10))),
+            appBarBuilder: (context, state, navGroups, value) {
+              return AppBar();
+            }),
         pages: [
-          BoringPage(
+          BoringPageWidget(
               navigationEntry:
                   BoringNavigationEntry("/a", icon: const Icon(Icons.abc)),
               builder: (p0, p1) {
@@ -56,24 +50,20 @@ class MyApp extends StatelessWidget {
                 );
               },
               subPages: [
-                BoringPage(
+                BoringPageWidget(
                     navigationEntry: BoringNavigationEntry("a1",
                         label: "A1", icon: const Icon(Icons.abc)),
                     builder: (context, state) {
-
-
-
                       print("BUILDING A1");
                       return const Center(
                         child: Text("A1"),
                       );
                     },
                     subPages: [
-                      BoringPage(
+                      BoringPageWidget(
                         navigationEntry: BoringNavigationEntry(":nome",
                             label: "A1", icon: const Icon(Icons.abc)),
                         builder: (p0, p1) {
-
                           print("BUILDING A11");
                           return const Center(
                             child: Text('saddsa'),
@@ -81,7 +71,7 @@ class MyApp extends StatelessWidget {
                         },
                       ),
                     ]),
-                BoringPage(
+                BoringPageWidget(
                   navigationEntry: BoringNavigationEntry("a2", label: "A2"),
                   builder: (p0, p1) {
                     return const Center(
@@ -89,7 +79,7 @@ class MyApp extends StatelessWidget {
                     );
                   },
                 ),
-                BoringPage(
+                BoringPageWidget(
                   hideFromNavigation: true,
                   giftSelectionWhenHidden: true,
                   navigationEntry: BoringNavigationEntry("a3", label: "A3"),
@@ -100,7 +90,8 @@ class MyApp extends StatelessWidget {
                   },
                 ),
               ]),
-          BoringPage(
+          BoringPageWidget(
+            preventNavigationDisplay: true,
             navigationEntry: BoringNavigationEntry("/b",
                 label: "B", icon: const Icon(Icons.add_chart_sharp)),
             builder: (p0, p1) {
@@ -109,7 +100,16 @@ class MyApp extends StatelessWidget {
               );
             },
           ),
-          BoringPage(
+          BoringPageWidget(
+            navigationEntry: BoringNavigationEntry("/",
+                label: "ROOT", icon: const Icon(Icons.add_chart_sharp)),
+            builder: (p0, p1) {
+              return const Center(
+                child: Text("ROOT"),
+              );
+            },
+          ),
+          BoringPageWidget(
             hideFromNavigation: true,
             navigationEntry: BoringNavigationEntry("/c", label: "C"),
             builder: (p0, p1) {
