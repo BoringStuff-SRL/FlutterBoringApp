@@ -150,6 +150,7 @@ class BoringAppInstance {
         child: boringNavigation.buildWithContent(
             state, child, _navigationGroups, context, appThemeConfig),
       ),
+      
     );
   }
 

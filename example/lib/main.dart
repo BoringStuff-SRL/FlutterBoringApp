@@ -6,19 +6,22 @@ import 'package:boring_app/boring_app/pages/boring_page.dart';
 import 'package:flutter/material.dart';
 
 void main(List<String> args) {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final ValueNotifier<String> testNotifier = ValueNotifier('pippo');
 
   @override
   Widget build(BuildContext context) {
     return BoringApp(
-        initialLocation: "/pippo/a",
+        initialLocation: "/a",
         themeConfig: BoringThemeConfig(
             theme: ThemeData(
           fontFamily: 'Inter',
+          useMaterial3: false,
           visualDensity: VisualDensity.standard,
           brightness: Brightness.light,
           scaffoldBackgroundColor: Colors.grey[100],
@@ -30,23 +33,57 @@ class MyApp extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(15)))),
         )),
-        boringNavigation: BoringNavigationDrawer(
-            drawerStyle: const BoringDrawerStyle(
-                width: 230,
-                backgroundColor: Colors.white,
-                drawerContentPadding: EdgeInsets.symmetric(horizontal: 25),
-                drawerRadius: BorderRadius.all(Radius.circular(10))),
-            appBarBuilder: (context, state, navGroups, value) {
-              return AppBar();
-            }),
+        boringNavigation: BoringNavigationDrawer<String>(
+          appBarNotifier: testNotifier,
+          drawerStyle: const BoringDrawerStyle(
+              width: 230,
+              backgroundColor: Colors.white,
+              drawerContentPadding: EdgeInsets.symmetric(horizontal: 25),
+              drawerRadius: BorderRadius.all(Radius.circular(10))),
+          appBarBuilder: (context, state, navGroups, notifier) {
+            print('build appbar');
+            return AppBar(
+              backgroundColor: Colors.white,
+              title: Text(
+                notifier!.value,
+                style: TextStyle(color: Colors.black),
+              ),
+            );
+          },
+        ),
         pages: [
           BoringPageWidget(
               navigationEntry:
                   BoringNavigationEntry("/a", icon: const Icon(Icons.abc)),
               builder: (p0, p1) {
                 print("BUILDING A");
-                return const Center(
-                  child: Text("A"),
+                int index = 0;
+                return ElevatedButton(
+                  onPressed: () {
+                    testNotifier.value = '${++index}';
+                  },
+                  child: Text('signore'),
+                );
+
+                return FutureBuilder(
+                  future: Future.delayed(const Duration(seconds: 2)),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return Text('loading');
+                    }
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      testNotifier.value = 'letsgoo';
+                    });
+
+                    return SingleChildScrollView(
+                      child: SizedBox(
+                        height: 20000,
+                        child: const Center(
+                          child: Text("A"),
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
               subPages: [

@@ -50,15 +50,18 @@ abstract class BoringNavigation<T> {
           : null;
 
   Widget _child(BuildContext context, BoxConstraints constraints, Widget child,
-      Widget? navigationWidget, AppBar? appBar, BoringThemeConfig theme) {
+      Widget? navigationWidget, Widget? appBar, BoringThemeConfig theme) {
     return content(context, child, navigationPosition, constraints,
         navigationWidget, appBar, theme);
   }
 
-  bool _appBarShouldGoWithContent(BoxConstraints constraints) =>
-      embraceAppBar &&
-      navigationPosition.isSide &&
-      constraints.maxWidth > persistentSide;
+  bool _appBarShouldGoWithContent(BoxConstraints constraints) {
+    // return embraceAppBar &&
+    //   navigationPosition.isSide &&
+    //   constraints.maxWidth > persistentSide;
+
+    return embraceAppBar && navigationPosition.isSide;
+  }
 
   AppBar? _topAppBar(
       BuildContext context, BoxConstraints constraints, AppBar? appBar) {
@@ -88,16 +91,31 @@ abstract class BoringNavigation<T> {
       final bool drawerVisible = isDrawerVisible(constraints);
       final navGroups = navigationGroups.withSelection(state);
       final drawer = _drawer(context, navGroups, constraints);
-      final appBar =
-          appBarBuilder?.call(context, state, navGroups, appBarNotifier);
+      // final appBar =
+      //     appBarBuilder?.call(context, state, navGroups, appBarNotifier);
       return Scaffold(
         drawer: (!drawerVisible && navigationPosition.isRight) ? drawer : null,
         endDrawer:
             (!drawerVisible && navigationPosition.isRight) ? drawer : null,
-        appBar: _topAppBar(context, constraints, appBar),
+        //appBar: _topAppBar(context, constraints, appBar),
         bottomNavigationBar: _bottomNav(context, navGroups, constraints),
-        body: _child(context, constraints, child, drawer,
-            _contentAppBar(context, constraints, appBar), theme),
+        body: _child(
+            context,
+            constraints,
+            child,
+            drawer,
+            //_contentAppBar(context, constraints, appBar),
+            appBarBuilder != null
+                ? ValueListenableBuilder(
+                    valueListenable: appBarNotifier!,
+                    builder: (context, value, child) {
+                      return appBarBuilder!.call(
+                              context, state, navGroups, appBarNotifier) ??
+                          Container();
+                    },
+                  )
+                : null,
+            theme),
       );
     });
   }

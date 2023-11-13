@@ -5,20 +5,24 @@ import '../boring_app.dart';
 
 const persistentSide = 750;
 
-Widget content(
+Widget content<T>(
     BuildContext context,
     Widget child,
     BoringNavigationPosition navigationPosition,
     BoxConstraints constraints,
     Widget? navigationWidget,
-    AppBar? appBar,
+    Widget? appBar,
     BoringThemeConfig theme) {
   if (navigationWidget == null) {
     return child;
   }
+
   final childContent = appBar != null
       ? Column(
-          children: [appBar, Expanded(child: child)],
+          children: [
+            appBar,
+            Expanded(child: child),
+          ],
         )
       : child;
 
@@ -28,7 +32,7 @@ Widget content(
       return child;
     default:
       if (constraints.maxWidth < persistentSide) {
-        return child;
+        return childContent;
       }
       return Row(
         children: [
