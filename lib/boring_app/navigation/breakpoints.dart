@@ -21,6 +21,7 @@ Widget content<T>(
       ? Column(
           children: [
             appBar,
+            const SizedBox(height: 20),
             Expanded(child: child),
           ],
         )
