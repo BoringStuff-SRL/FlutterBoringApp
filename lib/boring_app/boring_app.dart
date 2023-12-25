@@ -165,6 +165,19 @@ class BoringAppInstance {
 
 class BoringApp extends StatelessWidget {
   final List<BoringAppInstance> applications;
+  final GlobalKey<NavigatorState> _defaultRootNavigatorKey =
+      GlobalKey<NavigatorState>();
+
+  final BoringThemeConfig themeConfig;
+  final GlobalKey<NavigatorState>? rootNavigator;
+  final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
+      redirect;
+  final String? initialLocation;
+  final Listenable? refreshListenable;
+  final Iterable<Locale> supportedLocales;
+  final Locale? locale;
+  final bool debug;
+  final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
 
   BoringApp(
       {super.key,
@@ -185,13 +198,31 @@ class BoringApp extends StatelessWidget {
               pages: pages,
               boringNavigation: boringNavigation ?? BoringNavigationDrawer())
         ];
-  final GlobalKey<NavigatorState> _defaultRootNavigatorKey =
-      GlobalKey<NavigatorState>();
+
+  BoringApp.withGroups(
+      {super.key,
+      BoringNavigation? boringNavigation,
+      required List<BoringPageGroup> pageGroups,
+      this.themeConfig = const BoringThemeConfig(),
+      this.redirect,
+      this.initialLocation,
+      this.rootNavigator,
+      this.localizationsDelegates,
+      this.supportedLocales = const <Locale>[Locale('en', 'US')],
+      this.locale,
+      this.refreshListenable,
+      this.debug = kDebugMode})
+      : applications = [
+          BoringAppInstance.withGroups(
+              path: "",
+              pageGroups: pageGroups,
+              boringNavigation: boringNavigation ?? BoringNavigationDrawer())
+        ];
 
   BoringApp.multiApp(
       {super.key,
       BoringNavigation? boringNavigation,
-      required List<BoringPage> pages,
+      // required List<BoringPage> pages,
       this.themeConfig = const BoringThemeConfig(),
       this.redirect,
       this.initialLocation,
@@ -206,17 +237,6 @@ class BoringApp extends StatelessWidget {
 
   static bool _checkOnlyOneIsRoot(List<BoringAppInstance> apps) =>
       apps.where((app) => app.isOnRoot).length < 2;
-
-  final BoringThemeConfig themeConfig;
-  final GlobalKey<NavigatorState>? rootNavigator;
-  final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
-      redirect;
-  final String? initialLocation;
-  final Listenable? refreshListenable;
-  final Iterable<Locale> supportedLocales;
-  final Locale? locale;
-  final bool debug;
-  final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
 
   get _rootNavigatorKey => rootNavigator ?? _defaultRootNavigatorKey;
 
