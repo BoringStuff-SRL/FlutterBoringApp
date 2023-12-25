@@ -24,11 +24,11 @@ class BoringPageWidget extends BoringPage {
       _widgetBuilder(context, state);
 
   @override
-  BoringNavigationEntry get _navigationEntry => _widgetNavigationEntry;
+  BoringNavigationEntry get navigationEntry => _widgetNavigationEntry;
 }
 
 abstract class BoringPage {
-  abstract final BoringNavigationEntry _navigationEntry;
+  abstract final BoringNavigationEntry navigationEntry;
   Widget builder(BuildContext context, GoRouterState state);
 
   final bool hideFromNavigation;
@@ -45,7 +45,7 @@ abstract class BoringPage {
 
   GoRoute route(GlobalKey<NavigatorState> rootNavigatorKey,
       {String prefix = "", String? rootPrefix}) {
-    String path = _navigationEntry.path;
+    String path = navigationEntry.path;
     String currentFullPath = prefix.pathAppend(path);
     if (rootPrefix != null) {
       currentFullPath =
@@ -72,12 +72,12 @@ abstract class BoringPage {
   BoringNavigationEntryWithSubEntries navigationEntryWithSubentries(
           {String initPath = ""}) =>
       BoringNavigationEntryWithSubEntries.from(
-          _navigationEntry.copyWithPath(initPath
-              .pathAppend(_navigationEntry.path, mustStartWithSlash: true)),
+          navigationEntry.copyWithPath(initPath.pathAppend(navigationEntry.path,
+              mustStartWithSlash: true)),
           subPages
               // .where((element) => !element.hideFromNavigation)
               .map((e) => e.navigationEntryWithSubentries(
-                  initPath: initPath.pathAppend(_navigationEntry.path,
+                  initPath: initPath.pathAppend(navigationEntry.path,
                       mustStartWithSlash: true)))
               .toList(),
           hideFromNavigation,
@@ -87,7 +87,7 @@ abstract class BoringPage {
 class MyPage extends BoringPage {
   @override
   // TODO: implement _navigationEntry
-  BoringNavigationEntry get _navigationEntry => throw UnimplementedError();
+  BoringNavigationEntry get navigationEntry => throw UnimplementedError();
 
   @override
   Widget builder(BuildContext context, GoRouterState state) {
