@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 class BoringPageGroup {
   final String? name;
+  //TODO add icon [and display option]
   final List<BoringPage> pages;
   const BoringPageGroup({
     this.name,
