@@ -3,6 +3,7 @@ import 'package:boring_app/boring_app/navigation/boring_navigation.dart';
 import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_style.dart';
 import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_tile_style.dart';
 import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
+import 'package:boringcore/boringcore.dart';
 import 'package:flutter/material.dart';
 
 class BoringNavigationDrawer<T> extends BoringNavigation<T> {
@@ -36,11 +37,31 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
       BuildContext context,
       List<BoringNavigationGroupWithSelection> navigationGroups,
       BoxConstraints constraints) {
-    final children = navigationGroups
-        .map((group) => group.entries.map((e) => e.toDrawerTile(
-            context, tileStyle ?? const BoringDrawerTileStyle())))
-        .expand((element) => element)
-        .toList();
+    final children = <Widget>[];
+
+    for (var group in navigationGroups) {
+      final childrenWidgets = group.entries
+          .map((e) => e.toDrawerTile(
+              context, tileStyle ?? const BoringDrawerTileStyle()))
+          .toList();
+
+      if (group.hasName) {
+        children.add(
+          BoringExpansionWidget(
+            tilePadding: const EdgeInsets.all(8),
+            childPadding: EdgeInsets.zero,
+            primary: Text(group.name!),
+            disabledTextColor: drawerStyle.groupTileDisabledColor,
+            disabledIconColor: drawerStyle.groupTileDisabledColor,
+            child: Column(
+              children: childrenWidgets,
+            ),
+          ),
+        );
+      } else {
+        children.addAll(childrenWidgets);
+      }
+    }
     final BoringDrawerStyle overriddenDrawerStyle =
         overrideDrawerStyle?.call(drawerStyle, constraints) ?? drawerStyle;
     return Drawer(

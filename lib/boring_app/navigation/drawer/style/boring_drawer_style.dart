@@ -15,6 +15,7 @@ class BoringDrawerStyle {
   final double width;
   final double drawerElevation;
   final SectionNavigator sectionNavigator;
+  final Color groupTileDisabledColor;
 
   const BoringDrawerStyle({
     this.backgroundColor,
@@ -25,6 +26,7 @@ class BoringDrawerStyle {
     this.drawerContentPadding = const EdgeInsets.all(16),
     this.drawerElevation = 0,
     this.drawerRadius = const BorderRadius.all(Radius.circular(20)),
+    this.groupTileDisabledColor = Colors.grey,
   });
 
   BoringDrawerStyle copyWith({
@@ -36,15 +38,19 @@ class BoringDrawerStyle {
     double? width,
     double? drawerElevation,
     SectionNavigator? sectionNavigator,
+    TextStyle? groupTileTextStyle,
+    Color? groupDisabledColor,
   }) {
     return BoringDrawerStyle(
-        backgroundColor: backgroundColor ?? this.backgroundColor,
-        drawerRadius: drawerRadius ?? this.drawerRadius,
-        drawerContentPadding: drawerContentPadding ?? this.drawerContentPadding,
-        drawerForeignPadding: drawerForeignPadding ?? this.drawerForeignPadding,
-        drawerIcon: drawerIcon ?? this.drawerIcon,
-        width: width ?? this.width,
-        drawerElevation: drawerElevation ?? this.drawerElevation,
-        sectionNavigator: sectionNavigator ?? this.sectionNavigator);
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      drawerRadius: drawerRadius ?? this.drawerRadius,
+      drawerContentPadding: drawerContentPadding ?? this.drawerContentPadding,
+      drawerForeignPadding: drawerForeignPadding ?? this.drawerForeignPadding,
+      drawerIcon: drawerIcon ?? this.drawerIcon,
+      width: width ?? this.width,
+      drawerElevation: drawerElevation ?? this.drawerElevation,
+      sectionNavigator: sectionNavigator ?? this.sectionNavigator,
+      groupTileDisabledColor: groupDisabledColor ?? this.groupTileDisabledColor,
+    );
   }
 }

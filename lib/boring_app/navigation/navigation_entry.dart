@@ -119,6 +119,8 @@ class BoringNavigationGroupWithSelection {
     required this.entries,
   });
 
+  bool get hasName => name != null && name!.isNotEmpty;
+
   factory BoringNavigationGroupWithSelection.from(
       BoringNavigationGroup navigationGroup, GoRouterState state) {
     return BoringNavigationGroupWithSelection(
