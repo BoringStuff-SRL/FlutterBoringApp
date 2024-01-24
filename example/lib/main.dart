@@ -1,78 +1,102 @@
-import 'package:boring_app/boring_app.dart';
 import 'package:boring_app/boring_app/boring_app.dart';
-import 'package:boring_app/boring_app/style/boring_drawer_tile_style.dart';
+import 'package:boring_app/boring_app/navigation/drawer/boring_navigation_drawer.dart';
+import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_style.dart';
+import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
+import 'package:boring_app/boring_app/pages/boring_page.dart';
+import 'package:boring_app/boring_app/pages/boring_page_group.dart';
 import 'package:flutter/material.dart';
-
 
 void main(List<String> args) {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final ValueNotifier<String> testNotifier = ValueNotifier('pippo');
 
   @override
   Widget build(BuildContext context) {
-    return BoringApp(
-      initialLocation: "/main",
-      sections: [
-        BoringAppSection(
-          drawerFooterBuilder: (context) {
-            return GestureDetector(
-              onTap: () {
-                context.go('/hidden');
-              },
-              child: Text('Go to hidden'),
-            );
-          },
-          drawerTileStyle: BoringDrawerTileStyle(
-            selectedColor: Colors.red,
-            selectedTextColor: Colors.pink,
-            fontFamily: "Montserrat",
+    return BoringApp.withGroups(
+      initialLocation: "/a",
+      themeConfig: BoringThemeConfig(
+          theme: ThemeData(
+        fontFamily: 'Inter',
+        useMaterial3: false,
+        visualDensity: VisualDensity.standard,
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: Colors.grey[100],
+        primaryColor: Colors.green,
+        timePickerTheme: const TimePickerThemeData(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15)))),
+        dialogTheme: const DialogTheme(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15)))),
+      )),
+      boringNavigation: BoringNavigationDrawer<String>(
+        appBarNotifier: testNotifier,
+        drawerStyle: const BoringDrawerStyle(
+            width: 230,
+            backgroundColor: Colors.white,
+            drawerContentPadding: EdgeInsets.symmetric(horizontal: 25),
+            drawerRadius: BorderRadius.all(Radius.circular(10))),
+        appBarBuilder: (context, state, navGroups, notifier) {
+          print('build appbar');
+          return AppBar(
+            backgroundColor: Colors.white,
+            title: Text(
+              notifier!.value,
+              style: TextStyle(color: Colors.black),
+            ),
+          );
+        },
+      ),
+      pageGroups: [
+        BoringPageGroup(name: 'Vincenzo de simone', pages: [
+          BoringPageWidget(
+            navigationEntry:
+                BoringNavigationEntry("/a", icon: const Icon(Icons.abc)),
+            builder: (p0, p1) {
+              print("BUILDING A");
+              int index = 0;
+              return ElevatedButton(
+                onPressed: () {
+                  testNotifier.value = '${++index}';
+                },
+                child: Text('signore'),
+              );
+            },
           ),
-          children: [
-            BoringPage(
-              icon: Text("TEST"),
-              drawerLabel: "Main",
-              path: "main",
-              builder: (context, state) {
-                return HomePage();
-              },
-              showChildrenInDrawer: true,
-              subPages: [
-                BoringPage(
-                  drawerLabel: "Settings",
-                  path: "settings",
-                  builder: (context, state) {
-                    return HomePage();
-                  },
-                ),
-                BoringPage(
-                  path: "hidden",
-                  drawerLabel: "Aaaa",
-                  builder: (context, state) {
-                    return Scaffold(
-                      body: Column(
-                        children: [
-                          Text('This is the hidden page'),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ]
-            ),
-            BoringPage(
-              drawerLabel: "Settings",
-              path: "settings",
-              builder: (context, state) {
-                return HomePage();
-              },
-            ),
-          ],
-        )
+          BoringPageWidget(
+            navigationEntry: BoringNavigationEntry("/b",
+                label: "B", icon: const Icon(Icons.add_chart_sharp)),
+            builder: (p0, p1) {
+              return const Center(
+                child: Text("B"),
+              );
+            },
+          ),
+          BoringPageWidget(
+            navigationEntry: BoringNavigationEntry("/",
+                label: "ROOT", icon: const Icon(Icons.add_chart_sharp)),
+            builder: (p0, p1) {
+              return const Center(
+                child: Text("ROOT"),
+              );
+            },
+          ),
+          BoringPageWidget(
+            hideFromNavigation: true,
+            navigationEntry: BoringNavigationEntry("/c", label: "C"),
+            builder: (p0, p1) {
+              return const Center(
+                child: Text("C"),
+              );
+            },
+          ),
+        ])
       ],
-      rootNavigator: GlobalKey<NavigatorState>(),
     );
   }
 }
