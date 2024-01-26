@@ -35,22 +35,25 @@ Widget content<T>(
       if (constraints.maxWidth < persistentSide) {
         return childContent;
       }
-      return Row(
-        children: [
-          if (navigationPosition == BoringNavigationPosition.left) ...[
-            navigationWidget,
-            SizedBox(
-              width: theme.widthSpace,
-            ),
+      return Padding(
+        padding: EdgeInsets.all(theme.appPadding),
+        child: Row(
+          children: [
+            if (navigationPosition == BoringNavigationPosition.left) ...[
+              navigationWidget,
+              SizedBox(
+                width: theme.widthSpace,
+              ),
+            ],
+            Expanded(child: childContent),
+            if (navigationPosition == BoringNavigationPosition.right) ...[
+              SizedBox(
+                width: theme.widthSpace,
+              ),
+              navigationWidget
+            ],
           ],
-          Expanded(child: childContent),
-          if (navigationPosition == BoringNavigationPosition.right) ...[
-            SizedBox(
-              width: theme.widthSpace,
-            ),
-            navigationWidget
-          ],
-        ],
+        ),
       );
   }
 }
