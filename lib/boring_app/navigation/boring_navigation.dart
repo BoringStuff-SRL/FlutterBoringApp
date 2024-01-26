@@ -95,7 +95,7 @@ abstract class BoringNavigation<T> {
       // final appBar =
       //     appBarBuilder?.call(context, state, navGroups, appBarNotifier);
       return Scaffold(
-        drawer: (!drawerVisible && navigationPosition.isRight) ? drawer : null,
+        drawer: (!drawerVisible && !navigationPosition.isRight) ? drawer : null,
         endDrawer:
             (!drawerVisible && navigationPosition.isRight) ? drawer : null,
         //appBar: _topAppBar(context, constraints, appBar),

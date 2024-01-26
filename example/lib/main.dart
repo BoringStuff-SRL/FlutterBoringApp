@@ -36,12 +36,13 @@ class MyApp extends StatelessWidget {
       )),
       boringNavigation: BoringNavigationDrawer<String>(
         appBarNotifier: testNotifier,
+        rightPosition: false,
         drawerStyle: const BoringDrawerStyle(
             width: 230,
             backgroundColor: Colors.white,
             drawerContentPadding: EdgeInsets.symmetric(horizontal: 25),
             drawerRadius: BorderRadius.all(Radius.circular(10))),
-        appBarBuilder: (context, state, navGroups, notifier) {
+        appBarBuilder: (context, state, navGroups, notifier, drawerVisible) {
           print('build appbar');
           return AppBar(
             backgroundColor: Colors.white,
