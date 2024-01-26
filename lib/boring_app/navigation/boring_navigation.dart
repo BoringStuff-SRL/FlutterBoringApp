@@ -26,7 +26,8 @@ abstract class BoringNavigation<T> {
       BuildContext context,
       GoRouterState state,
       List<BoringNavigationGroupWithSelection> navGroups,
-      ValueNotifier<T>? appBarNotifier)? appBarBuilder;
+      ValueNotifier<T>? appBarNotifier,
+      bool isDrawerVisible)? appBarBuilder;
 
   BoringNavigation({this.appBarNotifier, this.appBarBuilder});
 
@@ -109,8 +110,8 @@ abstract class BoringNavigation<T> {
                 ? ValueListenableBuilder(
                     valueListenable: appBarNotifier!,
                     builder: (context, value, child) {
-                      return appBarBuilder!.call(
-                              context, state, navGroups, appBarNotifier) ??
+                      return appBarBuilder!.call(context, state, navGroups,
+                              appBarNotifier, drawerVisible) ??
                           Container();
                     },
                   )
