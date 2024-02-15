@@ -1,13 +1,50 @@
-import 'package:boring_app/boring_app/boring_app.dart';
-import 'package:boring_app/boring_app/navigation/drawer/boring_navigation_drawer.dart';
-import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_style.dart';
-import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
-import 'package:boring_app/boring_app/pages/boring_page.dart';
-import 'package:boring_app/boring_app/pages/boring_page_group.dart';
+import 'package:boring_app/boring_app.dart';
 import 'package:flutter/material.dart';
 
 void main(List<String> args) {
   runApp(MyApp());
+}
+
+class BoringTopNavigation<T> extends BoringNavigation<T> {
+  BoringTopNavigation({super.appBarNotifier, super.appBarBuilder});
+
+  @override
+  Widget builder(
+      BuildContext context,
+      List<BoringNavigationGroupWithSelection> navigationGroups,
+      BoxConstraints constraints) {
+    final children = <Widget>[];
+
+    for (final group in navigationGroups) {
+      final childrenWidgets = group.entries
+          .map((e) => e.toDrawerTile(context, const BoringDrawerTileStyle()))
+          .toList();
+
+      children.addAll(childrenWidgets);
+    }
+
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(200),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+        margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300, width: 1.5),
+        ),
+        child: Row(
+          children: [Text("ASD")],
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool get embraceAppBar => true;
+
+  @override
+  BoringNavigationPosition get navigationPosition =>
+      BoringNavigationPosition.top;
 }
 
 class MyApp extends StatelessWidget {
@@ -17,7 +54,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BoringApp.withGroups(
+    return BoringApp(
       initialLocation: "/a",
       themeConfig: BoringThemeConfig(
           theme: ThemeData(
@@ -34,69 +71,23 @@ class MyApp extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15)))),
       )),
-      boringNavigation: BoringNavigationDrawer<String>(
-        appBarNotifier: testNotifier,
-        rightPosition: false,
-        drawerStyle: const BoringDrawerStyle(
-            width: 230,
-            backgroundColor: Colors.white,
-            drawerContentPadding: EdgeInsets.symmetric(horizontal: 25),
-            drawerRadius: BorderRadius.all(Radius.circular(10))),
-        appBarBuilder: (context, state, navGroups, notifier, drawerVisible) {
-          print('build appbar');
-          return AppBar(
-            backgroundColor: Colors.white,
-            title: Text(
-              notifier!.value,
-              style: TextStyle(color: Colors.black),
-            ),
-          );
-        },
-      ),
-      pageGroups: [
-        BoringPageGroup(name: 'Vincenzo de simone', pages: [
-          BoringPageWidget(
-            navigationEntry:
-                BoringNavigationEntry("/a", icon: const Icon(Icons.abc)),
-            builder: (p0, p1) {
-              print("BUILDING A");
-              int index = 0;
-              return ElevatedButton(
-                onPressed: () {
-                  testNotifier.value = '${++index}';
-                },
-                child: Text('signore'),
-              );
-            },
-          ),
-          BoringPageWidget(
-            navigationEntry: BoringNavigationEntry("/b",
-                label: "B", icon: const Icon(Icons.add_chart_sharp)),
-            builder: (p0, p1) {
-              return const Center(
-                child: Text("B"),
-              );
-            },
-          ),
-          BoringPageWidget(
-            navigationEntry: BoringNavigationEntry("/",
-                label: "ROOT", icon: const Icon(Icons.add_chart_sharp)),
-            builder: (p0, p1) {
-              return const Center(
-                child: Text("ROOT"),
-              );
-            },
-          ),
-          BoringPageWidget(
-            hideFromNavigation: true,
-            navigationEntry: BoringNavigationEntry("/c", label: "C"),
-            builder: (p0, p1) {
-              return const Center(
-                child: Text("C"),
-              );
-            },
-          ),
-        ])
+      boringNavigation: BoringTopNavigation(),
+      pages: [
+        BoringPageWidget(
+          navigationEntry:
+              BoringNavigationEntry("/a", icon: const Icon(Icons.abc)),
+          builder: (p0, p1) {
+            print("BUILDING A");
+            int index = 0;
+            return ElevatedButton(
+              onPressed: () {
+                testNotifier.value = '${++index}';
+                p0.go('/a/12');
+              },
+              child: Text('signore'),
+            );
+          },
+        ),
       ],
     );
   }
