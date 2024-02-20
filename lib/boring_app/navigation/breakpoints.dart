@@ -30,7 +30,10 @@ Widget content<T>(
   switch (navigationPosition) {
     case BoringNavigationPosition.bottom:
     case BoringNavigationPosition.top:
-      return child;
+      return Padding(
+        padding: EdgeInsets.all(theme.appPadding),
+        child: child,
+      );
     default:
       if (constraints.maxWidth < persistentSide) {
         return childContent;

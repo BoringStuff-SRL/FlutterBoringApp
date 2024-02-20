@@ -136,13 +136,17 @@ class BoringAppInstance {
         .toList();
   }
 
-  ShellRoute shellRoute(GlobalKey<NavigatorState> rootNavigatorKey,
+  ShellRoute? shellRoute(GlobalKey<NavigatorState> rootNavigatorKey,
       BoringThemeConfig rootThemeConfig) {
     final appThemeConfig = themeConfig ?? rootThemeConfig;
+    final routes = _routes(rootNavigatorKey, displayedWithNavigation: true);
+    if (routes.isEmpty) {
+      return null;
+    }
     return ShellRoute(
       // navigatorKey: GlobalKey<NavigatorState>(),
       // parentNavigatorKey: rootNavigatorKey,
-      routes: _routes(rootNavigatorKey, displayedWithNavigation: true),
+      routes: routes,
       builder: (context, state, child) => Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: boringNavigation.buildWithContent(
@@ -240,7 +244,9 @@ class BoringApp extends StatelessWidget {
 
   List<ShellRoute> get _shellRoutes => applications
       .map((app) => app.shellRoute(_rootNavigatorKey, themeConfig))
-      .toList();
+      .where((element) => element != null)
+      .toList()
+      .cast<ShellRoute>();
   List<RouteBase> get _routesWithoutNavigation => applications
       .map((app) => app.routesWithoutNavigation(_rootNavigatorKey))
       .expand((element) => element)

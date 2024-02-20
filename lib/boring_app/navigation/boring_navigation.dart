@@ -50,6 +50,15 @@ abstract class BoringNavigation<T> {
           ? builder(context, navigationGroups, constraints)
           : null;
 
+  PreferredSizeWidget? _topNav(
+          BuildContext context,
+          List<BoringNavigationGroupWithSelection> navigationGroups,
+          BoxConstraints constraints) =>
+      navigationPosition == BoringNavigationPosition.top
+          ? builder(context, navigationGroups, constraints)
+              as PreferredSizeWidget
+          : null;
+
   Widget _child(BuildContext context, BoxConstraints constraints, Widget child,
       Widget? navigationWidget, Widget? appBar, BoringThemeConfig theme) {
     return content(context, child, navigationPosition, constraints,
@@ -92,13 +101,14 @@ abstract class BoringNavigation<T> {
       final bool drawerVisible = isDrawerVisible(constraints);
       final navGroups = navigationGroups.withSelection(state);
       final drawer = _drawer(context, navGroups, constraints);
+
       // final appBar =
       //     appBarBuilder?.call(context, state, navGroups, appBarNotifier);
       return Scaffold(
         drawer: (!drawerVisible && !navigationPosition.isRight) ? drawer : null,
         endDrawer:
             (!drawerVisible && navigationPosition.isRight) ? drawer : null,
-        //appBar: _topAppBar(context, constraints, appBar),
+        appBar: _topNav(context, navGroups, constraints),
         bottomNavigationBar: _bottomNav(context, navGroups, constraints),
         body: _child(
             context,
