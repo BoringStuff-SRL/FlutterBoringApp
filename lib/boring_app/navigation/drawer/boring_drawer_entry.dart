@@ -40,7 +40,9 @@ class BoringDrawerEntry extends StatelessWidget {
         child: BoringHoverWidget(
           builder: (context, isHover) => BoringBouncingButton(
             onPressed: () {
-              GoRouter.of(context).go(path);
+              if (!isSelected) {
+                GoRouter.of(context).go(path);
+              }
               Scaffold.of(context).closeDrawer();
             },
             child: AnimatedContainer(
