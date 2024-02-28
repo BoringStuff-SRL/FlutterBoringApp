@@ -71,7 +71,20 @@ class MyApp extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15)))),
       )),
-      boringNavigation: BoringTopNavigation(),
+      boringNavigation: BoringNavigationDrawer(
+        appBarNotifier: testNotifier,
+        appBarBuilder:
+            (context, state, navGroups, appBarNotifier, isDrawerVisible) {
+          print('rebuild');
+          return AppBar(
+            title: Text(appBarNotifier!.value),
+          );
+        },
+      ),
+      redirect: (context, state) {
+        print('redirect called');
+        testNotifier.value = '';
+      },
       pages: [
         BoringPageWidget(
           navigationEntry:
@@ -79,6 +92,9 @@ class MyApp extends StatelessWidget {
           builder: (p0, p1) {
             print("BUILDING A");
             int index = 0;
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              testNotifier.value = 'SIUUU';
+            });
             return ElevatedButton(
               onPressed: () {
                 testNotifier.value = '${++index}';
