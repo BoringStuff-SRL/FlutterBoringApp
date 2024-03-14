@@ -55,6 +55,7 @@ abstract class BoringPage {
     //PATH = {rootPrefix}/{_navigationEntry.path}
     //FULL_PATH = {rootPrefix}/{prefix}/{_navigationEntry.path}
     return GoRoute(
+
         parentNavigatorKey: preventNavigationDisplay ? rootNavigatorKey : null,
         path: path,
         pageBuilder: (context, state) {

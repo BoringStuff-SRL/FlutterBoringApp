@@ -1,9 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:boring_app/boring_app.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main(List<String> args) {
   runApp(MyApp());
 }
+
+HttpClient client = HttpClient();
 
 class BoringTopNavigation<T> extends BoringNavigation<T> {
   BoringTopNavigation({super.appBarNotifier, super.appBarBuilder});
@@ -47,15 +53,16 @@ class BoringTopNavigation<T> extends BoringNavigation<T> {
       BoringNavigationPosition.top;
 }
 
+final ValueNotifier<String> testNotifier = ValueNotifier('pippo');
+
 class MyApp extends StatelessWidget {
   MyApp({super.key});
-
-  final ValueNotifier<String> testNotifier = ValueNotifier('pippo');
 
   @override
   Widget build(BuildContext context) {
     return BoringApp(
-      initialLocation: "/a",
+      initialLocation: "/1",
+      functionsOnRouteObserved: [client.close],
       themeConfig: BoringThemeConfig(
           theme: ThemeData(
         fontFamily: 'Inter',
@@ -75,45 +82,130 @@ class MyApp extends StatelessWidget {
         appBarNotifier: testNotifier,
         appBarBuilder:
             (context, state, navGroups, appBarNotifier, isDrawerVisible) {
-          print('rebuild');
           return AppBar(
             title: Text(appBarNotifier!.value),
           );
         },
       ),
       redirect: (context, state) {
-        print('redirect called');
-        testNotifier.value = '';
+        return null;
       },
       pages: [
-        BoringPageWidget(
-          navigationEntry:
-              BoringNavigationEntry("/a", icon: const Icon(Icons.abc)),
-          builder: (p0, p1) {
-            print("BUILDING A");
-            int index = 0;
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              testNotifier.value = 'SIUUU';
-            });
-            return ElevatedButton(
-              onPressed: () {
-                testNotifier.value = '${++index}';
-                p0.go('/a/12');
-              },
-              child: Text('signore'),
-            );
-          },
-        ),
+        TestFirstPage(),
+        TestSecondPage(),
       ],
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class TestFirstPage extends BoringPage {
+  static const String path = '/1';
+  static const String label = 'Test 1';
 
   @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
+  bool get hideFromNavigation => false;
+
+  @override
+  // TODO: implement subPages
+  List<BoringPage> get subPages => [TestThirdPage()];
+
+  @override
+  Widget builder(BuildContext context, GoRouterState state) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      testNotifier.value = 'TEST 1';
+    });
+    return SelectionArea(
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              FilledButton(
+                  onPressed: () async {
+                    //context.go('/1/3');
+
+                    var url = Uri.parse(
+                      'https://httpbin.org/delay/5',
+                    );
+
+                    client = HttpClient();
+
+                     client.get('httpbin.org', 1010, 'delay/5');
+
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return Container(
+                        width: 150,
+                        height: 150,
+                        color: Colors.amber,
+                        child: FilledButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('back'),
+                        ),
+                      );
+                    }));
+                  },
+                  child: const Text('GO TEST 3'))
+            ],
+          ),
+        ),
+      ),
+    );
   }
+
+  @override
+  BoringNavigationEntry get navigationEntry =>
+      BoringNavigationEntry(path, label: label);
+}
+
+class TestSecondPage extends BoringPage {
+  static const String path = '/2';
+  static const String label = 'Test 2';
+
+  @override
+  bool get hideFromNavigation => false;
+
+  @override
+  Widget builder(BuildContext context, GoRouterState state) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      testNotifier.value = 'TEST 2';
+    });
+    return const SelectionArea(
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Placeholder(),
+      ),
+    );
+  }
+
+  @override
+  BoringNavigationEntry get navigationEntry =>
+      BoringNavigationEntry(path, label: label);
+}
+
+class TestThirdPage extends BoringPage {
+  static const String path = ':id';
+  static const String label = 'Test 3';
+
+  @override
+  bool get hideFromNavigation => false;
+
+  @override
+  Widget builder(BuildContext context, GoRouterState state) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      testNotifier.value = 'TEST 1 > TEST 3';
+    });
+    return const SelectionArea(
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Placeholder(),
+      ),
+    );
+  }
+
+  @override
+  BoringNavigationEntry get navigationEntry =>
+      BoringNavigationEntry(path, label: label);
 }

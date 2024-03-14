@@ -137,7 +137,8 @@ class BoringAppInstance {
   }
 
   ShellRoute? shellRoute(GlobalKey<NavigatorState> rootNavigatorKey,
-      BoringThemeConfig rootThemeConfig) {
+      BoringThemeConfig rootThemeConfig,
+      {List<void Function()> functionsOnRouteObserved = const []}) {
     final appThemeConfig = themeConfig ?? rootThemeConfig;
     final routes = _routes(rootNavigatorKey, displayedWithNavigation: true);
     if (routes.isEmpty) {
@@ -147,6 +148,9 @@ class BoringAppInstance {
       // navigatorKey: GlobalKey<NavigatorState>(),
       // parentNavigatorKey: rootNavigatorKey,
       routes: routes,
+      observers: [
+        GoRouterObserver(functionsOnRouteObserved: functionsOnRouteObserved),
+      ],
       builder: (context, state, child) => Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: boringNavigation.buildWithContent(
@@ -180,6 +184,7 @@ class BoringApp extends StatelessWidget {
   final Locale? locale;
   final bool debug;
   final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
+  final List<void Function()> functionsOnRouteObserved;
 
   BoringApp(
       {super.key,
@@ -192,6 +197,7 @@ class BoringApp extends StatelessWidget {
       this.localizationsDelegates,
       this.supportedLocales = const <Locale>[Locale('en', 'US')],
       this.locale,
+      this.functionsOnRouteObserved = const [],
       this.refreshListenable,
       this.debug = kDebugMode})
       : applications = [
@@ -211,6 +217,7 @@ class BoringApp extends StatelessWidget {
       this.rootNavigator,
       this.localizationsDelegates,
       this.supportedLocales = const <Locale>[Locale('en', 'US')],
+      this.functionsOnRouteObserved = const [],
       this.locale,
       this.refreshListenable,
       this.debug = kDebugMode})
@@ -231,6 +238,7 @@ class BoringApp extends StatelessWidget {
       this.rootNavigator,
       this.localizationsDelegates,
       this.supportedLocales = const <Locale>[Locale('en', 'US')],
+      this.functionsOnRouteObserved = const [],
       this.locale,
       this.refreshListenable,
       this.debug = kDebugMode,
@@ -243,7 +251,8 @@ class BoringApp extends StatelessWidget {
   get _rootNavigatorKey => rootNavigator ?? _defaultRootNavigatorKey;
 
   List<ShellRoute> get _shellRoutes => applications
-      .map((app) => app.shellRoute(_rootNavigatorKey, themeConfig))
+      .map((app) => app.shellRoute(_rootNavigatorKey, themeConfig,
+          functionsOnRouteObserved: functionsOnRouteObserved))
       .where((element) => element != null)
       .toList()
       .cast<ShellRoute>();
@@ -255,6 +264,9 @@ class BoringApp extends StatelessWidget {
   void _computeRouter() {
     BoringStaticRouter.goRouter ??= GoRouter(
         debugLogDiagnostics: debug,
+        observers: [
+          GoRouterObserver(functionsOnRouteObserved: functionsOnRouteObserved),
+        ],
         initialLocation: initialLocation,
         redirect: redirect,
         refreshListenable: refreshListenable,
@@ -268,6 +280,7 @@ class BoringApp extends StatelessWidget {
     return MaterialApp.router(
       //routerConfig: _goRouter,
       localizationsDelegates: localizationsDelegates,
+
       routeInformationParser:
           BoringStaticRouter.goRouter!.routeInformationParser,
       routeInformationProvider:
@@ -302,4 +315,38 @@ class BoringThemeConfig {
       this.themeMode = ThemeMode.system,
       this.appPadding = 20,
       this.widthSpace = 20});
+}
+
+class GoRouterObserver extends NavigatorObserver {
+  GoRouterObserver({this.functionsOnRouteObserved = const []});
+
+  final List<void Function()> functionsOnRouteObserved;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    print('push');
+    _callFunctions();
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    print('pop');
+    _callFunctions();
+  }
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    _callFunctions();
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    _callFunctions();
+  }
+
+  void _callFunctions() {
+    for (final e in functionsOnRouteObserved) {
+      e.call();
+    }
+  }
 }

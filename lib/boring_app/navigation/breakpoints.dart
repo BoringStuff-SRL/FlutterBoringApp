@@ -1,7 +1,9 @@
 import 'package:boring_app/boring_app/navigation/boring_navigation.dart';
 import 'package:flutter/material.dart';
 
+import '../../boring_app.dart';
 import '../boring_app.dart';
+import 'navigation_entry.dart';
 
 const persistentSide = 750;
 
@@ -11,21 +13,27 @@ Widget content<T>(
     BoringNavigationPosition navigationPosition,
     BoxConstraints constraints,
     Widget? navigationWidget,
-    Widget? appBar,
+    ValueNotifier<T>? appBarNotifier,
+AppBar? Function(BuildContext, GoRouterState, List<BoringNavigationGroupWithSelection>, ValueNotifier<T>?, bool)? appBarBuilder,
+    GoRouterState state,
+    List<BoringNavigationGroupWithSelection> navGroup,
+    bool drawerVisible,
+
     BoringThemeConfig theme) {
   if (navigationWidget == null) {
     return child;
   }
 
-  final childContent = appBar != null
-      ? Column(
-          children: [
-            appBar,
-            const SizedBox(height: 20),
-            Expanded(child: child),
-          ],
-        )
-      : child;
+
+  print('REBUILD');
+  final childContent = Column(
+    children: [
+      Container(width: double.infinity,
+      height: 50, color: Colors.red,),
+
+      Expanded(child: child),
+    ],
+  );
 
   switch (navigationPosition) {
     case BoringNavigationPosition.bottom:

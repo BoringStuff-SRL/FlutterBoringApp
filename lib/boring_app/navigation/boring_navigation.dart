@@ -59,10 +59,35 @@ abstract class BoringNavigation<T> {
               as PreferredSizeWidget
           : null;
 
-  Widget _child(BuildContext context, BoxConstraints constraints, Widget child,
-      Widget? navigationWidget, Widget? appBar, BoringThemeConfig theme) {
-    return content(context, child, navigationPosition, constraints,
-        navigationWidget, appBar, theme);
+  Widget _child(
+      BuildContext context,
+      BoxConstraints constraints,
+      Widget child,
+      Widget? navigationWidget,
+      ValueNotifier<T>? appBarNotifier,
+      AppBar? Function(
+              BuildContext,
+              GoRouterState,
+              List<BoringNavigationGroupWithSelection>,
+              ValueNotifier<T>?,
+              bool)?
+          appBarBuilder,
+      GoRouterState state,
+      List<BoringNavigationGroupWithSelection> navGroup,
+      bool drawerVisible,
+      BoringThemeConfig theme) {
+    return content(
+        context,
+        child,
+        navigationPosition,
+        constraints,
+        navigationWidget,
+        appBarNotifier,
+        appBarBuilder,
+        state,
+        navGroup,
+        drawerVisible,
+        theme);
   }
 
   bool _appBarShouldGoWithContent(BoxConstraints constraints) {
@@ -116,16 +141,11 @@ abstract class BoringNavigation<T> {
             child,
             drawer,
             //_contentAppBar(context, constraints, appBar),
-            appBarBuilder != null
-                ? ValueListenableBuilder(
-                    valueListenable: appBarNotifier!,
-                    builder: (context, value, child) {
-                      return appBarBuilder!.call(context, state, navGroups,
-                              appBarNotifier, drawerVisible) ??
-                          Container();
-                    },
-                  )
-                : null,
+            appBarNotifier,
+            appBarBuilder,
+            state,
+            navGroups,
+            drawerVisible,
             theme),
       );
     });
