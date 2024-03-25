@@ -40,10 +40,10 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
     final children = <Widget>[];
 
     for (var group in navigationGroups) {
-      final childrenWidgets = group.entries
-          .map((e) => e.toDrawerTile(
-              context, tileStyle ?? const BoringDrawerTileStyle()))
-          .toList();
+      final childrenWidgets = group.entries.map((e) {
+        return e.toDrawerTile(
+            context, tileStyle ?? const BoringDrawerTileStyle());
+      }).toList();
 
       if (group.hasName) {
         children.add(
