@@ -102,31 +102,46 @@ abstract class BoringNavigation<T> {
       final navGroups = navigationGroups.withSelection(state);
       final drawer = _drawer(context, navGroups, constraints);
 
+      BoringNavigationEntryWithSelection? entry;
+
+      try {
+        // cerco la sezione per impostare il titolo della tab
+
+        entry = navGroups.expand((element) => element.entries).firstWhere(
+              (element) => state.fullPath!.startsWith(element.path),
+            );
+      } catch (e) {}
+
       // final appBar =
       //     appBarBuilder?.call(context, state, navGroups, appBarNotifier);
-      return Scaffold(
-        drawer: (!drawerVisible && !navigationPosition.isRight) ? drawer : null,
-        endDrawer:
-            (!drawerVisible && navigationPosition.isRight) ? drawer : null,
-        appBar: _topNav(context, navGroups, constraints),
-        bottomNavigationBar: _bottomNav(context, navGroups, constraints),
-        body: _child(
-            context,
-            constraints,
-            child,
-            drawer,
-            //_contentAppBar(context, constraints, appBar),
-            appBarBuilder != null
-                ? ValueListenableBuilder(
-                    valueListenable: appBarNotifier!,
-                    builder: (context, value, child) {
-                      return appBarBuilder!.call(context, state, navGroups,
-                              appBarNotifier, drawerVisible) ??
-                          Container();
-                    },
-                  )
-                : null,
-            theme),
+      return Title(
+        color: Colors.white,
+        title: entry?.label ?? '',
+        child: Scaffold(
+          drawer:
+              (!drawerVisible && !navigationPosition.isRight) ? drawer : null,
+          endDrawer:
+              (!drawerVisible && navigationPosition.isRight) ? drawer : null,
+          appBar: _topNav(context, navGroups, constraints),
+          bottomNavigationBar: _bottomNav(context, navGroups, constraints),
+          body: _child(
+              context,
+              constraints,
+              child,
+              drawer,
+              //_contentAppBar(context, constraints, appBar),
+              appBarBuilder != null
+                  ? ValueListenableBuilder(
+                      valueListenable: appBarNotifier!,
+                      builder: (context, value, child) {
+                        return appBarBuilder!.call(context, state, navGroups,
+                                appBarNotifier, drawerVisible) ??
+                            Container();
+                      },
+                    )
+                  : null,
+              theme),
+        ),
       );
     });
   }

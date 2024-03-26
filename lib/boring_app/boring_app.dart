@@ -147,11 +147,13 @@ class BoringAppInstance {
       // navigatorKey: GlobalKey<NavigatorState>(),
       // parentNavigatorKey: rootNavigatorKey,
       routes: routes,
-      builder: (context, state, child) => Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: boringNavigation.buildWithContent(
-            state, child, _navigationGroups, context, appThemeConfig),
-      ),
+      builder: (context, state, child) {
+        return Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: boringNavigation.buildWithContent(
+              state, child, _navigationGroups, context, appThemeConfig),
+        );
+      },
     );
   }
 

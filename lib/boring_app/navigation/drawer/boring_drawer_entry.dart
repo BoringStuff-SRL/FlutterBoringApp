@@ -40,7 +40,13 @@ class BoringDrawerEntry extends StatelessWidget {
         child: BoringHoverWidget(
           builder: (context, isHover) => BoringBouncingButton(
             onPressed: () {
-              if (!isSelected) {
+              final currentPath = GoRouter.of(context)
+                  .routeInformationProvider
+                  .value
+                  .uri
+                  .toString();
+
+              if (currentPath != path) {
                 GoRouter.of(context).go(path);
               }
               Scaffold.of(context).closeDrawer();

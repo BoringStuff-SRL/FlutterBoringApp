@@ -16,9 +16,9 @@ class BoringTopNavigation<T> extends BoringNavigation<T> {
     final children = <Widget>[];
 
     for (final group in navigationGroups) {
-      final childrenWidgets = group.entries
-          .map((e) => e.toDrawerTile(context, const BoringDrawerTileStyle()))
-          .toList();
+      final childrenWidgets = group.entries.map((e) {
+        return e.toDrawerTile(context, const BoringDrawerTileStyle());
+      }).toList();
 
       children.addAll(childrenWidgets);
     }
@@ -75,20 +75,53 @@ class MyApp extends StatelessWidget {
         appBarNotifier: testNotifier,
         appBarBuilder:
             (context, state, navGroups, appBarNotifier, isDrawerVisible) {
-          print('rebuild');
           return AppBar(
             title: Text(appBarNotifier!.value),
           );
         },
       ),
       redirect: (context, state) {
-        print('redirect called');
         testNotifier.value = '';
       },
       pages: [
         BoringPageWidget(
-          navigationEntry:
-              BoringNavigationEntry("/a", icon: const Icon(Icons.abc)),
+          navigationEntry: BoringNavigationEntry("/b",
+              icon: const Icon(Icons.abc), label: 'ewqeqw'),
+          subPages: [
+            BoringPageWidget(
+              hideFromNavigation: true,
+              navigationEntry: BoringNavigationEntry('b', label: 'SIUU'),
+              builder: (context, state) {
+                print("BUILDING B SUBPAGE");
+                return Text('asdasd');
+              },
+            )
+          ],
+          builder: (p0, p1) {
+            print("BUILDING B");
+            int index = 0;
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              testNotifier.value = 'SIUUU';
+            });
+            return ElevatedButton(
+              onPressed: () {
+                testNotifier.value = '${++index}';
+                p0.push('/b/b');
+              },
+              child: Text('signore'),
+            );
+          },
+        ),
+        BoringPageWidget(
+          navigationEntry: BoringNavigationEntry("/a",
+              icon: const Icon(Icons.abc), label: 'Prova123'),
+          subPages: [
+            BoringPageWidget(
+              hideFromNavigation: true,
+              navigationEntry: BoringNavigationEntry('b', label: 'SIUU'),
+              builder: (context, state) => Text('asdasd'),
+            )
+          ],
           builder: (p0, p1) {
             print("BUILDING A");
             int index = 0;
@@ -98,7 +131,7 @@ class MyApp extends StatelessWidget {
             return ElevatedButton(
               onPressed: () {
                 testNotifier.value = '${++index}';
-                p0.go('/a/12');
+                p0.go('/a/b');
               },
               child: Text('signore'),
             );
