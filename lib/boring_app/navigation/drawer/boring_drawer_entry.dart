@@ -1,12 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:math';
 
-import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_tile_style.dart';
+import 'package:boring_app/boring_app.dart';
 import 'package:boring_app/boring_app/utils/boring_expandable.dart';
 import 'package:boring_app/boring_app/utils/boring_hover_widget.dart';
 import 'package:boring_app/boring_app/utils/bouncing_button.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class BoringDrawerEntry extends StatelessWidget {
   final String path;
@@ -15,7 +14,7 @@ class BoringDrawerEntry extends StatelessWidget {
   final bool isSelected;
   final List<BoringDrawerEntry> subEntries;
   final BoringDrawerTileStyle tileStyle;
-  final bool shrinked;
+  final Animation<double> hExpansionAnimation;
 
   late final ValueNotifier<bool> isExpanded;
 
@@ -25,14 +24,11 @@ class BoringDrawerEntry extends StatelessWidget {
     this.label,
     this.icon,
     required this.isSelected,
+    Animation<double>? hExpansionAnimation,
     this.tileStyle = const BoringDrawerTileStyle(),
     required this.subEntries,
-    this.shrinked = false,
-  }) {
-    if (shrinked) {
-      assert(icon != null,
-          "If you want the Drawer to be shrinked, please provide an icon for this tile");
-    }
+  }) : hExpansionAnimation = hExpansionAnimation ??
+            Animation<double>.fromValueListenable(ValueNotifier(1)) {
     isExpanded = ValueNotifier(false);
   }
 
@@ -72,20 +68,19 @@ class BoringDrawerEntry extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (icon != null)
-                    Padding(
-                      padding: shrinked
-                          ? EdgeInsets.zero
-                          : const EdgeInsets.only(right: 8.0),
-                      child: ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                              (isHover || isSelected)
-                                  ? tileStyle.selectedTextColor!
-                                  : tileStyle.unSelectedTextColor!,
-                              BlendMode.srcIn),
-                          child: icon!),
-                    ),
-                  if (!shrinked)
-                    Expanded(
+                    ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                            (isHover || isSelected)
+                                ? tileStyle.selectedTextColor!
+                                : tileStyle.unSelectedTextColor!,
+                            BlendMode.srcIn),
+                        child: icon!),
+                  SizeTransition(
+                    axis: Axis.horizontal,
+                    sizeFactor: hExpansionAnimation,
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 8),
+                      width: 150,
                       child: Text(
                         label ?? "",
                         style: TextStyle(
@@ -103,7 +98,8 @@ class BoringDrawerEntry extends StatelessWidget {
                                 : FontWeight.w500),
                       ),
                     ),
-                  if (_hasSubEntries && !shrinked)
+                  ),
+                  if (_hasSubEntries)
                     AnimatedBuilder(
                         animation: animation,
                         child: InkWell(
