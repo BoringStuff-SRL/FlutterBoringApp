@@ -5,7 +5,7 @@ import '../drawer/style/boring_drawer_style.dart';
 
 part 'boring_drawer_expansion_animation.dart';
 
-class BoringAnimatedNavigationDrawer extends BoringNavigationDrawer {
+class BoringAnimatedNavigationDrawer<T> extends BoringNavigationDrawer<T> {
   final BoringAnimatedNavigationDrawerStyle animatedDrawerStyle;
 
   final ValueNotifier<bool> _mouseHoverNotifier = ValueNotifier(false);
