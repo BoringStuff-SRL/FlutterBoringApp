@@ -8,7 +8,7 @@ class BoringAnimatedNavigationDrawerStyle {
   final List<double>? stops;
 
   const BoringAnimatedNavigationDrawerStyle({
-    this.shrinkPercentage = .35,
+    this.shrinkPercentage = .40,
     this.shrinkedBorderRadius,
     this.animationDuration = const Duration(milliseconds: 200),
     this.shadowColors,

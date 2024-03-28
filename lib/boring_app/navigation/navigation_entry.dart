@@ -88,13 +88,15 @@ class BoringNavigationEntryWithSelection {
   }
 
   BoringDrawerEntry toDrawerTile(
-          BuildContext context, BoringDrawerTileStyle tileStyle) =>
+          BuildContext context, BoringDrawerTileStyle tileStyle,
+          {bool shrinked = false}) =>
       BoringDrawerEntry(
         label: label,
         isSelected: selected,
         icon: icon,
         path: path,
         tileStyle: tileStyle,
+        shrinked: shrinked,
         subEntries: subEntries
             .where((element) => !element.hideInNav)
             .map((e) => e.toDrawerTile(context, tileStyle))

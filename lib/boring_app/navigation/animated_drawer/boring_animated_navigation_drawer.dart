@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:boring_app/boring_app.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +32,22 @@ class BoringAnimatedNavigationDrawer<T> extends BoringNavigationDrawer<T> {
     final originalDrawer =
         super.builder(context, navigationGroups, constraints);
 
+    final shrinkedDrawer = BoringNavigationDrawer<T>(
+      shrinked: true,
+      rightPosition: super.rightPosition,
+      overrideDrawerStyle: super.overrideDrawerStyle,
+      embraceAppBar: super.embraceAppBar,
+      appBarBuilder: super.appBarBuilder,
+      appBarNotifier: super.appBarNotifier,
+      drawerFooterBuilder: super.drawerFooterBuilder,
+      drawerHeaderBuilder: super.drawerHeaderBuilder,
+      drawerStyle: super.drawerStyle.copyWith(
+            width:
+                super.drawerStyle.width * animatedDrawerStyle.shrinkPercentage,
+          ),
+      tileStyle: super.tileStyle,
+    ).builder(context, navigationGroups, constraints);
+
     final BoringDrawerStyle overriddenDrawerStyle =
         overrideDrawerStyle?.call(drawerStyle, constraints) ?? drawerStyle;
 
@@ -47,8 +65,10 @@ class BoringAnimatedNavigationDrawer<T> extends BoringNavigationDrawer<T> {
           valueListenable: _mouseHoverNotifier,
           builder: (context, hover, child) => _BoringDrawerExpansionAnimation(
             style: animatedDrawerStyle,
+            drawerStyle: drawerStyle,
             isShrinked: !hover,
-            child: originalDrawer,
+            expandedDrawer: originalDrawer,
+            shrinkedDrawer: shrinkedDrawer,
           ),
         ),
       ),

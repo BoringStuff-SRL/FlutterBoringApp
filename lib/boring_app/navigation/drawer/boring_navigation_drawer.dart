@@ -14,6 +14,7 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
           BoringDrawerStyle drawerStyle, BoxConstraints constraints)?
       overrideDrawerStyle;
   final BoringDrawerTileStyle? tileStyle;
+  final bool shrinked;
   final Widget Function(BuildContext context)? drawerHeaderBuilder;
   final Widget Function(BuildContext context)? drawerFooterBuilder;
 
@@ -25,6 +26,7 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
       this.drawerStyle = const BoringDrawerStyle(),
       this.overrideDrawerStyle,
       this.rightPosition = false,
+      this.shrinked = false,
       super.appBarNotifier,
       super.appBarBuilder});
 
@@ -42,6 +44,7 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
                 return e.toDrawerTile(
                   context,
                   tileStyle ?? const BoringDrawerTileStyle(),
+                  shrinked: shrinked,
                 );
               }).toList())
           .expand((element) => element)
@@ -59,6 +62,7 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
         return e.toDrawerTile(
           context,
           tileStyle ?? const BoringDrawerTileStyle(),
+          shrinked: shrinked,
         );
       }).toList();
 

@@ -4,13 +4,17 @@ class _BoringDrawerExpansionAnimation extends StatefulWidget {
   const _BoringDrawerExpansionAnimation({
     super.key,
     required this.style,
+    required this.drawerStyle,
     required this.isShrinked,
-    required this.child,
+    required this.expandedDrawer,
+    required this.shrinkedDrawer,
   });
 
   final BoringAnimatedNavigationDrawerStyle style;
+  final BoringDrawerStyle drawerStyle;
   final bool isShrinked;
-  final Widget child;
+  final Widget expandedDrawer;
+  final Widget shrinkedDrawer;
 
   @override
   State<_BoringDrawerExpansionAnimation> createState() =>
@@ -34,7 +38,7 @@ class _BoringDrawerExpansionAnimationState
       [
         TweenSequenceItem<double>(
           tween: Tween(
-            begin: style.shrinkPercentage,
+            begin: 0.0,
             end: 1.0,
           ),
           weight: 10,
@@ -64,42 +68,33 @@ class _BoringDrawerExpansionAnimationState
     super.didUpdateWidget(oldWidget);
   }
 
+  double get smallWidgetOpacity => 1 - _expansionAnimation.value;
+  double get bigWidgetOpacity => _expansionAnimation.value;
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _expansionAnimation,
       builder: (context, child) => Align(
-        widthFactor: _expansionAnimation.value,
+        widthFactor: max(style.shrinkPercentage, _expansionAnimation.value),
         alignment: Alignment.centerLeft,
-        child: Stack(
-          children: [
-            widget.child,
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              top: 0,
-              child: IgnorePointer(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      stops: style.stops ?? [0, .9],
-                      colors:
-                          style.shadowColors?.call(_expansionAnimation.value) ??
-                              [
-                                Colors.transparent,
-                                Colors.black.withOpacity(
-                                  1 - _expansionAnimation.value,
-                                ),
-                              ],
-                    ),
-                  ),
+        child: Container(
+          color: widget.drawerStyle.backgroundColor,
+          child: Stack(
+            children: [
+              Opacity(
+                opacity: bigWidgetOpacity,
+                child: widget.expandedDrawer,
+              ),
+              IgnorePointer(
+                ignoring: true,
+                child: Opacity(
+                  opacity: smallWidgetOpacity,
+                  child: widget.shrinkedDrawer,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

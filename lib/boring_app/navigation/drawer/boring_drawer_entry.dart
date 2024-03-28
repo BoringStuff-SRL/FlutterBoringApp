@@ -15,6 +15,7 @@ class BoringDrawerEntry extends StatelessWidget {
   final bool isSelected;
   final List<BoringDrawerEntry> subEntries;
   final BoringDrawerTileStyle tileStyle;
+  final bool shrinked;
 
   late final ValueNotifier<bool> isExpanded;
 
@@ -26,7 +27,12 @@ class BoringDrawerEntry extends StatelessWidget {
     required this.isSelected,
     this.tileStyle = const BoringDrawerTileStyle(),
     required this.subEntries,
+    this.shrinked = false,
   }) {
+    if (shrinked) {
+      assert(icon != null,
+          "If you want the Drawer to be shrinked, please provide an icon for this tile");
+    }
     isExpanded = ValueNotifier(false);
   }
 
@@ -67,7 +73,9 @@ class BoringDrawerEntry extends StatelessWidget {
                 children: [
                   if (icon != null)
                     Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
+                      padding: shrinked
+                          ? EdgeInsets.zero
+                          : const EdgeInsets.only(right: 8.0),
                       child: ColorFiltered(
                           colorFilter: ColorFilter.mode(
                               (isHover || isSelected)
@@ -76,25 +84,26 @@ class BoringDrawerEntry extends StatelessWidget {
                               BlendMode.srcIn),
                           child: icon!),
                     ),
-                  Expanded(
-                    child: Text(
-                      label ?? "",
-                      style: TextStyle(
-                          color: (isHover || isSelected)
-                              ? tileStyle.selectedTextColor
-                              : tileStyle.unSelectedTextColor,
-                          fontSize: tileStyle.fontSize,
-                          fontFamily: tileStyle.fontFamily ??
-                              Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.fontFamily,
-                          fontWeight: (isHover || isSelected)
-                              ? FontWeight.w700
-                              : FontWeight.w500),
+                  if (!shrinked)
+                    Expanded(
+                      child: Text(
+                        label ?? "",
+                        style: TextStyle(
+                            color: (isHover || isSelected)
+                                ? tileStyle.selectedTextColor
+                                : tileStyle.unSelectedTextColor,
+                            fontSize: tileStyle.fontSize,
+                            fontFamily: tileStyle.fontFamily ??
+                                Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.fontFamily,
+                            fontWeight: (isHover || isSelected)
+                                ? FontWeight.w700
+                                : FontWeight.w500),
+                      ),
                     ),
-                  ),
-                  if (_hasSubEntries)
+                  if (_hasSubEntries && !shrinked)
                     AnimatedBuilder(
                         animation: animation,
                         child: InkWell(
