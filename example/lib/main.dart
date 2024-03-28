@@ -1,4 +1,5 @@
 import 'package:boring_app/boring_app.dart';
+import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_style.dart';
 import 'package:flutter/material.dart';
 
 void main(List<String> args) {
@@ -71,7 +72,8 @@ class MyApp extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15)))),
       )),
-      boringNavigation: BoringNavigationDrawer(
+      boringNavigation: BoringAnimatedNavigationDrawer(
+        drawerStyle: BoringDrawerStyle(backgroundColor: Colors.red),
         appBarNotifier: testNotifier,
         appBarBuilder:
             (context, state, navGroups, appBarNotifier, isDrawerVisible) {

@@ -6,6 +6,8 @@ import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
 import 'package:boringcore/boringcore.dart';
 import 'package:flutter/material.dart';
 
+import 'boring_drawer_entry.dart';
+
 class BoringNavigationDrawer<T> extends BoringNavigation<T> {
   final BoringDrawerStyle drawerStyle;
   final BoringDrawerStyle? Function(
@@ -14,6 +16,7 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
   final BoringDrawerTileStyle? tileStyle;
   final Widget Function(BuildContext context)? drawerHeaderBuilder;
   final Widget Function(BuildContext context)? drawerFooterBuilder;
+
   BoringNavigationDrawer(
       {this.embraceAppBar = true,
       this.tileStyle,
@@ -32,6 +35,18 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
       ? BoringNavigationPosition.right
       : BoringNavigationPosition.left;
 
+  List<BoringDrawerEntry> drawerEntries(BuildContext context,
+          List<BoringNavigationGroupWithSelection> navigationGroups) =>
+      navigationGroups
+          .map((group) => group.entries.map((e) {
+                return e.toDrawerTile(
+                  context,
+                  tileStyle ?? const BoringDrawerTileStyle(),
+                );
+              }).toList())
+          .expand((element) => element)
+          .toList();
+
   @override
   Widget builder(
       BuildContext context,
@@ -42,7 +57,9 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
     for (var group in navigationGroups) {
       final childrenWidgets = group.entries.map((e) {
         return e.toDrawerTile(
-            context, tileStyle ?? const BoringDrawerTileStyle());
+          context,
+          tileStyle ?? const BoringDrawerTileStyle(),
+        );
       }).toList();
 
       if (group.hasName) {
