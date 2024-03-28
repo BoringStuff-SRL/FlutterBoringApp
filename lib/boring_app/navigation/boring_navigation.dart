@@ -106,7 +106,6 @@ abstract class BoringNavigation<T> {
 
       try {
         // cerco la sezione per impostare il titolo della tab
-
         entry = navGroups.expand((element) => element.entries).firstWhere(
               (element) => state.fullPath!.startsWith(element.path),
             );

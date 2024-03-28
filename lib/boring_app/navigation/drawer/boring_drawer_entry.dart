@@ -1,12 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:math';
 
-import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_tile_style.dart';
+import 'package:boring_app/boring_app.dart';
 import 'package:boring_app/boring_app/utils/boring_expandable.dart';
 import 'package:boring_app/boring_app/utils/boring_hover_widget.dart';
 import 'package:boring_app/boring_app/utils/bouncing_button.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class BoringDrawerEntry extends StatelessWidget {
   final String path;
@@ -15,6 +14,7 @@ class BoringDrawerEntry extends StatelessWidget {
   final bool isSelected;
   final List<BoringDrawerEntry> subEntries;
   final BoringDrawerTileStyle tileStyle;
+  final Animation<double> hExpansionAnimation;
 
   late final ValueNotifier<bool> isExpanded;
 
@@ -24,9 +24,11 @@ class BoringDrawerEntry extends StatelessWidget {
     this.label,
     this.icon,
     required this.isSelected,
+    Animation<double>? hExpansionAnimation,
     this.tileStyle = const BoringDrawerTileStyle(),
     required this.subEntries,
-  }) {
+  }) : hExpansionAnimation = hExpansionAnimation ??
+            Animation<double>.fromValueListenable(ValueNotifier(1)) {
     isExpanded = ValueNotifier(false);
   }
 
@@ -66,32 +68,35 @@ class BoringDrawerEntry extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (icon != null)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                              (isHover || isSelected)
-                                  ? tileStyle.selectedTextColor!
-                                  : tileStyle.unSelectedTextColor!,
-                              BlendMode.srcIn),
-                          child: icon!),
-                    ),
-                  Expanded(
-                    child: Text(
-                      label ?? "",
-                      style: TextStyle(
-                          color: (isHover || isSelected)
-                              ? tileStyle.selectedTextColor
-                              : tileStyle.unSelectedTextColor,
-                          fontSize: tileStyle.fontSize,
-                          fontFamily: tileStyle.fontFamily ??
-                              Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.fontFamily,
-                          fontWeight: (isHover || isSelected)
-                              ? FontWeight.w700
-                              : FontWeight.w500),
+                    ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                            (isHover || isSelected)
+                                ? tileStyle.selectedTextColor!
+                                : tileStyle.unSelectedTextColor!,
+                            BlendMode.srcIn),
+                        child: icon!),
+                  SizeTransition(
+                    axis: Axis.horizontal,
+                    sizeFactor: hExpansionAnimation,
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 8),
+                      width: 150,
+                      child: Text(
+                        label ?? "",
+                        style: TextStyle(
+                            color: (isHover || isSelected)
+                                ? tileStyle.selectedTextColor
+                                : tileStyle.unSelectedTextColor,
+                            fontSize: tileStyle.fontSize,
+                            fontFamily: tileStyle.fontFamily ??
+                                Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.fontFamily,
+                            fontWeight: (isHover || isSelected)
+                                ? FontWeight.w700
+                                : FontWeight.w500),
+                      ),
                     ),
                   ),
                   if (_hasSubEntries)

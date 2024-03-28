@@ -1,50 +1,9 @@
 import 'package:boring_app/boring_app.dart';
+import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_style.dart';
 import 'package:flutter/material.dart';
 
 void main(List<String> args) {
   runApp(MyApp());
-}
-
-class BoringTopNavigation<T> extends BoringNavigation<T> {
-  BoringTopNavigation({super.appBarNotifier, super.appBarBuilder});
-
-  @override
-  Widget builder(
-      BuildContext context,
-      List<BoringNavigationGroupWithSelection> navigationGroups,
-      BoxConstraints constraints) {
-    final children = <Widget>[];
-
-    for (final group in navigationGroups) {
-      final childrenWidgets = group.entries.map((e) {
-        return e.toDrawerTile(context, const BoringDrawerTileStyle());
-      }).toList();
-
-      children.addAll(childrenWidgets);
-    }
-
-    return PreferredSize(
-      preferredSize: const Size.fromHeight(200),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-        margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300, width: 1.5),
-        ),
-        child: Row(
-          children: [Text("ASD")],
-        ),
-      ),
-    );
-  }
-
-  @override
-  bool get embraceAppBar => true;
-
-  @override
-  BoringNavigationPosition get navigationPosition =>
-      BoringNavigationPosition.top;
 }
 
 class MyApp extends StatelessWidget {
@@ -72,6 +31,7 @@ class MyApp extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(15)))),
       )),
       boringNavigation: BoringNavigationDrawer(
+        drawerStyle: BoringDrawerStyle(backgroundColor: Colors.red),
         appBarNotifier: testNotifier,
         appBarBuilder:
             (context, state, navGroups, appBarNotifier, isDrawerVisible) {

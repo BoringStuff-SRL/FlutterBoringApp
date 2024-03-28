@@ -88,16 +88,21 @@ class BoringNavigationEntryWithSelection {
   }
 
   BoringDrawerEntry toDrawerTile(
-          BuildContext context, BoringDrawerTileStyle tileStyle) =>
+    BuildContext context,
+    BoringDrawerTileStyle tileStyle, {
+    Animation<double>? hExpansionAnimation,
+  }) =>
       BoringDrawerEntry(
         label: label,
         isSelected: selected,
         icon: icon,
         path: path,
         tileStyle: tileStyle,
+        hExpansionAnimation: hExpansionAnimation,
         subEntries: subEntries
             .where((element) => !element.hideInNav)
-            .map((e) => e.toDrawerTile(context, tileStyle))
+            .map((e) => e.toDrawerTile(context, tileStyle,
+                hExpansionAnimation: hExpansionAnimation))
             .toList(),
       );
 }
