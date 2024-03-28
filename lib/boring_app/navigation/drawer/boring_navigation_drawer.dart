@@ -1,32 +1,47 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:boring_app/boring_app/navigation/boring_navigation.dart';
-import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_style.dart';
-import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_tile_style.dart';
-import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
-import 'package:boringcore/boringcore.dart';
+import 'package:boring_app/boring_app.dart';
+import 'package:boringcore/widgets/boring_expandable/boring_expansion_widget.dart';
 import 'package:flutter/material.dart';
 
-import 'boring_drawer_entry.dart';
+import '../drawer/style/boring_drawer_style.dart';
+
+part 'boring_drawer_expansion_animation.dart';
+
+enum BoringAnimatedNavigationDrawerBehaviour {
+  fixedOpen,
+  fixedClose,
+  toggleOnHover;
+
+  bool get isMouseHover =>
+      this == BoringAnimatedNavigationDrawerBehaviour.toggleOnHover;
+}
 
 class BoringNavigationDrawer<T> extends BoringNavigation<T> {
+  final Duration animationDuration;
   final BoringDrawerStyle drawerStyle;
   final BoringDrawerStyle? Function(
           BoringDrawerStyle drawerStyle, BoxConstraints constraints)?
       overrideDrawerStyle;
   final BoringDrawerTileStyle? tileStyle;
-  final Widget Function(BuildContext context)? drawerHeaderBuilder;
-  final Widget Function(BuildContext context)? drawerFooterBuilder;
+  final Widget Function(BuildContext context, Animation<double>? animation)?
+      drawerHeaderBuilder;
+  final Widget Function(BuildContext context, Animation<double>? animation)?
+      drawerFooterBuilder;
 
-  BoringNavigationDrawer(
-      {this.embraceAppBar = true,
-      this.tileStyle,
-      this.drawerHeaderBuilder,
-      this.drawerFooterBuilder,
-      this.drawerStyle = const BoringDrawerStyle(),
-      this.overrideDrawerStyle,
-      this.rightPosition = false,
-      super.appBarNotifier,
-      super.appBarBuilder});
+  final BoringAnimatedNavigationDrawerBehaviour behaviour;
+
+  BoringNavigationDrawer({
+    this.embraceAppBar = true,
+    this.tileStyle,
+    this.animationDuration = const Duration(milliseconds: 200),
+    this.drawerHeaderBuilder,
+    this.drawerFooterBuilder,
+    this.drawerStyle = const BoringDrawerStyle(),
+    this.overrideDrawerStyle,
+    this.rightPosition = false,
+    super.appBarNotifier,
+    super.appBarBuilder,
+    this.behaviour = BoringAnimatedNavigationDrawerBehaviour.fixedOpen,
+  });
 
   final bool rightPosition;
 
@@ -35,72 +50,29 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
       ? BoringNavigationPosition.right
       : BoringNavigationPosition.left;
 
-  List<BoringDrawerEntry> drawerEntries(BuildContext context,
-          List<BoringNavigationGroupWithSelection> navigationGroups) =>
-      navigationGroups
-          .map((group) => group.entries.map((e) {
-                return e.toDrawerTile(
-                  context,
-                  tileStyle ?? const BoringDrawerTileStyle(),
-                );
-              }).toList())
-          .expand((element) => element)
-          .toList();
+  @override
+  final bool embraceAppBar;
 
   @override
   Widget builder(
-      BuildContext context,
-      List<BoringNavigationGroupWithSelection> navigationGroups,
-      BoxConstraints constraints) {
-    final children = <Widget>[];
-
-    for (var group in navigationGroups) {
-      final childrenWidgets = group.entries.map((e) {
-        return e.toDrawerTile(
-          context,
-          tileStyle ?? const BoringDrawerTileStyle(),
-        );
-      }).toList();
-
-      if (group.hasName) {
-        children.add(
-          BoringExpansionWidget(
-            tilePadding: const EdgeInsets.all(8),
-            childPadding: EdgeInsets.zero,
-            primary: Text(group.name!),
-            disabledTextColor: drawerStyle.groupTileDisabledColor,
-            disabledIconColor: drawerStyle.groupTileDisabledColor,
-            child: Column(
-              children: childrenWidgets,
-            ),
-          ),
-        );
-      } else {
-        children.addAll(childrenWidgets);
-      }
-    }
-    final BoringDrawerStyle overriddenDrawerStyle =
-        overrideDrawerStyle?.call(drawerStyle, constraints) ?? drawerStyle;
-    return Drawer(
-        width: overriddenDrawerStyle.width,
-        shape: RoundedRectangleBorder(
-            borderRadius: overriddenDrawerStyle.drawerRadius),
-        elevation: overriddenDrawerStyle.drawerElevation,
-        backgroundColor: overriddenDrawerStyle.backgroundColor,
-        child: Column(
-          children: [
-            if (drawerHeaderBuilder != null) drawerHeaderBuilder!(context),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: overriddenDrawerStyle.drawerContentPadding,
-                child: Column(children: children),
-              ),
-            ),
-            if (drawerFooterBuilder != null) drawerFooterBuilder!(context),
-          ],
-        ));
+    BuildContext context,
+    List<BoringNavigationGroupWithSelection> navigationGroups,
+    BoxConstraints constraints,
+  ) {
+    return _BoringDrawerExpansionAnimation(
+      behaviour: behaviour,
+      animationDuration: animationDuration,
+      constraints: constraints,
+      navigationGroups: navigationGroups,
+      drawerStyle: drawerStyle,
+      tileStyle: tileStyle,
+      appBarNotifier: appBarNotifier,
+      appBarBuilder: appBarBuilder,
+      drawerFooterBuilder: drawerFooterBuilder,
+      drawerHeaderBuilder: drawerHeaderBuilder,
+      embraceAppBar: embraceAppBar,
+      overrideDrawerStyle: overrideDrawerStyle,
+      rightPosition: rightPosition,
+    );
   }
-
-  @override
-  final bool embraceAppBar;
 }
