@@ -89,7 +89,11 @@ class BoringDrawerEntry extends StatelessWidget {
                               BlendMode.srcIn),
                           child: icon!),
                     overrideAlwaysOpen
-                        ? Expanded(child: labelWidget)
+                        ? Expanded(
+                            child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: labelWidget,
+                          ))
                         : SizeTransition(
                             axis: Axis.horizontal,
                             sizeFactor: hExpansionAnimation,
