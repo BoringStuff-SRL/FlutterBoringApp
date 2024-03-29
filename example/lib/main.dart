@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
       )),
       boringNavigation: BoringNavigationDrawer(
         drawerStyle: BoringDrawerStyle(backgroundColor: Colors.red),
+        behaviour: BoringAnimatedNavigationDrawerBehaviour.toggleOnHover,
         appBarNotifier: testNotifier,
         appBarBuilder:
             (context, state, navGroups, appBarNotifier, isDrawerVisible) {

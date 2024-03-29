@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class BoringDrawerTileStyle {
   final BorderRadius tileRadius;
   final double tileSpacing;
+  final double tileMaxExpansion;
   final Color selectedColor;
   final String? fontFamily;
   final double? fontSize;
@@ -23,6 +24,7 @@ class BoringDrawerTileStyle {
     this.tileRadius = const BorderRadius.all(
       Radius.circular(10.0),
     ),
+    this.tileMaxExpansion = 150.0,
     this.isOpenedIcon = const Icon(Icons.arrow_drop_up),
     this.isClosedIcon = const Icon(Icons.arrow_drop_down),
     this.tileSpacing = 8,
