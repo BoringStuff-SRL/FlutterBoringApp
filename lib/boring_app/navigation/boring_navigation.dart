@@ -65,27 +65,27 @@ abstract class BoringNavigation<T> {
         navigationWidget, appBar, theme);
   }
 
-  bool _appBarShouldGoWithContent(BoxConstraints constraints) {
-    // return embraceAppBar &&
-    //   navigationPosition.isSide &&
-    //   constraints.maxWidth > persistentSide;
+  // bool _appBarShouldGoWithContent(BoxConstraints constraints) {
+  //   // return embraceAppBar &&
+  //   //   navigationPosition.isSide &&
+  //   //   constraints.maxWidth > persistentSide;
 
-    return embraceAppBar && navigationPosition.isSide;
-  }
+  //   return embraceAppBar && navigationPosition.isSide;
+  // }
 
-  AppBar? _topAppBar(
-      BuildContext context, BoxConstraints constraints, AppBar? appBar) {
-    return (appBar == null || _appBarShouldGoWithContent(constraints))
-        ? null
-        : appBar;
-  }
+  // AppBar? _topAppBar(
+  //     BuildContext context, BoxConstraints constraints, AppBar? appBar) {
+  //   return (appBar == null || _appBarShouldGoWithContent(constraints))
+  //       ? null
+  //       : appBar;
+  // }
 
-  AppBar? _contentAppBar(
-      BuildContext context, BoxConstraints constraints, AppBar? appBar) {
-    return (appBar != null && _appBarShouldGoWithContent(constraints))
-        ? appBar
-        : null;
-  }
+  // AppBar? _contentAppBar(
+  //     BuildContext context, BoxConstraints constraints, AppBar? appBar) {
+  //   return (appBar != null && _appBarShouldGoWithContent(constraints))
+  //       ? appBar
+  //       : null;
+  // }
 
   bool isDrawerVisible(BoxConstraints constraints) =>
       constraints.maxWidth > persistentSide;
