@@ -15,8 +15,7 @@ class BoringDrawerEntry extends StatelessWidget {
   final List<BoringDrawerEntry> subEntries;
   final BoringDrawerTileStyle tileStyle;
   final Animation<double> hExpansionAnimation;
-
-  late final ValueNotifier<bool> isExpanded;
+  final bool overrideAlwaysOpen;
 
   BoringDrawerEntry({
     super.key,
@@ -27,10 +26,9 @@ class BoringDrawerEntry extends StatelessWidget {
     Animation<double>? hExpansionAnimation,
     this.tileStyle = const BoringDrawerTileStyle(),
     required this.subEntries,
+    required this.overrideAlwaysOpen,
   }) : hExpansionAnimation = hExpansionAnimation ??
-            Animation<double>.fromValueListenable(ValueNotifier(1)) {
-    isExpanded = ValueNotifier(false);
-  }
+            Animation<double>.fromValueListenable(ValueNotifier(1));
 
   bool get _hasSubEntries => subEntries.isNotEmpty;
 
@@ -40,87 +38,94 @@ class BoringDrawerEntry extends StatelessWidget {
           vertical: tileStyle.tileSpacing / 2,
         ),
         child: BoringHoverWidget(
-          builder: (context, isHover) => BoringBouncingButton(
-            onPressed: () {
-              final currentPath = GoRouter.of(context)
-                  .routeInformationProvider
-                  .value
-                  .uri
-                  .toString();
+          builder: (context, isHover) {
+            final labelWidget = Text(
+              label ?? "",
+              style: TextStyle(
+                  color: (isHover || isSelected)
+                      ? tileStyle.selectedTextColor
+                      : tileStyle.unSelectedTextColor,
+                  fontSize: tileStyle.fontSize,
+                  fontFamily: tileStyle.fontFamily ??
+                      Theme.of(context).textTheme.titleMedium?.fontFamily,
+                  fontWeight: (isHover || isSelected)
+                      ? FontWeight.w700
+                      : FontWeight.w500),
+            );
 
-              if (currentPath != path) {
-                GoRouter.of(context).go(path);
-              }
-              Scaffold.of(context).closeDrawer();
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              padding: tileStyle
-                  .tilePadding, //const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              decoration: BoxDecoration(
-                color: (isHover || isSelected)
-                    ? tileStyle.selectedColor
-                    : Colors.transparent,
-                borderRadius: tileStyle.tileRadius,
+            return BoringBouncingButton(
+              onPressed: () {
+                final currentPath = GoRouter.of(context)
+                    .routeInformationProvider
+                    .value
+                    .uri
+                    .toString();
+
+                if (currentPath != path) {
+                  GoRouter.of(context).go(path);
+                }
+                Scaffold.of(context).closeDrawer();
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                padding: tileStyle
+                    .tilePadding, //const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(
+                  color: (isHover || isSelected)
+                      ? tileStyle.selectedColor
+                      : Colors.transparent,
+                  borderRadius: tileStyle.tileRadius,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (icon != null)
+                      ColorFiltered(
+                          colorFilter: ColorFilter.mode(
+                              (isHover || isSelected)
+                                  ? tileStyle.selectedTextColor!
+                                  : tileStyle.unSelectedTextColor!,
+                              BlendMode.srcIn),
+                          child: icon!),
+                    overrideAlwaysOpen
+                        ? Expanded(
+                            child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: labelWidget,
+                          ))
+                        : SizeTransition(
+                            axis: Axis.horizontal,
+                            sizeFactor: hExpansionAnimation,
+                            child: Container(
+                              padding: const EdgeInsets.only(left: 8),
+                              width: tileStyle.tileMaxExpansion,
+                              child: labelWidget,
+                            ),
+                          ),
+                    if (_hasSubEntries)
+                      AnimatedBuilder(
+                          animation: animation,
+                          child: InkWell(
+                            child: ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                    (isHover || isSelected)
+                                        ? tileStyle.selectedTextColor!
+                                        : tileStyle.unSelectedTextColor!,
+                                    BlendMode.srcIn),
+                                child: const Icon(Icons.expand_more)),
+                            onTap: () => toggleExpansion(),
+                          ),
+                          builder: (context, child) => Transform.rotate(
+                                angle: animation.value *
+                                    pi, // This is the current rotation value
+                                child: child, // Your widget goes here
+                              ))
+                  ],
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (icon != null)
-                    ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                            (isHover || isSelected)
-                                ? tileStyle.selectedTextColor!
-                                : tileStyle.unSelectedTextColor!,
-                            BlendMode.srcIn),
-                        child: icon!),
-                  SizeTransition(
-                    axis: Axis.horizontal,
-                    sizeFactor: hExpansionAnimation,
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 8),
-                      width: 150,
-                      child: Text(
-                        label ?? "",
-                        style: TextStyle(
-                            color: (isHover || isSelected)
-                                ? tileStyle.selectedTextColor
-                                : tileStyle.unSelectedTextColor,
-                            fontSize: tileStyle.fontSize,
-                            fontFamily: tileStyle.fontFamily ??
-                                Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.fontFamily,
-                            fontWeight: (isHover || isSelected)
-                                ? FontWeight.w700
-                                : FontWeight.w500),
-                      ),
-                    ),
-                  ),
-                  if (_hasSubEntries)
-                    AnimatedBuilder(
-                        animation: animation,
-                        child: InkWell(
-                          child: ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                  (isHover || isSelected)
-                                      ? tileStyle.selectedTextColor!
-                                      : tileStyle.unSelectedTextColor!,
-                                  BlendMode.srcIn),
-                              child: const Icon(Icons.expand_more)),
-                          onTap: () => toggleExpansion(),
-                        ),
-                        builder: (context, child) => Transform.rotate(
-                              angle: animation.value *
-                                  pi, // This is the current rotation value
-                              child: child, // Your widget goes here
-                            ))
-                ],
-              ),
-            ),
-          ),
+            );
+          },
         ),
       );
 

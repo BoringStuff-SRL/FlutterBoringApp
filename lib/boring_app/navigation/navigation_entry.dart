@@ -1,8 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:boring_app/boring_app.dart';
 import 'package:boring_app/boring_app/navigation/drawer/boring_drawer_entry.dart';
-import 'package:boring_app/boring_app/navigation/drawer/style/boring_drawer_tile_style.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class BoringNavigationEntry {
   final String path;
@@ -89,6 +88,7 @@ class BoringNavigationEntryWithSelection {
     BuildContext context,
     BoringDrawerTileStyle tileStyle, {
     Animation<double>? hExpansionAnimation,
+    bool overrideAlwaysOpen = false,
   }) =>
       BoringDrawerEntry(
         label: label,
@@ -97,10 +97,12 @@ class BoringNavigationEntryWithSelection {
         path: path,
         tileStyle: tileStyle,
         hExpansionAnimation: hExpansionAnimation,
+        overrideAlwaysOpen: overrideAlwaysOpen,
         subEntries: subEntries
             .where((element) => !element.hideInNav)
             .map((e) => e.toDrawerTile(context, tileStyle,
-                hExpansionAnimation: hExpansionAnimation))
+                hExpansionAnimation: hExpansionAnimation,
+                overrideAlwaysOpen: overrideAlwaysOpen))
             .toList(),
       );
 }
