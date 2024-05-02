@@ -1,6 +1,7 @@
 name: boring_app
 description: A new Flutter package project.
 version: 0.0.1
+publish_to: none
 
 environment:
   sdk: ">=2.18.4 <3.0.0"
@@ -10,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  go_router: ^13.0.1
+  go_router: ^14.0.0
 
   boringcore:
     git:

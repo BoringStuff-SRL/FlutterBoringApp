@@ -44,9 +44,7 @@ class BoringNavigationEntryWithSubEntries {
           giftSelection: giftSelection,
           subEntries: subEntries);
 
-  bool isSelected(GoRouterState state) {
-    return path == state.matchedLocation;
-  }
+  bool isSelected(GoRouterState state) => path == state.fullPath;
 }
 
 class BoringNavigationEntryWithSelection {
