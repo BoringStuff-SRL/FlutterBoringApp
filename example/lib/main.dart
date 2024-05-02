@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BoringApp(
-      initialLocation: "/a",
+      initialLocation: "/prima",
       themeConfig: BoringThemeConfig(
           theme: ThemeData(
         fontFamily: 'Inter',
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(15)))),
       )),
       boringNavigation: BoringNavigationDrawer(
-        drawerStyle: BoringDrawerStyle(backgroundColor: Colors.red),
+        drawerStyle: const BoringDrawerStyle(backgroundColor: Colors.red),
         appBarNotifier: testNotifier,
         appBarBuilder:
             (context, state, navGroups, appBarNotifier, isDrawerVisible) {
@@ -42,58 +42,67 @@ class MyApp extends StatelessWidget {
       ),
       redirect: (context, state) {
         testNotifier.value = '';
+        return null;
       },
       pages: [
         BoringPageWidget(
-          navigationEntry: BoringNavigationEntry("/b",
-              icon: const Icon(Icons.abc), label: 'ewqeqw'),
+          navigationEntry: BoringNavigationEntry("/prima",
+              icon: const Icon(Icons.abc), label: 'Prima'),
           subPages: [
             BoringPageWidget(
               hideFromNavigation: true,
-              navigationEntry: BoringNavigationEntry('b', label: 'SIUU'),
+              navigationEntry: BoringNavigationEntry('seconda', label: 'SIUU'),
               builder: (context, state) {
-                print("BUILDING B SUBPAGE");
-                return Text('asdasd');
+                print("BUILDING SECOND PAGE");
+                return ElevatedButton(
+                    onPressed: () {
+                      context.go("/prima1/seconda1");
+                    },
+                    child: const Text("VAI A SECONDA DENTRO SECONDA"));
+              },
+            ),
+            BoringPageWidget(
+              hideFromNavigation: true,
+              navigationEntry: BoringNavigationEntry(':id/ciao', label: 'SIUU'),
+              builder: (context, state) {
+                print("BUILDING SECOND PAGE");
+                final id = state.pathParameters["id"] ?? "NO ID";
+                return Text("ID: $id");
               },
             )
           ],
           builder: (p0, p1) {
-            print("BUILDING B");
-            int index = 0;
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              testNotifier.value = 'SIUUU';
-            });
+            print("BUILDING FIRST PAGE");
+
             return ElevatedButton(
               onPressed: () {
-                testNotifier.value = '${++index}';
-                p0.push('/b/b');
+                p0.push('/prima/seconda');
               },
-              child: Text('signore'),
+              child: const Text('VAI A SECONDA'),
             );
           },
         ),
         BoringPageWidget(
-          navigationEntry: BoringNavigationEntry("/a",
-              icon: const Icon(Icons.abc), label: 'Prova123'),
+          navigationEntry: BoringNavigationEntry("/prima1",
+              icon: const Icon(Icons.abc), label: 'Prima1'),
           subPages: [
             BoringPageWidget(
               hideFromNavigation: true,
-              navigationEntry: BoringNavigationEntry('b', label: 'SIUU'),
-              builder: (context, state) => Text('asdasd'),
+              navigationEntry: BoringNavigationEntry('seconda1', label: 'SIUU'),
+              builder: (context, state) {
+                print("BUILDING SECOND PAGE");
+                return const Text('SECONDA1');
+              },
             )
           ],
           builder: (p0, p1) {
-            print("BUILDING A");
-            int index = 0;
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              testNotifier.value = 'SIUUU';
-            });
+            print("BUILDING FIRST PAGE");
+
             return ElevatedButton(
               onPressed: () {
-                testNotifier.value = '${++index}';
-                p0.go('/a/b');
+                p0.push('/prima1/seconda1');
               },
-              child: Text('signore'),
+              child: const Text('VAI A SECONDA'),
             );
           },
         ),
