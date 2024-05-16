@@ -891,4 +891,8 @@ DerivedData/
 
 
 #Added by Fradesa
+#Stuff inside the example folder
 macos/Runner.xcodeproj
+/example/ios/Flutter/flutter_export_environment.sh
+
+
