@@ -172,7 +172,7 @@ class BoringApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _computeRouter();
-    return MaterialApp.router(
+    final app = MaterialApp.router(
       //routerConfig: _goRouter,
       localizationsDelegates: localizationsDelegates,
       routeInformationParser:
@@ -189,6 +189,7 @@ class BoringApp extends StatelessWidget {
       highContrastDarkTheme: themeConfig.highContrastDarkTheme,
       themeMode: themeConfig.themeMode,
     );
+    return appWrapper.build(context, app);
   }
 }
 
