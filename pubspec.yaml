@@ -16,7 +16,7 @@ dependencies:
   boringcore:
     git:
       url: https://github.com/BoringStuff-SRL/BoringCore
-      ref: dart-3.0.0
+      ref: main
 
 
 dev_dependencies:
