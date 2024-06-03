@@ -7,61 +7,67 @@ class BoringNavigationEntry {
   final String path;
   final String? label;
   final Widget? icon;
+  final BreadcrumbLabelBuilder? breadcrumbLabelBuilder;
   BoringNavigationEntry(
     this.path, {
     this.label,
     this.icon,
+    this.breadcrumbLabelBuilder,
   });
-  BoringNavigationEntry copyWithPath(String path) =>
-      BoringNavigationEntry(path, label: label, icon: icon);
+  BoringNavigationEntry copyWithPath(String path) => BoringNavigationEntry(path,
+      label: label, icon: icon, breadcrumbLabelBuilder: breadcrumbLabelBuilder);
 }
 
-class BoringNavigationEntryWithSubEntries {
-  final String path;
-  final String? label;
-  final Widget? icon;
+typedef BreadcrumbLabelBuilder = String Function(GoRouterState state);
+
+class BoringNavigationEntryWithSubEntries extends BoringNavigationEntry {
   final bool hideInNav;
   final bool giftSelection;
   final List<BoringNavigationEntryWithSubEntries> subEntries;
   BoringNavigationEntryWithSubEntries(
-    this.path, {
+    super.path, {
+    required super.label,
+    super.icon,
+    required super.breadcrumbLabelBuilder,
     this.subEntries = const [],
-    required this.label,
-    this.icon,
     required this.giftSelection,
     required this.hideInNav,
   });
 
   factory BoringNavigationEntryWithSubEntries.from(
-          BoringNavigationEntry navigationEntry,
-          List<BoringNavigationEntryWithSubEntries> subEntries,
-          bool hideInNav,
-          bool giftSelection) =>
-      BoringNavigationEntryWithSubEntries(navigationEntry.path,
-          label: navigationEntry.label,
-          hideInNav: hideInNav,
-          icon: navigationEntry.icon,
-          giftSelection: giftSelection,
-          subEntries: subEntries);
+    BoringNavigationEntry navigationEntry,
+    List<BoringNavigationEntryWithSubEntries> subEntries,
+    bool hideInNav,
+    bool giftSelection,
+  ) =>
+      BoringNavigationEntryWithSubEntries(
+        navigationEntry.path,
+        label: navigationEntry.label,
+        icon: navigationEntry.icon,
+        breadcrumbLabelBuilder: navigationEntry.breadcrumbLabelBuilder,
+        subEntries: subEntries,
+        giftSelection: giftSelection,
+        hideInNav: hideInNav,
+      );
 
   bool isSelected(GoRouterState state) => path == state.fullPath;
 }
 
-class BoringNavigationEntryWithSelection {
-  final String path;
-  final String? label;
-  final Widget? icon;
-  final bool selected;
-  final bool hideInNav;
-  final bool giftSelection;
+class BoringNavigationEntryWithSelection
+    extends BoringNavigationEntryWithSubEntries {
+  @override
+  // ignore: overridden_fields
   final List<BoringNavigationEntryWithSelection> subEntries;
+
+  final bool selected;
   BoringNavigationEntryWithSelection(
-    this.path, {
-    required this.hideInNav,
-    required this.giftSelection,
+    super.path, {
+    required super.label,
+    super.icon,
+    super.breadcrumbLabelBuilder,
     this.subEntries = const [],
-    required this.label,
-    this.icon,
+    required super.giftSelection,
+    required super.hideInNav,
     required this.selected,
   });
 
@@ -71,8 +77,6 @@ class BoringNavigationEntryWithSelection {
     final subentries = navigationEntry.subEntries
         .map((e) => BoringNavigationEntryWithSelection.from(e, state))
         .toList();
-    // print(
-    //     "CURRENT PATH ${navigationEntry.path} - HIDDEN : ${navigationEntry.hideInNav}");
     final inheritSelection =
         subentries.any((e) => e.selected && e.hideInNav && e.giftSelection);
     return BoringNavigationEntryWithSelection(navigationEntry.path,

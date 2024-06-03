@@ -3,29 +3,29 @@ import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-class BoringPageWidget extends BoringPage {
-  final Widget Function(BuildContext context, GoRouterState state)
-      _widgetBuilder;
-  final BoringNavigationEntry _widgetNavigationEntry;
-  BoringPageWidget(
-      {required BoringNavigationEntry navigationEntry,
-      required Widget Function(BuildContext context, GoRouterState state)
-          builder,
-      super.subPages,
-      super.hideFromNavigation = false,
-      super.giftSelectionWhenHidden = true,
-      super.redirect,
-      super.preventNavigationDisplay})
-      : _widgetNavigationEntry = navigationEntry,
-        _widgetBuilder = builder;
+// class BoringPageWidget extends BoringPage {
+//   final Widget Function(BuildContext context, GoRouterState state)
+//       _widgetBuilder;
+//   final BoringNavigationEntry _widgetNavigationEntry;
+//   BoringPageWidget(
+//       {required BoringNavigationEntry navigationEntry,
+//       required Widget Function(BuildContext context, GoRouterState state)
+//           builder,
+//       super.subPages,
+//       super.hideFromNavigation = false,
+//       super.giftSelectionWhenHidden = true,
+//       super.redirect,
+//       super.preventNavigationDisplay})
+//       : _widgetNavigationEntry = navigationEntry,
+//         _widgetBuilder = builder;
 
-  @override
-  Widget builder(BuildContext context, GoRouterState state) =>
-      _widgetBuilder(context, state);
+//   @override
+//   Widget builder(BuildContext context, GoRouterState state) =>
+//       _widgetBuilder(context, state);
 
-  @override
-  BoringNavigationEntry get navigationEntry => _widgetNavigationEntry;
-}
+//   @override
+//   BoringNavigationEntry get navigationEntry => _widgetNavigationEntry;
+// }
 
 abstract class BoringPage {
   abstract final BoringNavigationEntry navigationEntry;
@@ -36,6 +36,7 @@ abstract class BoringPage {
   final Future<String?> Function(BuildContext, GoRouterState)? redirect;
   final List<BoringPage> subPages;
   final bool preventNavigationDisplay;
+
   BoringPage(
       {this.subPages = const [],
       this.hideFromNavigation = false,
