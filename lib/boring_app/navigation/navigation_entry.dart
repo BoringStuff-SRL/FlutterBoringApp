@@ -82,6 +82,7 @@ class BoringNavigationEntryWithSelection
     return BoringNavigationEntryWithSelection(navigationEntry.path,
         label: navigationEntry.label,
         icon: navigationEntry.icon,
+        breadcrumbLabelBuilder: navigationEntry.breadcrumbLabelBuilder,
         hideInNav: navigationEntry.hideInNav,
         giftSelection: navigationEntry.giftSelection,
         subEntries: subentries,
