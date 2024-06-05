@@ -16,12 +16,7 @@ class _BoringDrawerExpansionAnimation<T> extends StatefulWidget {
   final BoringAnimatedNavigationDrawerBehaviour behaviour;
 
   final ValueNotifier<T>? appBarNotifier;
-  final AppBar? Function(
-      BuildContext context,
-      GoRouterState state,
-      List<BoringNavigationGroupWithSelection> navGroups,
-      ValueNotifier<T>? appBarNotifier,
-      bool isDrawerVisible)? appBarBuilder;
+  final AppBarBuilder<T>? appBarBuilder;
 
   final List<BoringNavigationGroupWithSelection> navigationGroups;
   final BoxConstraints constraints;

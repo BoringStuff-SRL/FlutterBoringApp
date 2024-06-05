@@ -18,16 +18,18 @@ extension BoringNavigationPositionUtils on BoringNavigationPosition {
   bool get isLeft => this == BoringNavigationPosition.left;
 }
 
+typedef AppBarBuilder<T> = PreferredSizeWidget? Function(
+    BuildContext context,
+    GoRouterState state,
+    List<BoringNavigationGroupWithSelection> navGroups,
+    ValueNotifier<T>? appBarNotifier,
+    bool isDrawerVisible);
+
 abstract class BoringNavigation<T> {
   abstract final bool embraceAppBar;
   abstract final BoringNavigationPosition navigationPosition;
   final ValueNotifier<T>? appBarNotifier;
-  final AppBar? Function(
-      BuildContext context,
-      GoRouterState state,
-      List<BoringNavigationGroupWithSelection> navGroups,
-      ValueNotifier<T>? appBarNotifier,
-      bool isDrawerVisible)? appBarBuilder;
+  final AppBarBuilder<T>? appBarBuilder;
 
   BoringNavigation({this.appBarNotifier, this.appBarBuilder});
 
@@ -64,28 +66,6 @@ abstract class BoringNavigation<T> {
     return content(context, child, navigationPosition, constraints,
         navigationWidget, appBar, theme);
   }
-
-  // bool _appBarShouldGoWithContent(BoxConstraints constraints) {
-  //   // return embraceAppBar &&
-  //   //   navigationPosition.isSide &&
-  //   //   constraints.maxWidth > persistentSide;
-
-  //   return embraceAppBar && navigationPosition.isSide;
-  // }
-
-  // AppBar? _topAppBar(
-  //     BuildContext context, BoxConstraints constraints, AppBar? appBar) {
-  //   return (appBar == null || _appBarShouldGoWithContent(constraints))
-  //       ? null
-  //       : appBar;
-  // }
-
-  // AppBar? _contentAppBar(
-  //     BuildContext context, BoxConstraints constraints, AppBar? appBar) {
-  //   return (appBar != null && _appBarShouldGoWithContent(constraints))
-  //       ? appBar
-  //       : null;
-  // }
 
   bool isDrawerVisible(BoxConstraints constraints) =>
       constraints.maxWidth > persistentSide;
