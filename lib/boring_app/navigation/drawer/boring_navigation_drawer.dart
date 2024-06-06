@@ -17,6 +17,7 @@ enum BoringAnimatedNavigationDrawerBehaviour {
 
 class BoringNavigationDrawer<T> extends BoringNavigation<T> {
   final Duration animationDuration;
+  final Curve animationCurve;
   final BoringDrawerStyle drawerStyle;
   final BoringDrawerStyle? Function(
           BoringDrawerStyle drawerStyle, BoxConstraints constraints)?
@@ -41,6 +42,7 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
     super.appBarNotifier,
     super.appBarBuilder,
     this.behaviour = BoringAnimatedNavigationDrawerBehaviour.fixedOpen,
+    this.animationCurve = Curves.ease,
   });
 
   final bool rightPosition;
@@ -73,6 +75,7 @@ class BoringNavigationDrawer<T> extends BoringNavigation<T> {
       embraceAppBar: embraceAppBar,
       overrideDrawerStyle: overrideDrawerStyle,
       rightPosition: rightPosition,
+      animationCurve: animationCurve,
     );
   }
 }

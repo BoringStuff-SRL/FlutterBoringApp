@@ -14,6 +14,7 @@ class _BoringDrawerExpansionAnimation<T> extends StatefulWidget {
   final bool rightPosition;
   final Duration animationDuration;
   final BoringAnimatedNavigationDrawerBehaviour behaviour;
+  final Curve animationCurve;
 
   final ValueNotifier<T>? appBarNotifier;
   final AppBar? Function(
@@ -40,6 +41,7 @@ class _BoringDrawerExpansionAnimation<T> extends StatefulWidget {
     required this.navigationGroups,
     required this.constraints,
     required this.animationDuration,
+    required this.animationCurve,
   });
 
   @override
@@ -88,7 +90,8 @@ class _BoringDrawerExpansionAnimationState
         return e.toDrawerTile(
           context,
           widget.tileStyle ?? const BoringDrawerTileStyle(),
-          hExpansionAnimation: _animationController,
+          hExpansionAnimation:
+              CurvedAnimation(parent: _animationController, curve: Curves.ease),
         );
       }).toList();
 
@@ -114,10 +117,12 @@ class _BoringDrawerExpansionAnimationState
         widget.drawerStyle;
     return MouseRegion(
       onEnter: (event) {
-        if (widget.behaviour.isMouseHover) toggleAnimation();
+        //if (widget.behaviour.isMouseHover) toggleAnimation();
+        if (widget.behaviour.isMouseHover) _animationController.forward();
       },
       onExit: (event) {
-        if (widget.behaviour.isMouseHover) toggleAnimation();
+        //if (widget.behaviour.isMouseHover) toggleAnimation();
+        if (widget.behaviour.isMouseHover) _animationController.reverse();
       },
       child: Container(
         decoration: BoxDecoration(

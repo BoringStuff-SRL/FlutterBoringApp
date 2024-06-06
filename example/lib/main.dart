@@ -31,8 +31,7 @@ class MyApp extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(15)))),
       )),
       boringNavigation: BoringNavigationDrawer(
- develop
-        drawerStyle: BoringDrawerStyle(backgroundColor: Colors.red),
+        drawerStyle: const BoringDrawerStyle(backgroundColor: Colors.red),
         behaviour: BoringAnimatedNavigationDrawerBehaviour.toggleOnHover,
         appBarNotifier: testNotifier,
         appBarBuilder:
