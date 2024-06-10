@@ -189,7 +189,7 @@ class BoringApp extends StatelessWidget {
       highContrastDarkTheme: themeConfig.highContrastDarkTheme,
       themeMode: themeConfig.themeMode,
     );
-    return appWrapper.build(context, app);
+    return appWrapper.wrapper(context, app);
   }
 }
 
@@ -215,12 +215,12 @@ class BoringThemeConfig {
 abstract class BoringAppWrapper {
   const BoringAppWrapper();
 
-  Widget build(BuildContext context, Widget child);
+  Widget wrapper(BuildContext context, Widget child);
 }
 
 class DefaultAppWrapper extends BoringAppWrapper {
   const DefaultAppWrapper();
 
   @override
-  Widget build(BuildContext context, Widget child) => child;
+  Widget wrapper(BuildContext context, Widget child) => child;
 }
