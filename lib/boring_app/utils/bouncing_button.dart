@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 class BoringBouncingButton extends StatelessWidget {
   BoringBouncingButton({
-    super.key,
     required this.onPressed,
     required this.child,
+    super.key,
     this.animationDuration,
     this.scaling,
   });

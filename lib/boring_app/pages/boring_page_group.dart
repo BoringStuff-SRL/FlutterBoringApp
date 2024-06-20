@@ -6,28 +6,39 @@ import 'package:go_router/go_router.dart';
 
 class BoringPageGroup {
   final String? name;
-  //TODO add icon [and display option]
+  final Widget? icon;
+
   final List<BoringPage> pages;
+
   const BoringPageGroup({
-    this.name,
     required this.pages,
+    this.name,
+    this.icon,
   });
 
   BoringNavigationGroup navigationGroup({String? rootPrefix}) {
     return BoringNavigationGroup(
-        name: name,
-        entries: pages
-            .map((e) =>
-                e.navigationEntryWithSubentries(initPath: rootPrefix ?? ""))
-            .toList());
+      name: name,
+      icon: icon,
+      entries: pages
+          .map(
+            (e) => e.navigationEntryWithSubentries(initPath: rootPrefix ?? ''),
+          )
+          .toList(),
+    );
   }
 
-  List<RouteBase> routes(GlobalKey<NavigatorState> rootNavigatorKey,
-          {String? rootPrefix, bool? displayedWithNavigation}) =>
+  List<RouteBase> routes(
+    GlobalKey<NavigatorState> rootNavigatorKey, {
+    String? rootPrefix,
+    bool? displayedWithNavigation,
+  }) =>
       pages
-          .where((element) => (displayedWithNavigation != null)
-              ? element.preventNavigationDisplay != displayedWithNavigation
-              : true)
+          .where(
+            (element) => (displayedWithNavigation != null)
+                ? element.preventNavigationDisplay != displayedWithNavigation
+                : true,
+          )
           .map((e) => e.route(rootNavigatorKey, rootPrefix: rootPrefix))
           .toList();
 }

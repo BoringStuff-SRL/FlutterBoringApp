@@ -50,7 +50,7 @@ class BoringDrawerStyle {
       width: width ?? this.width,
       drawerElevation: drawerElevation ?? this.drawerElevation,
       sectionNavigator: sectionNavigator ?? this.sectionNavigator,
-      groupTileDisabledColor: groupDisabledColor ?? this.groupTileDisabledColor,
+      groupTileDisabledColor: groupDisabledColor ?? groupTileDisabledColor,
     );
   }
 }

@@ -1,10 +1,27 @@
 part of 'boring_navigation_drawer.dart';
 
 class _BoringDrawerExpansionAnimation<T> extends StatefulWidget {
+  const _BoringDrawerExpansionAnimation({
+    required this.behaviour,
+    required this.navigationGroups,
+    required this.constraints,
+    required this.animationDuration,
+    this.embraceAppBar = true,
+    this.tileStyle,
+    this.drawerHeaderBuilder,
+    this.drawerFooterBuilder,
+    this.drawerStyle = const BoringDrawerStyle(),
+    this.overrideDrawerStyle,
+    this.rightPosition = false,
+    this.appBarNotifier,
+    this.appBarBuilder,
+  });
+
   final BoringDrawerStyle drawerStyle;
   final BoringDrawerStyle? Function(
-          BoringDrawerStyle drawerStyle, BoxConstraints constraints)?
-      overrideDrawerStyle;
+    BoringDrawerStyle drawerStyle,
+    BoxConstraints constraints,
+  )? overrideDrawerStyle;
   final BoringDrawerTileStyle? tileStyle;
   final Widget Function(BuildContext context, Animation<double> animation)?
       drawerHeaderBuilder;
@@ -20,22 +37,6 @@ class _BoringDrawerExpansionAnimation<T> extends StatefulWidget {
 
   final List<BoringNavigationGroupWithSelection> navigationGroups;
   final BoxConstraints constraints;
-
-  const _BoringDrawerExpansionAnimation({
-    this.embraceAppBar = true,
-    this.tileStyle,
-    this.drawerHeaderBuilder,
-    this.drawerFooterBuilder,
-    this.drawerStyle = const BoringDrawerStyle(),
-    this.overrideDrawerStyle,
-    this.rightPosition = false,
-    this.appBarNotifier,
-    this.appBarBuilder,
-    required this.behaviour,
-    required this.navigationGroups,
-    required this.constraints,
-    required this.animationDuration,
-  });
 
   @override
   State<_BoringDrawerExpansionAnimation> createState() =>
@@ -54,7 +55,6 @@ class _BoringDrawerExpansionAnimationState
     switch (widget.behaviour) {
       case BoringAnimatedNavigationDrawerBehaviour.fixedOpen:
         _animationController.value = 1.0;
-        break;
       default:
     }
     super.initState();
@@ -78,7 +78,7 @@ class _BoringDrawerExpansionAnimationState
   Widget build(BuildContext context) {
     final children = <Widget>[];
 
-    for (var group in widget.navigationGroups) {
+    for (final group in widget.navigationGroups) {
       final childrenWidgets = group.entries.map((e) {
         return e.toDrawerTile(
           context,
@@ -104,7 +104,7 @@ class _BoringDrawerExpansionAnimationState
         children.addAll(childrenWidgets);
       }
     }
-    final BoringDrawerStyle overriddenDrawerStyle = widget.overrideDrawerStyle
+    final overriddenDrawerStyle = widget.overrideDrawerStyle
             ?.call(widget.drawerStyle, widget.constraints) ??
         widget.drawerStyle;
     return MouseRegion(
@@ -116,8 +116,9 @@ class _BoringDrawerExpansionAnimationState
       },
       child: Container(
         decoration: BoxDecoration(
-            color: overriddenDrawerStyle.backgroundColor,
-            borderRadius: overriddenDrawerStyle.drawerRadius),
+          color: overriddenDrawerStyle.backgroundColor,
+          borderRadius: overriddenDrawerStyle.drawerRadius,
+        ),
         child: Column(
           children: [
             if (widget.drawerHeaderBuilder != null)

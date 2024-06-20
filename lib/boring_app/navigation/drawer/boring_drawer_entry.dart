@@ -18,15 +18,15 @@ class BoringDrawerEntry extends StatelessWidget {
   final bool overrideAlwaysOpen;
 
   BoringDrawerEntry({
-    super.key,
     required this.path,
-    this.label,
-    this.icon,
     required this.isSelected,
-    Animation<double>? hExpansionAnimation,
-    this.tileStyle = const BoringDrawerTileStyle(),
     required this.subEntries,
     required this.overrideAlwaysOpen,
+    super.key,
+    this.label,
+    this.icon,
+    Animation<double>? hExpansionAnimation,
+    this.tileStyle = const BoringDrawerTileStyle(),
   }) : hExpansionAnimation = hExpansionAnimation ??
             Animation<double>.fromValueListenable(ValueNotifier(1));
 
@@ -40,17 +40,17 @@ class BoringDrawerEntry extends StatelessWidget {
         child: BoringHoverWidget(
           builder: (context, isHover) {
             final labelWidget = Text(
-              label ?? "",
+              label ?? '',
               style: TextStyle(
-                  color: (isHover || isSelected)
-                      ? tileStyle.selectedTextColor
-                      : tileStyle.unSelectedTextColor,
-                  fontSize: tileStyle.fontSize,
-                  fontFamily: tileStyle.fontFamily ??
-                      Theme.of(context).textTheme.titleMedium?.fontFamily,
-                  fontWeight: (isHover || isSelected)
-                      ? FontWeight.w700
-                      : FontWeight.w500),
+                color: (isHover || isSelected)
+                    ? tileStyle.selectedTextColor
+                    : tileStyle.unSelectedTextColor,
+                fontSize: tileStyle.fontSize,
+                fontFamily: tileStyle.fontFamily ??
+                    Theme.of(context).textTheme.titleMedium?.fontFamily,
+                fontWeight:
+                    (isHover || isSelected) ? FontWeight.w700 : FontWeight.w500,
+              ),
             );
 
             return BoringBouncingButton(
@@ -68,8 +68,8 @@ class BoringDrawerEntry extends StatelessWidget {
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
-                padding: tileStyle
-                    .tilePadding, //const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: tileStyle.tilePadding,
+                //const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 decoration: BoxDecoration(
                   color: (isHover || isSelected)
                       ? tileStyle.selectedColor
@@ -77,50 +77,56 @@ class BoringDrawerEntry extends StatelessWidget {
                   borderRadius: tileStyle.tileRadius,
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (icon != null)
                       ColorFiltered(
-                          colorFilter: ColorFilter.mode(
+                        colorFilter: ColorFilter.mode(
+                          (isHover || isSelected)
+                              ? tileStyle.selectedTextColor!
+                              : tileStyle.unSelectedTextColor!,
+                          BlendMode.srcIn,
+                        ),
+                        child: icon,
+                      ),
+                    if (overrideAlwaysOpen)
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: labelWidget,
+                        ),
+                      )
+                    else
+                      SizeTransition(
+                        axis: Axis.horizontal,
+                        sizeFactor: hExpansionAnimation,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 8),
+                          width: tileStyle.tileMaxExpansion,
+                          child: labelWidget,
+                        ),
+                      ),
+                    if (_hasSubEntries)
+                      AnimatedBuilder(
+                        animation: animation,
+                        child: InkWell(
+                          child: ColorFiltered(
+                            colorFilter: ColorFilter.mode(
                               (isHover || isSelected)
                                   ? tileStyle.selectedTextColor!
                                   : tileStyle.unSelectedTextColor!,
-                              BlendMode.srcIn),
-                          child: icon!),
-                    overrideAlwaysOpen
-                        ? Expanded(
-                            child: Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: labelWidget,
-                          ))
-                        : SizeTransition(
-                            axis: Axis.horizontal,
-                            sizeFactor: hExpansionAnimation,
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 8),
-                              width: tileStyle.tileMaxExpansion,
-                              child: labelWidget,
+                              BlendMode.srcIn,
                             ),
+                            child: const Icon(Icons.expand_more),
                           ),
-                    if (_hasSubEntries)
-                      AnimatedBuilder(
-                          animation: animation,
-                          child: InkWell(
-                            child: ColorFiltered(
-                                colorFilter: ColorFilter.mode(
-                                    (isHover || isSelected)
-                                        ? tileStyle.selectedTextColor!
-                                        : tileStyle.unSelectedTextColor!,
-                                    BlendMode.srcIn),
-                                child: const Icon(Icons.expand_more)),
-                            onTap: () => toggleExpansion(),
-                          ),
-                          builder: (context, child) => Transform.rotate(
-                                angle: animation.value *
-                                    pi, // This is the current rotation value
-                                child: child, // Your widget goes here
-                              ))
+                          onTap: () => toggleExpansion(),
+                        ),
+                        builder: (context, child) => Transform.rotate(
+                          angle: animation.value *
+                              pi, // This is the current rotation value
+                          child: child, // Your widget goes here
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -146,9 +152,7 @@ class BoringDrawerEntry extends StatelessWidget {
               );
             }
           : null,
-      header: (toggleExpansion, animation) {
-        return _tileHeader(toggleExpansion, animation);
-      },
+      header: _tileHeader,
     );
   }
 }

@@ -1,10 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:boring_app/boring_app.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../boring_app.dart';
 
 class BoringStaticRouter {
   static GoRouter? goRouter;
@@ -17,29 +16,39 @@ class BoringAppInstance {
   final List<BoringPageGroup> _pageGroups;
 
   BoringAppInstance({
-    this.themeConfig,
     required this.path,
     required this.boringNavigation,
     required List<BoringPage> pages,
-  }) : _pageGroups = [BoringPageGroup(pages: pages)];
-  BoringAppInstance.withGroups({
     this.themeConfig,
+  }) : _pageGroups = [BoringPageGroup(pages: pages)];
+
+  BoringAppInstance.withGroups({
     required this.path,
     required this.boringNavigation,
     required List<BoringPageGroup> pageGroups,
+    this.themeConfig,
   }) : _pageGroups = pageGroups;
 
-  List<RouteBase> _routes(GlobalKey<NavigatorState> rootNavigatorKey,
-      {bool? displayedWithNavigation}) {
+  List<RouteBase> _routes(
+    GlobalKey<NavigatorState> rootNavigatorKey, {
+    bool? displayedWithNavigation,
+  }) {
     return _pageGroups
-        .map((e) => e.routes(rootNavigatorKey,
-            rootPrefix: path, displayedWithNavigation: displayedWithNavigation))
+        .map(
+          (e) => e.routes(
+            rootNavigatorKey,
+            rootPrefix: path,
+            displayedWithNavigation: displayedWithNavigation,
+          ),
+        )
         .expand((element) => element)
         .toList();
   }
 
-  ShellRoute? shellRoute(GlobalKey<NavigatorState> rootNavigatorKey,
-      BoringThemeConfig rootThemeConfig) {
+  ShellRoute? shellRoute(
+    GlobalKey<NavigatorState> rootNavigatorKey,
+    BoringThemeConfig rootThemeConfig,
+  ) {
     final appThemeConfig = themeConfig ?? rootThemeConfig;
     final routes = _routes(rootNavigatorKey, displayedWithNavigation: true);
     if (routes.isEmpty) {
@@ -53,14 +62,20 @@ class BoringAppInstance {
         return Container(
           color: Theme.of(context).scaffoldBackgroundColor,
           child: boringNavigation.buildWithContent(
-              state, child, _navigationGroups, context, appThemeConfig),
+            state,
+            child,
+            _navigationGroups,
+            context,
+            appThemeConfig,
+          ),
         );
       },
     );
   }
 
   List<RouteBase> routesWithoutNavigation(
-          GlobalKey<NavigatorState> rootNavigatorKey) =>
+    GlobalKey<NavigatorState> rootNavigatorKey,
+  ) =>
       _routes(rootNavigatorKey, displayedWithNavigation: false);
 
   List<BoringNavigationGroup> get _navigationGroups =>
@@ -85,75 +100,79 @@ class BoringApp extends StatelessWidget {
   final bool debug;
   final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
   final BoringAppWrapper appWrapper;
-  BoringApp(
-      {super.key,
-      BoringNavigation? boringNavigation,
-      required List<BoringPage> pages,
-      this.themeConfig = const BoringThemeConfig(),
-      this.appWrapper = const DefaultAppWrapper(),
-      this.redirect,
-      this.initialLocation,
-      this.rootNavigator,
-      this.localizationsDelegates,
-      this.supportedLocales = const <Locale>[Locale('en', 'US')],
-      this.locale,
-      this.refreshListenable,
-      this.debug = kDebugMode})
-      : applications = [
+
+  BoringApp({
+    required List<BoringPage> pages,
+    super.key,
+    BoringNavigation? boringNavigation,
+    this.themeConfig = const BoringThemeConfig(),
+    this.appWrapper = const DefaultAppWrapper(),
+    this.redirect,
+    this.initialLocation,
+    this.rootNavigator,
+    this.localizationsDelegates,
+    this.supportedLocales = const <Locale>[Locale('en', 'US')],
+    this.locale,
+    this.refreshListenable,
+    this.debug = kDebugMode,
+  }) : applications = [
           BoringAppInstance(
-              path: "",
-              pages: pages,
-              boringNavigation: boringNavigation ?? BoringNavigationDrawer())
+            path: '',
+            pages: pages,
+            boringNavigation: boringNavigation ?? BoringNavigationDrawer(),
+          ),
         ];
 
-  BoringApp.withGroups(
-      {super.key,
-      BoringNavigation? boringNavigation,
-      required List<BoringPageGroup> pageGroups,
-      this.themeConfig = const BoringThemeConfig(),
-      this.appWrapper = const DefaultAppWrapper(),
-      this.redirect,
-      this.initialLocation,
-      this.rootNavigator,
-      this.localizationsDelegates,
-      this.supportedLocales = const <Locale>[Locale('en', 'US')],
-      this.locale,
-      this.refreshListenable,
-      this.debug = kDebugMode})
-      : applications = [
+  BoringApp.withGroups({
+    required List<BoringPageGroup> pageGroups,
+    super.key,
+    BoringNavigation? boringNavigation,
+    this.themeConfig = const BoringThemeConfig(),
+    this.appWrapper = const DefaultAppWrapper(),
+    this.redirect,
+    this.initialLocation,
+    this.rootNavigator,
+    this.localizationsDelegates,
+    this.supportedLocales = const <Locale>[Locale('en', 'US')],
+    this.locale,
+    this.refreshListenable,
+    this.debug = kDebugMode,
+  }) : applications = [
           BoringAppInstance.withGroups(
-              path: "",
-              pageGroups: pageGroups,
-              boringNavigation: boringNavigation ?? BoringNavigationDrawer())
+            path: '',
+            pageGroups: pageGroups,
+            boringNavigation: boringNavigation ?? BoringNavigationDrawer(),
+          ),
         ];
 
-  BoringApp.multiApp(
-      {super.key,
-      BoringNavigation? boringNavigation,
-      // required List<BoringPage> pages,
-      this.themeConfig = const BoringThemeConfig(),
-      this.appWrapper = const DefaultAppWrapper(),
-      this.redirect,
-      this.initialLocation,
-      this.rootNavigator,
-      this.localizationsDelegates,
-      this.supportedLocales = const <Locale>[Locale('en', 'US')],
-      this.locale,
-      this.refreshListenable,
-      this.debug = kDebugMode,
-      required this.applications})
-      : assert(_checkOnlyOneIsRoot(applications));
+  BoringApp.multiApp({
+    required this.applications,
+    super.key,
+    // required List<BoringPage> pages,
+    this.themeConfig = const BoringThemeConfig(),
+    this.appWrapper = const DefaultAppWrapper(),
+    this.redirect,
+    this.initialLocation,
+    this.rootNavigator,
+    this.localizationsDelegates,
+    this.supportedLocales = const <Locale>[Locale('en', 'US')],
+    this.locale,
+    this.refreshListenable,
+    this.debug = kDebugMode,
+  }) : assert(_checkOnlyOneIsRoot(applications));
 
   static bool _checkOnlyOneIsRoot(List<BoringAppInstance> apps) =>
       apps.where((app) => app.isOnRoot).length < 2;
 
-  get _rootNavigatorKey => rootNavigator ?? _defaultRootNavigatorKey;
+  GlobalKey<NavigatorState> get _rootNavigatorKey =>
+      rootNavigator ?? _defaultRootNavigatorKey;
 
   List<ShellRoute> get _shellRoutes => applications
       .map((app) => app.shellRoute(_rootNavigatorKey, themeConfig))
       .where((element) => element != null)
       .toList()
       .cast<ShellRoute>();
+
   List<RouteBase> get _routesWithoutNavigation => applications
       .map((app) => app.routesWithoutNavigation(_rootNavigatorKey))
       .expand((element) => element)
@@ -161,12 +180,13 @@ class BoringApp extends StatelessWidget {
 
   void _computeRouter() {
     BoringStaticRouter.goRouter ??= GoRouter(
-        debugLogDiagnostics: debug,
-        initialLocation: initialLocation,
-        redirect: redirect,
-        refreshListenable: refreshListenable,
-        navigatorKey: _rootNavigatorKey,
-        routes: [..._shellRoutes, ..._routesWithoutNavigation]);
+      debugLogDiagnostics: debug,
+      initialLocation: initialLocation,
+      redirect: redirect,
+      refreshListenable: refreshListenable,
+      navigatorKey: _rootNavigatorKey,
+      routes: [..._shellRoutes, ..._routesWithoutNavigation],
+    );
   }
 
   @override
@@ -202,14 +222,15 @@ class BoringThemeConfig {
   final double appPadding;
   final double widthSpace;
 
-  const BoringThemeConfig(
-      {this.theme,
-      this.darkTheme,
-      this.highContrastTheme,
-      this.highContrastDarkTheme,
-      this.themeMode = ThemeMode.system,
-      this.appPadding = 20,
-      this.widthSpace = 20});
+  const BoringThemeConfig({
+    this.theme,
+    this.darkTheme,
+    this.highContrastTheme,
+    this.highContrastDarkTheme,
+    this.themeMode = ThemeMode.system,
+    this.appPadding = 20,
+    this.widthSpace = 20,
+  });
 }
 
 abstract class BoringAppWrapper {

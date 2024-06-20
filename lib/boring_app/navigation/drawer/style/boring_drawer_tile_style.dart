@@ -22,7 +22,7 @@ class BoringDrawerTileStyle {
 
   const BoringDrawerTileStyle({
     this.tileRadius = const BorderRadius.all(
-      Radius.circular(10.0),
+      Radius.circular(10),
     ),
     this.tileMaxExpansion = 150.0,
     this.isOpenedIcon = const Icon(Icons.arrow_drop_up),

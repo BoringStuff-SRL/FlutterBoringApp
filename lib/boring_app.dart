@@ -1,5 +1,3 @@
-library boring_app;
-
 export 'package:boring_app/boring_app.dart';
 export 'package:boring_app/boring_app/boring_app.dart';
 export 'package:boring_app/boring_app/navigation/boring_navigation.dart';

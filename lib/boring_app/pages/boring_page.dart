@@ -29,6 +29,7 @@ import 'package:go_router/go_router.dart';
 
 abstract class BoringPage {
   abstract final BoringNavigationEntry navigationEntry;
+
   Widget builder(BuildContext context, GoRouterState state);
 
   final bool hideFromNavigation;
@@ -37,17 +38,21 @@ abstract class BoringPage {
   final List<BoringPage> subPages;
   final bool preventNavigationDisplay;
 
-  BoringPage(
-      {this.subPages = const [],
-      this.hideFromNavigation = false,
-      this.giftSelectionWhenHidden = true,
-      this.redirect,
-      this.preventNavigationDisplay = false});
+  BoringPage({
+    this.subPages = const [],
+    this.hideFromNavigation = false,
+    this.giftSelectionWhenHidden = true,
+    this.redirect,
+    this.preventNavigationDisplay = false,
+  });
 
-  GoRoute route(GlobalKey<NavigatorState> rootNavigatorKey,
-      {String prefix = "", String? rootPrefix}) {
-    String path = navigationEntry.path;
-    String currentFullPath = prefix.pathAppend(path);
+  GoRoute route(
+    GlobalKey<NavigatorState> rootNavigatorKey, {
+    String prefix = '',
+    String? rootPrefix,
+  }) {
+    var path = navigationEntry.path;
+    var currentFullPath = prefix.pathAppend(path);
     if (rootPrefix != null) {
       currentFullPath =
           rootPrefix.pathAppend(currentFullPath, mustStartWithSlash: true);
@@ -56,33 +61,45 @@ abstract class BoringPage {
     //PATH = {rootPrefix}/{_navigationEntry.path}
     //FULL_PATH = {rootPrefix}/{prefix}/{_navigationEntry.path}
     return GoRoute(
-        parentNavigatorKey: preventNavigationDisplay ? rootNavigatorKey : null,
-        path: path,
-        pageBuilder: (context, state) {
-          if (state.fullPath != currentFullPath) {
-            return NoTransitionPage(child: Container());
-          }
-          return NoTransitionPage(child: builder(context, state));
-        },
-        redirect: redirect,
-        routes: subPages
-            .map((e) => e.route(rootNavigatorKey, prefix: currentFullPath))
-            .toList());
+      parentNavigatorKey: preventNavigationDisplay ? rootNavigatorKey : null,
+      path: path,
+      pageBuilder: (context, state) {
+        if (state.fullPath != currentFullPath) {
+          return NoTransitionPage(child: Container());
+        }
+        return NoTransitionPage(child: builder(context, state));
+      },
+      redirect: redirect,
+      routes: subPages
+          .map((e) => e.route(rootNavigatorKey, prefix: currentFullPath))
+          .toList(),
+    );
   }
 
-  BoringNavigationEntryWithSubEntries navigationEntryWithSubentries(
-          {String initPath = ""}) =>
+  BoringNavigationEntryWithSubEntries navigationEntryWithSubentries({
+    String initPath = '',
+  }) =>
       BoringNavigationEntryWithSubEntries.from(
-          navigationEntry.copyWithPath(initPath.pathAppend(navigationEntry.path,
-              mustStartWithSlash: true)),
-          subPages
-              // .where((element) => !element.hideFromNavigation)
-              .map((e) => e.navigationEntryWithSubentries(
-                  initPath: initPath.pathAppend(navigationEntry.path,
-                      mustStartWithSlash: true)))
-              .toList(),
-          hideFromNavigation,
-          giftSelectionWhenHidden);
+        navigationEntry.copyWithPath(
+          initPath.pathAppend(
+            navigationEntry.path,
+            mustStartWithSlash: true,
+          ),
+        ),
+        subPages
+            // .where((element) => !element.hideFromNavigation)
+            .map(
+              (e) => e.navigationEntryWithSubentries(
+                initPath: initPath.pathAppend(
+                  navigationEntry.path,
+                  mustStartWithSlash: true,
+                ),
+              ),
+            )
+            .toList(),
+        hideFromNavigation,
+        giftSelectionWhenHidden,
+      );
 }
 
 class MyPage extends BoringPage {
@@ -100,12 +117,12 @@ class MyPage extends BoringPage {
 extension on String {
   String pathAppend(String other, {bool mustStartWithSlash = false}) {
     if (isEmpty) return other;
-    String res = "$this/$other".replaceAll("//", "/").trim();
-    if (res.endsWith("/")) {
+    var res = '$this/$other'.replaceAll('//', '/').trim();
+    if (res.endsWith('/')) {
       res = res.substring(0, res.length - 1);
     }
-    if (mustStartWithSlash && !res.startsWith("/")) {
-      res = "/$res";
+    if (mustStartWithSlash && !res.startsWith('/')) {
+      res = '/$res';
     }
     return res;
   }

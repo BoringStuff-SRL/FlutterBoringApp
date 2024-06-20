@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class BoringHoverWidget extends StatelessWidget {
   BoringHoverWidget({
-    super.key,
     required this.builder,
+    super.key,
   });
 
   final ValueNotifier<bool> _isHover = ValueNotifier<bool>(false);
@@ -21,10 +21,11 @@ class BoringHoverWidget extends StatelessWidget {
       },
       opaque: false,
       child: ValueListenableBuilder(
-          valueListenable: _isHover,
-          builder: (BuildContext context, bool value, Widget? child) {
-            return builder(context, value);
-          }),
+        valueListenable: _isHover,
+        builder: (BuildContext context, bool value, Widget? child) {
+          return builder(context, value);
+        },
+      ),
     );
   }
 }

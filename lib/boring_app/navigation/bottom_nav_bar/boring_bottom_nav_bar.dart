@@ -13,25 +13,28 @@ class BoringBottomNavBar extends BoringNavigation {
 
   @override
   Widget builder(
-      BuildContext context,
-      List<BoringNavigationGroupWithSelection> navigationGroups,
-      BoxConstraints constraints) {
+    BuildContext context,
+    List<BoringNavigationGroupWithSelection> navigationGroups,
+    BoxConstraints constraints,
+  ) {
     final children = navigationGroups
         .map((group) => group.entries)
         .expand((element) => element)
         .toList();
     assert(
-        children
-            .every((element) => element.icon != null && element.label != null),
-        "All BottomNavigationBar entries must have an icon and a label!");
+      children
+          .every((element) => element.icon != null && element.label != null),
+      'All BottomNavigationBar entries must have an icon and a label!',
+    );
     return BottomNavigationBar(
-        onTap: (value) {
-          GoRouter.of(context).go(children[value].path);
-        },
-        currentIndex: children.indexWhere((element) => element.selected),
-        items: children
-            .map((e) => BottomNavigationBarItem(icon: e.icon!, label: e.label!))
-            .toList());
+      onTap: (value) {
+        GoRouter.of(context).go(children[value].path);
+      },
+      currentIndex: children.indexWhere((element) => element.selected),
+      items: children
+          .map((e) => BottomNavigationBarItem(icon: e.icon!, label: e.label))
+          .toList(),
+    );
 
     // final children = navigationGroups
     //     .map((group) => group.entries.map((e) => e.toDrawerTile(

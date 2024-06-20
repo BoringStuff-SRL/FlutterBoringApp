@@ -1,18 +1,18 @@
+import 'package:boring_app/boring_app/boring_app.dart';
 import 'package:boring_app/boring_app/navigation/boring_navigation.dart';
 import 'package:flutter/material.dart';
-
-import '../boring_app.dart';
 
 const persistentSide = 750;
 
 Widget content<T>(
-    BuildContext context,
-    Widget child,
-    BoringNavigationPosition navigationPosition,
-    BoxConstraints constraints,
-    Widget? navigationWidget,
-    Widget? appBar,
-    BoringThemeConfig theme) {
+  BuildContext context,
+  Widget child,
+  BoringNavigationPosition navigationPosition,
+  BoxConstraints constraints,
+  Widget? navigationWidget,
+  Widget? appBar,
+  BoringThemeConfig theme,
+) {
   if (navigationWidget == null) {
     return child;
   }
@@ -53,7 +53,7 @@ Widget content<T>(
               SizedBox(
                 width: theme.widthSpace,
               ),
-              navigationWidget
+              navigationWidget,
             ],
           ],
         ),

@@ -8,14 +8,20 @@ class BoringNavigationEntry {
   final String? label;
   final Widget? icon;
   final BreadcrumbLabelBuilder? breadcrumbLabelBuilder;
+
   BoringNavigationEntry(
     this.path, {
     this.label,
     this.icon,
     this.breadcrumbLabelBuilder,
   });
-  BoringNavigationEntry copyWithPath(String path) => BoringNavigationEntry(path,
-      label: label, icon: icon, breadcrumbLabelBuilder: breadcrumbLabelBuilder);
+
+  BoringNavigationEntry copyWithPath(String path) => BoringNavigationEntry(
+        path,
+        label: label,
+        icon: icon,
+        breadcrumbLabelBuilder: breadcrumbLabelBuilder,
+      );
 }
 
 typedef BreadcrumbLabelBuilder = String Function(GoRouterState state);
@@ -24,14 +30,15 @@ class BoringNavigationEntryWithSubEntries extends BoringNavigationEntry {
   final bool hideInNav;
   final bool giftSelection;
   final List<BoringNavigationEntryWithSubEntries> subEntries;
+
   BoringNavigationEntryWithSubEntries(
     super.path, {
     required super.label,
-    super.icon,
     required super.breadcrumbLabelBuilder,
-    this.subEntries = const [],
     required this.giftSelection,
     required this.hideInNav,
+    super.icon,
+    this.subEntries = const [],
   });
 
   factory BoringNavigationEntryWithSubEntries.from(
@@ -60,33 +67,37 @@ class BoringNavigationEntryWithSelection
   final List<BoringNavigationEntryWithSelection> subEntries;
 
   final bool selected;
+
   BoringNavigationEntryWithSelection(
     super.path, {
     required super.label,
-    super.icon,
-    super.breadcrumbLabelBuilder,
-    this.subEntries = const [],
     required super.giftSelection,
     required super.hideInNav,
     required this.selected,
+    super.icon,
+    super.breadcrumbLabelBuilder,
+    this.subEntries = const [],
   });
 
   factory BoringNavigationEntryWithSelection.from(
-      BoringNavigationEntryWithSubEntries navigationEntry,
-      GoRouterState state) {
+    BoringNavigationEntryWithSubEntries navigationEntry,
+    GoRouterState state,
+  ) {
     final subentries = navigationEntry.subEntries
         .map((e) => BoringNavigationEntryWithSelection.from(e, state))
         .toList();
     final inheritSelection =
         subentries.any((e) => e.selected && e.hideInNav && e.giftSelection);
-    return BoringNavigationEntryWithSelection(navigationEntry.path,
-        label: navigationEntry.label,
-        icon: navigationEntry.icon,
-        breadcrumbLabelBuilder: navigationEntry.breadcrumbLabelBuilder,
-        hideInNav: navigationEntry.hideInNav,
-        giftSelection: navigationEntry.giftSelection,
-        subEntries: subentries,
-        selected: inheritSelection || navigationEntry.isSelected(state));
+    return BoringNavigationEntryWithSelection(
+      navigationEntry.path,
+      label: navigationEntry.label,
+      icon: navigationEntry.icon,
+      breadcrumbLabelBuilder: navigationEntry.breadcrumbLabelBuilder,
+      hideInNav: navigationEntry.hideInNav,
+      giftSelection: navigationEntry.giftSelection,
+      subEntries: subentries,
+      selected: inheritSelection || navigationEntry.isSelected(state),
+    );
   }
 
   BoringDrawerEntry toDrawerTile(
@@ -105,40 +116,55 @@ class BoringNavigationEntryWithSelection
         overrideAlwaysOpen: overrideAlwaysOpen,
         subEntries: subEntries
             .where((element) => !element.hideInNav)
-            .map((e) => e.toDrawerTile(context, tileStyle,
+            .map(
+              (e) => e.toDrawerTile(
+                context,
+                tileStyle,
                 hExpansionAnimation: hExpansionAnimation,
-                overrideAlwaysOpen: overrideAlwaysOpen))
+                overrideAlwaysOpen: overrideAlwaysOpen,
+              ),
+            )
             .toList(),
       );
 }
 
 class BoringNavigationGroup {
   String? name;
+  Widget? icon;
   List<BoringNavigationEntryWithSubEntries> entries;
+
   BoringNavigationGroup({
-    this.name,
     required this.entries,
+    required this.icon,
+    this.name,
   });
 }
 
 class BoringNavigationGroupWithSelection {
   String? name;
+  Widget? icon;
   List<BoringNavigationEntryWithSelection> entries;
+
   BoringNavigationGroupWithSelection({
-    this.name,
     required this.entries,
+    this.name,
+     this.icon,
   });
 
   bool get hasName => name != null && name!.isNotEmpty;
 
   factory BoringNavigationGroupWithSelection.from(
-      BoringNavigationGroup navigationGroup, GoRouterState state) {
+    BoringNavigationGroup navigationGroup,
+    GoRouterState state,
+  ) {
     return BoringNavigationGroupWithSelection(
-        name: navigationGroup.name,
-        entries: navigationGroup.entries
-            .where((element) => !element.hideInNav)
-            .map((e) => BoringNavigationEntryWithSelection.from(e, state))
-            .toList());
+      name: navigationGroup.name,
+      icon: navigationGroup.icon,
+      entries: navigationGroup.entries
+          .where((element) => !element.hideInNav)
+          .map((e) => BoringNavigationEntryWithSelection.from(e, state))
+          .toList(),
+    );
   }
 }
 
