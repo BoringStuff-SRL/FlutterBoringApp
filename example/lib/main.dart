@@ -74,6 +74,7 @@ class MyApp extends StatelessWidget {
           ],
           builder: (p0, p1) {
             print("BUILDING FIRST PAGE");
+            throw Exception();
 
             return ElevatedButton(
               onPressed: () {
