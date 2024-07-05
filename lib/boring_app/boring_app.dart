@@ -76,6 +76,7 @@ class BoringApp extends StatelessWidget {
 
   final BoringThemeConfig themeConfig;
   final GlobalKey<NavigatorState>? rootNavigator;
+  final Widget Function(FlutterErrorDetails errorDetails)? onErrorBuilder;
   final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
       redirect;
   final String? initialLocation;
@@ -96,6 +97,7 @@ class BoringApp extends StatelessWidget {
       this.localizationsDelegates,
       this.supportedLocales = const <Locale>[Locale('en', 'US')],
       this.locale,
+      this.onErrorBuilder,
       this.refreshListenable,
       this.debug = kDebugMode})
       : applications = [
@@ -116,6 +118,7 @@ class BoringApp extends StatelessWidget {
       this.localizationsDelegates,
       this.supportedLocales = const <Locale>[Locale('en', 'US')],
       this.locale,
+      this.onErrorBuilder,
       this.refreshListenable,
       this.debug = kDebugMode})
       : applications = [
@@ -129,6 +132,7 @@ class BoringApp extends StatelessWidget {
       {super.key,
       BoringNavigation? boringNavigation,
       // required List<BoringPage> pages,
+      this.onErrorBuilder,
       this.themeConfig = const BoringThemeConfig(),
       this.redirect,
       this.initialLocation,
@@ -185,6 +189,13 @@ class BoringApp extends StatelessWidget {
       highContrastTheme: themeConfig.highContrastTheme,
       highContrastDarkTheme: themeConfig.highContrastDarkTheme,
       themeMode: themeConfig.themeMode,
+      builder: (context, child) {
+        if (onErrorBuilder != null) {
+          ErrorWidget.builder = onErrorBuilder!;
+        }
+
+        return child!;
+      },
     );
   }
 }
