@@ -100,11 +100,13 @@ class BoringApp extends StatelessWidget {
   final bool debug;
   final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
   final BoringAppWrapper appWrapper;
+  final Widget Function(BuildContext context, Widget? child)? builder;
 
   BoringApp({
     required List<BoringPage> pages,
     super.key,
     BoringNavigation? boringNavigation,
+    this.builder,
     this.themeConfig = const BoringThemeConfig(),
     this.appWrapper = const DefaultAppWrapper(),
     this.redirect,
@@ -126,6 +128,7 @@ class BoringApp extends StatelessWidget {
   BoringApp.withGroups({
     required List<BoringPageGroup> pageGroups,
     super.key,
+    this.builder,
     BoringNavigation? boringNavigation,
     this.themeConfig = const BoringThemeConfig(),
     this.appWrapper = const DefaultAppWrapper(),
@@ -149,6 +152,7 @@ class BoringApp extends StatelessWidget {
     required this.applications,
     super.key,
     // required List<BoringPage> pages,
+    this.builder,
     this.themeConfig = const BoringThemeConfig(),
     this.appWrapper = const DefaultAppWrapper(),
     this.redirect,
@@ -208,6 +212,7 @@ class BoringApp extends StatelessWidget {
       highContrastTheme: themeConfig.highContrastTheme,
       highContrastDarkTheme: themeConfig.highContrastDarkTheme,
       themeMode: themeConfig.themeMode,
+      builder: builder,
     );
     return appWrapper.wrapper(context, app);
   }
