@@ -20,8 +20,14 @@ Widget content<T>(
   final childContent = appBar != null
       ? Column(
           children: [
-            appBar,
-            const SizedBox(height: 20),
+            Padding(
+              padding: EdgeInsets.only(
+                left: theme.widthSpace,
+                top: theme.widthSpace,
+                right: theme.widthSpace,
+              ),
+              child: appBar,
+            ),
             Expanded(child: child),
           ],
         )
@@ -38,25 +44,26 @@ Widget content<T>(
       if (constraints.maxWidth < persistentSide) {
         return childContent;
       }
-      return Padding(
-        padding: EdgeInsets.all(theme.appPadding),
-        child: Row(
-          children: [
-            if (navigationPosition == BoringNavigationPosition.left) ...[
-              navigationWidget,
-              SizedBox(
-                width: theme.widthSpace,
+      return Row(
+        children: [
+          if (navigationPosition == BoringNavigationPosition.left) ...[
+            Padding(
+              padding: EdgeInsets.only(
+                left: theme.widthSpace,
+                top: theme.widthSpace,
+                bottom: theme.widthSpace,
               ),
-            ],
-            Expanded(child: childContent),
-            if (navigationPosition == BoringNavigationPosition.right) ...[
-              SizedBox(
-                width: theme.widthSpace,
-              ),
-              navigationWidget,
-            ],
+              child: navigationWidget,
+            ),
           ],
-        ),
+          Expanded(child: childContent),
+          if (navigationPosition == BoringNavigationPosition.right) ...[
+            SizedBox(
+              width: theme.widthSpace,
+            ),
+            navigationWidget,
+          ],
+        ],
       );
   }
 }

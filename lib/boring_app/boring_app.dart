@@ -31,6 +31,7 @@ class BoringAppInstance {
 
   List<RouteBase> _routes(
     GlobalKey<NavigatorState> rootNavigatorKey, {
+    required BoringThemeConfig theme,
     bool? displayedWithNavigation,
   }) {
     return _pageGroups
@@ -39,6 +40,7 @@ class BoringAppInstance {
             rootNavigatorKey,
             rootPrefix: path,
             displayedWithNavigation: displayedWithNavigation,
+            theme: theme,
           ),
         )
         .expand((element) => element)
@@ -50,24 +52,26 @@ class BoringAppInstance {
     BoringThemeConfig rootThemeConfig,
   ) {
     final appThemeConfig = themeConfig ?? rootThemeConfig;
-    final routes = _routes(rootNavigatorKey, displayedWithNavigation: true);
+    final routes = _routes(
+      rootNavigatorKey,
+      displayedWithNavigation: true,
+      theme: rootThemeConfig,
+    );
     if (routes.isEmpty) {
       return null;
     }
     return ShellRoute(
       // navigatorKey: GlobalKey<NavigatorState>(),
       // parentNavigatorKey: rootNavigatorKey,
+
       routes: routes,
       builder: (context, state, child) {
-        return Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: boringNavigation.buildWithContent(
-            state,
-            child,
-            _navigationGroups,
-            context,
-            appThemeConfig,
-          ),
+        return boringNavigation.buildWithContent(
+          state,
+          child,
+          _navigationGroups,
+          context,
+          appThemeConfig,
         );
       },
     );
@@ -75,8 +79,13 @@ class BoringAppInstance {
 
   List<RouteBase> routesWithoutNavigation(
     GlobalKey<NavigatorState> rootNavigatorKey,
+    BoringThemeConfig rootThemeConfig,
   ) =>
-      _routes(rootNavigatorKey, displayedWithNavigation: false);
+      _routes(
+        rootNavigatorKey,
+        displayedWithNavigation: false,
+        theme: rootThemeConfig,
+      );
 
   List<BoringNavigationGroup> get _navigationGroups =>
       _pageGroups.map((e) => e.navigationGroup(rootPrefix: path)).toList();
@@ -178,7 +187,7 @@ class BoringApp extends StatelessWidget {
       .cast<ShellRoute>();
 
   List<RouteBase> get _routesWithoutNavigation => applications
-      .map((app) => app.routesWithoutNavigation(_rootNavigatorKey))
+      .map((app) => app.routesWithoutNavigation(_rootNavigatorKey, themeConfig))
       .expand((element) => element)
       .toList();
 

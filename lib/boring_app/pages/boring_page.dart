@@ -3,6 +3,8 @@ import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+import '../boring_app.dart';
+
 // class BoringPageWidget extends BoringPage {
 //   final Widget Function(BuildContext context, GoRouterState state)
 //       _widgetBuilder;
@@ -48,6 +50,7 @@ abstract class BoringPage {
 
   GoRoute route(
     GlobalKey<NavigatorState> rootNavigatorKey, {
+    required BoringThemeConfig theme,
     String prefix = '',
     String? rootPrefix,
   }) {
@@ -67,11 +70,22 @@ abstract class BoringPage {
         if (state.fullPath != currentFullPath) {
           return NoTransitionPage(child: Container());
         }
-        return NoTransitionPage(child: builder(context, state));
+        return NoTransitionPage(
+          child: Padding(
+            padding: EdgeInsets.all(theme.widthSpace),
+            child: builder(context, state),
+          ),
+        );
       },
       redirect: redirect,
       routes: subPages
-          .map((e) => e.route(rootNavigatorKey, prefix: currentFullPath))
+          .map(
+            (e) => e.route(
+              rootNavigatorKey,
+              prefix: currentFullPath,
+              theme: theme,
+            ),
+          )
           .toList(),
     );
   }
@@ -100,18 +114,6 @@ abstract class BoringPage {
         hideFromNavigation,
         giftSelectionWhenHidden,
       );
-}
-
-class MyPage extends BoringPage {
-  @override
-  // TODO: implement _navigationEntry
-  BoringNavigationEntry get navigationEntry => throw UnimplementedError();
-
-  @override
-  Widget builder(BuildContext context, GoRouterState state) {
-    // TODO: implement builder
-    throw UnimplementedError();
-  }
 }
 
 extension on String {

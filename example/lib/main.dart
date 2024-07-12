@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BoringApp(
-      initialLocation: "/prima",
+      initialLocation: "/test",
       themeConfig: BoringThemeConfig(
           theme: ThemeData(
         fontFamily: 'Inter',
@@ -45,78 +45,64 @@ class MyApp extends StatelessWidget {
         testNotifier.value = '';
         return null;
       },
-      pages: [
-        BoringPageWidget(
-          navigationEntry: BoringNavigationEntry("/prima",
-              icon: const Icon(Icons.abc), label: 'Prima'),
-          subPages: [
-            BoringPageWidget(
-              hideFromNavigation: true,
-              navigationEntry: BoringNavigationEntry('seconda', label: 'SIUU'),
-              builder: (context, state) {
-                print("BUILDING SECOND PAGE");
-                return ElevatedButton(
-                    onPressed: () {
-                      context.go("/prima1/seconda1");
-                    },
-                    child: const Text("VAI A SECONDA DENTRO SECONDA"));
-              },
-            ),
-            BoringPageWidget(
-              hideFromNavigation: true,
-              navigationEntry: BoringNavigationEntry(':id/ciao', label: 'SIUU'),
-              builder: (context, state) {
-                print("BUILDING SECOND PAGE");
-                final id = state.pathParameters["id"] ?? "NO ID";
-                return Text("ID: $id");
-              },
-            )
-          ],
-          builder: (p0, p1) {
-            print("BUILDING FIRST PAGE");
-
-            return ElevatedButton(
-              onPressed: () {
-                p0.push('/prima/seconda');
-              },
-              child: const Text('VAI A SECONDA'),
-            );
-          },
-        ),
-        BoringPageWidget(
-          navigationEntry: BoringNavigationEntry("/prima1",
-              icon: const Icon(Icons.abc), label: 'Prima1'),
-          subPages: [
-            BoringPageWidget(
-              hideFromNavigation: true,
-              navigationEntry: BoringNavigationEntry('seconda1', label: 'SIUU'),
-              builder: (context, state) {
-                print("BUILDING SECOND PAGE");
-                return const Text('SECONDA1');
-              },
-            )
-          ],
-          builder: (p0, p1) {
-            print("BUILDING FIRST PAGE");
-
-            return ElevatedButton(
-              onPressed: () {
-                p0.push('/prima1/seconda1');
-              },
-              child: const Text('VAI A SECONDA'),
-            );
-          },
-        ),
-      ],
+      pages: [MyPage()],
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class MyPage extends BoringPage {
+  @override
+  Widget builder(BuildContext context, GoRouterState state) {
+    return Container(
+      height: 200,
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 10,
+            spreadRadius: 0.5,
+          )
+        ],
+      ),
+      child: FilledButton(
+          onPressed: () {
+            context.go('/test/subpage');
+          },
+          child: Text('child')),
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
+  // TODO: implement subPages
+  List<BoringPage> get subPages => [MySubPage()];
+  @override
+  BoringNavigationEntry get navigationEntry =>
+      BoringNavigationEntry('/test', label: 'Test');
+}
+
+class MySubPage extends BoringPage {
+  @override
+  Widget builder(BuildContext context, GoRouterState state) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Container(
+        height: 200,
+        decoration: BoxDecoration(
+          color: Colors.red,
+          boxShadow: [
+            BoxShadow(
+              spreadRadius: 1,
+              blurRadius: 20,
+              offset: Offset.zero,
+              color: Colors.black,
+            )
+          ],
+        ),
+      ),
+    );
   }
+
+  @override
+  BoringNavigationEntry get navigationEntry =>
+      BoringNavigationEntry('subpage', label: 'Test');
 }
