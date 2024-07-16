@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../boring_app.dart';
@@ -71,9 +71,14 @@ abstract class BoringPage {
           return NoTransitionPage(child: Container());
         }
         return NoTransitionPage(
-          child: Padding(
-            padding: EdgeInsets.all(theme.widthSpace),
-            child: builder(context, state),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(theme.widthSpace),
+              child: builder(context, state),
+            ),
           ),
         );
       },
