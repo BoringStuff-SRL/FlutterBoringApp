@@ -51,6 +51,7 @@ abstract class BoringPage {
   GoRoute route(
     GlobalKey<NavigatorState> rootNavigatorKey, {
     required BoringThemeConfig theme,
+    bool? displayWithNavigation,
     String prefix = '',
     String? rootPrefix,
   }) {
@@ -72,9 +73,10 @@ abstract class BoringPage {
         }
         return NoTransitionPage(
           child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-            ),
+            // == false perche' puo essere false
+            color: displayWithNavigation == false
+                ? Theme.of(context).colorScheme.surface
+                : null,
             child: Padding(
               padding: EdgeInsets.all(theme.widthSpace),
               child: builder(context, state),
@@ -89,6 +91,7 @@ abstract class BoringPage {
               rootNavigatorKey,
               prefix: currentFullPath,
               theme: theme,
+              displayWithNavigation: displayWithNavigation,
             ),
           )
           .toList(),

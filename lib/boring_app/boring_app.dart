@@ -32,7 +32,7 @@ class BoringAppInstance {
   List<RouteBase> _routes(
     GlobalKey<NavigatorState> rootNavigatorKey, {
     required BoringThemeConfig theme,
-    bool? displayedWithNavigation,
+    required bool? displayedWithNavigation,
   }) {
     return _pageGroups
         .map(

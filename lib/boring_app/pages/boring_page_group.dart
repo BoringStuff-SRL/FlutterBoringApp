@@ -29,8 +29,8 @@ class BoringPageGroup {
   List<RouteBase> routes(
     GlobalKey<NavigatorState> rootNavigatorKey, {
     required BoringThemeConfig theme,
+    required bool? displayedWithNavigation,
     String? rootPrefix,
-    bool? displayedWithNavigation,
   }) =>
       pages
           .where(
@@ -43,6 +43,7 @@ class BoringPageGroup {
               rootNavigatorKey,
               rootPrefix: rootPrefix,
               theme: theme,
+              displayWithNavigation: displayedWithNavigation,
             ),
           )
           .toList();
