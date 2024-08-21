@@ -148,7 +148,7 @@ class BoringNavigationGroupWithSelection {
   BoringNavigationGroupWithSelection({
     required this.entries,
     this.name,
-     this.icon,
+    this.icon,
   });
 
   bool get hasName => name != null && name!.isNotEmpty;
@@ -161,7 +161,7 @@ class BoringNavigationGroupWithSelection {
       name: navigationGroup.name,
       icon: navigationGroup.icon,
       entries: navigationGroup.entries
-          .where((element) => !element.hideInNav)
+          //.where((element) => !element.hideInNav)
           .map((e) => BoringNavigationEntryWithSelection.from(e, state))
           .toList(),
     );
