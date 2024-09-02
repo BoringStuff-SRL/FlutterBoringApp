@@ -15,7 +15,7 @@ dependencies:
 
   boringcore:
     git:
-      url: https://github.com/BoringStuff-SRL/BoringCore
+      url: git@github.com:BoringStuff-SRL/BoringCore.git
       ref: main
 
 
