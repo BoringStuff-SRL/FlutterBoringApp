@@ -39,6 +39,7 @@ abstract class BoringPage {
   final Future<String?> Function(BuildContext, GoRouterState)? redirect;
   final List<BoringPage> subPages;
   final bool preventNavigationDisplay;
+  final Map<String, String> initialQueryParams;
 
   BoringPage({
     this.subPages = const [],
@@ -46,6 +47,7 @@ abstract class BoringPage {
     this.giftSelectionWhenHidden = true,
     this.redirect,
     this.preventNavigationDisplay = false,
+    this.initialQueryParams = const {},
   });
 
   GoRoute route(
@@ -62,6 +64,7 @@ abstract class BoringPage {
           rootPrefix.pathAppend(currentFullPath, mustStartWithSlash: true);
       path = rootPrefix.pathAppend(path, mustStartWithSlash: true);
     }
+
     //PATH = {rootPrefix}/{_navigationEntry.path}
     //FULL_PATH = {rootPrefix}/{prefix}/{_navigationEntry.path}
     return GoRoute(
@@ -71,17 +74,29 @@ abstract class BoringPage {
         if (state.fullPath != currentFullPath) {
           return NoTransitionPage(child: Container());
         }
+
         return NoTransitionPage(
-          child: Container(
-            // == false perche' puo essere false
-            color: displayWithNavigation == false
-                ? Theme.of(context).colorScheme.surface
-                : null,
-            child: Padding(
-              padding: EdgeInsets.all(theme.widthSpace),
-              child: builder(context, state),
-            ),
-          ),
+          child: Builder(builder: (context) {
+            WidgetsBinding.instance.addPostFrameCallback(
+              (timeStamp) {
+                if (initialQueryParams.isNotEmpty &&
+                    state.uri.queryParameters.isEmpty) {
+                  context.go(
+                      '${_joinQueryParams(state.fullPath!, initialQueryParams)}');
+                }
+              },
+            );
+            return Container(
+              // == false perche' puo essere false
+              color: displayWithNavigation == false
+                  ? Theme.of(context).colorScheme.surface
+                  : null,
+              child: Padding(
+                padding: EdgeInsets.all(theme.widthSpace),
+                child: builder(context, state),
+              ),
+            );
+          }),
         );
       },
       redirect: redirect,
@@ -96,6 +111,16 @@ abstract class BoringPage {
           )
           .toList(),
     );
+  }
+
+  String _joinQueryParams(String path, Map<String, dynamic> queryParams) {
+    final queryParamsString = initialQueryParams.entries
+        .map(
+          (e) => "${e.key}=${e.value}",
+        )
+        .join('&');
+
+    return "$path?$queryParamsString";
   }
 
   BoringNavigationEntryWithSubEntries navigationEntryWithSubentries({

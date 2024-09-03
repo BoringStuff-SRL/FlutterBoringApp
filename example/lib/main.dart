@@ -52,6 +52,11 @@ class MyApp extends StatelessWidget {
 
 class MyPage extends BoringPage {
   @override
+  Map<String, String> get initialQueryParams => {
+        'page': "1",
+      };
+
+  @override
   Widget builder(BuildContext context, GoRouterState state) {
     return Container(
       height: 200,
