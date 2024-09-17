@@ -16,7 +16,7 @@ dependencies:
   boringcore:
     git:
       url: git@github.com:BoringStuff-SRL/BoringCore.git
-      ref: dropdown-fix
+      ref: main
 
 
 dev_dependencies:
