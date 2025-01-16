@@ -145,13 +145,14 @@ class BoringNavigationGroup {
 class BoringNavigationGroupWithSelection {
   String? name;
   Widget? icon;
+  bool hideFromNavigation;
   List<BoringNavigationEntryWithSelection> entries;
 
-  BoringNavigationGroupWithSelection({
-    required this.entries,
-    this.name,
-    this.icon,
-  });
+  BoringNavigationGroupWithSelection(
+      {required this.entries,
+      this.name,
+      this.icon,
+      this.hideFromNavigation = false});
 
   bool get hasName => name != null && name!.isNotEmpty;
 

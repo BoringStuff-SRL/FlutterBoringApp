@@ -87,7 +87,7 @@ class _BoringDrawerExpansionAnimationState
         );
       }).toList();
 
-      if (group.hasName) {
+      if (group.hasName && !group.hideFromNavigation) {
         children.add(
           BoringExpansionWidget(
             tilePadding: const EdgeInsets.all(8),

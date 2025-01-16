@@ -19,6 +19,7 @@ class BoringPageGroup {
     return BoringNavigationGroup(
       name: name,
       icon: icon,
+      hideFromNavigation: hideFromNavigation,
       entries: pages
           .map(
             (e) => e.navigationEntryWithSubentries(
