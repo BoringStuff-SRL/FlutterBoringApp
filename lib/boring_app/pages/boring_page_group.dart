@@ -5,15 +5,15 @@ import 'package:flutter/widgets.dart';
 class BoringPageGroup {
   final String? name;
   final Widget? icon;
-  final bool hideFromNavigation;
+  bool get hideFromNavigation => false;
 
   final List<BoringPage> pages;
 
-  const BoringPageGroup(
-      {required this.pages,
-      this.name,
-      this.icon,
-      this.hideFromNavigation = false});
+  const BoringPageGroup({
+    required this.pages,
+    this.name,
+    this.icon,
+  });
 
   BoringNavigationGroup navigationGroup({String? rootPrefix}) {
     return BoringNavigationGroup(
