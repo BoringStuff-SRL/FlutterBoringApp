@@ -76,6 +76,7 @@ class _BoringDrawerExpansionAnimationState
 
   @override
   Widget build(BuildContext context) {
+    print('Drawer build');
     final children = <Widget>[];
 
     for (final group in widget.navigationGroups) {
