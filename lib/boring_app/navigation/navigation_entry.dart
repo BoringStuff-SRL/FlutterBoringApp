@@ -163,6 +163,7 @@ class BoringNavigationGroupWithSelection {
     return BoringNavigationGroupWithSelection(
       name: navigationGroup.name,
       icon: navigationGroup.icon,
+      hideFromNavigation: navigationGroup.hideFromNavigation,
       entries: navigationGroup.entries
           //.where((element) => !element.hideInNav)
           .map((e) => BoringNavigationEntryWithSelection.from(e, state))
