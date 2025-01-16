@@ -131,12 +131,14 @@ class BoringNavigationEntryWithSelection
 class BoringNavigationGroup {
   String? name;
   Widget? icon;
+  bool hideFromNavigation;
   List<BoringNavigationEntryWithSubEntries> entries;
 
   BoringNavigationGroup({
     required this.entries,
     required this.icon,
     this.name,
+    this.hideFromNavigation = false,
   });
 }
 

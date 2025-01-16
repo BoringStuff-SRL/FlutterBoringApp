@@ -5,11 +5,15 @@ import 'package:flutter/widgets.dart';
 class BoringPageGroup {
   final String? name;
   final Widget? icon;
-  final bool? test;
+  final bool hideFromNavigation;
 
   final List<BoringPage> pages;
 
-  const BoringPageGroup({required this.pages, this.name, this.icon, this.test});
+  const BoringPageGroup(
+      {required this.pages,
+      this.name,
+      this.icon,
+      this.hideFromNavigation = false});
 
   BoringNavigationGroup navigationGroup({String? rootPrefix}) {
     return BoringNavigationGroup(
@@ -17,7 +21,9 @@ class BoringPageGroup {
       icon: icon,
       entries: pages
           .map(
-            (e) => e.navigationEntryWithSubentries(initPath: rootPrefix ?? ''),
+            (e) => e.navigationEntryWithSubentries(
+              initPath: rootPrefix ?? '',
+            ),
           )
           .toList(),
     );
