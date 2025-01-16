@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 class BoringPageGroup {
   final String? name;
   final Widget? icon;
+  bool get hideFromNavigation => false;
 
   final List<BoringPage> pages;
 
@@ -18,9 +19,12 @@ class BoringPageGroup {
     return BoringNavigationGroup(
       name: name,
       icon: icon,
+      hideFromNavigation: hideFromNavigation,
       entries: pages
           .map(
-            (e) => e.navigationEntryWithSubentries(initPath: rootPrefix ?? ''),
+            (e) => e.navigationEntryWithSubentries(
+              initPath: rootPrefix ?? '',
+            ),
           )
           .toList(),
     );

@@ -76,6 +76,7 @@ class _BoringDrawerExpansionAnimationState
 
   @override
   Widget build(BuildContext context) {
+    
     final children = <Widget>[];
 
     for (final group in widget.navigationGroups) {
@@ -87,7 +88,8 @@ class _BoringDrawerExpansionAnimationState
         );
       }).toList();
 
-      if (group.hasName) {
+      if (group.hasName && !group.hideFromNavigation) {
+        
         children.add(
           BoringExpansionWidget(
             tilePadding: const EdgeInsets.all(8),

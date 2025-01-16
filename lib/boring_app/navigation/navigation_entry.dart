@@ -131,25 +131,28 @@ class BoringNavigationEntryWithSelection
 class BoringNavigationGroup {
   String? name;
   Widget? icon;
+  bool hideFromNavigation;
   List<BoringNavigationEntryWithSubEntries> entries;
 
   BoringNavigationGroup({
     required this.entries,
     required this.icon,
     this.name,
+    this.hideFromNavigation = false,
   });
 }
 
 class BoringNavigationGroupWithSelection {
   String? name;
   Widget? icon;
+  bool hideFromNavigation;
   List<BoringNavigationEntryWithSelection> entries;
 
-  BoringNavigationGroupWithSelection({
-    required this.entries,
-    this.name,
-    this.icon,
-  });
+  BoringNavigationGroupWithSelection(
+      {required this.entries,
+      this.name,
+      this.icon,
+      this.hideFromNavigation = false});
 
   bool get hasName => name != null && name!.isNotEmpty;
 
@@ -160,6 +163,7 @@ class BoringNavigationGroupWithSelection {
     return BoringNavigationGroupWithSelection(
       name: navigationGroup.name,
       icon: navigationGroup.icon,
+      hideFromNavigation: navigationGroup.hideFromNavigation,
       entries: navigationGroup.entries
           //.where((element) => !element.hideInNav)
           .map((e) => BoringNavigationEntryWithSelection.from(e, state))
