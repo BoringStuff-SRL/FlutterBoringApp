@@ -1,9 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:boring_app/boring_app/boring_app.dart';
 import 'package:boring_app/boring_app/navigation/navigation_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../boring_app.dart';
 
 // class BoringPageWidget extends BoringPage {
 //   final Widget Function(BuildContext context, GoRouterState state)
@@ -36,7 +35,8 @@ abstract class BoringPage {
 
   final bool hideFromNavigation;
   final bool giftSelectionWhenHidden;
-  final Future<String?> Function(BuildContext, GoRouterState)? redirect;
+  final Future<String?> Function(BuildContext context, GoRouterState state)?
+      redirect;
   final List<BoringPage> subPages;
   final bool preventNavigationDisplay;
   final Map<String, String> initialQueryParams;
@@ -76,27 +76,30 @@ abstract class BoringPage {
         }
 
         return NoTransitionPage(
-          child: Builder(builder: (context) {
-            WidgetsBinding.instance.addPostFrameCallback(
-              (timeStamp) {
-                if (initialQueryParams.isNotEmpty &&
-                    state.uri.queryParameters.isEmpty) {
-                  context.go(
-                      '${_joinQueryParams(state.fullPath!, initialQueryParams)}');
-                }
-              },
-            );
-            return Container(
-              // == false perche' puo essere false
-              color: displayWithNavigation == false
-                  ? Theme.of(context).colorScheme.surface
-                  : null,
-              child: Padding(
-                padding: EdgeInsets.all(theme.widthSpace),
-                child: builder(context, state),
-              ),
-            );
-          }),
+          child: Builder(
+            builder: (context) {
+              WidgetsBinding.instance.addPostFrameCallback(
+                (timeStamp) {
+                  if (initialQueryParams.isNotEmpty &&
+                      state.uri.queryParameters.isEmpty) {
+                    context.go(
+                      _joinQueryParams(state.fullPath!, initialQueryParams),
+                    );
+                  }
+                },
+              );
+              return Container(
+                // == false perche' puo essere false
+                color: displayWithNavigation == false
+                    ? Theme.of(context).colorScheme.surface
+                    : null,
+                child: Padding(
+                  padding: EdgeInsets.all(theme.widthSpace),
+                  child: builder(context, state),
+                ),
+              );
+            },
+          ),
         );
       },
       redirect: redirect,
@@ -116,11 +119,11 @@ abstract class BoringPage {
   String _joinQueryParams(String path, Map<String, dynamic> queryParams) {
     final queryParamsString = initialQueryParams.entries
         .map(
-          (e) => "${e.key}=${e.value}",
+          (e) => '${e.key}=${e.value}',
         )
         .join('&');
 
-    return "$path?$queryParamsString";
+    return '$path?$queryParamsString';
   }
 
   BoringNavigationEntryWithSubEntries navigationEntryWithSubentries({
