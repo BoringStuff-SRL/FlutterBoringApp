@@ -9,9 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  go_router: ^14.8.1
 
-  syncfusion_localizations: ^28.2.11
+  go_router: ^15.1.2
+  syncfusion_localizations: ^29.1.41
 
 dev_dependencies:
   flutter_lints: ^5.0.0
