@@ -56,6 +56,7 @@ abstract class BoringPage {
     bool? displayWithNavigation,
     String prefix = '',
     String? rootPrefix,
+    RedirectCallback? globalRedirect,
   }) {
     var path = navigationEntry.path;
     var currentFullPath = prefix.pathAppend(path);
@@ -102,7 +103,9 @@ abstract class BoringPage {
           ),
         );
       },
-      redirect: redirect,
+      redirect: (context, state) =>
+          globalRedirect?.call(context, state) ??
+          redirect?.call(context, state),
       routes: subPages
           .map(
             (e) => e.route(

@@ -35,6 +35,7 @@ class BoringPageGroup {
     required BoringThemeConfig theme,
     required bool? displayedWithNavigation,
     String? rootPrefix,
+    RedirectCallback? redirect,
   }) =>
       pages
           .where(
@@ -48,6 +49,7 @@ class BoringPageGroup {
               rootPrefix: rootPrefix,
               theme: theme,
               displayWithNavigation: displayedWithNavigation,
+              globalRedirect: redirect,
             ),
           )
           .toList();
