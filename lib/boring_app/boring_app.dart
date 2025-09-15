@@ -87,9 +87,8 @@ class BoringAppInstance {
 
   List<RouteBase> routesWithoutNavigation(
     GlobalKey<NavigatorState> rootNavigatorKey,
-    BoringThemeConfig rootThemeConfig, {
-    RedirectCallback? redirect,
-  }) =>
+    BoringThemeConfig rootThemeConfig,
+  ) =>
       _routes(
         rootNavigatorKey,
         displayedWithNavigation: false,
