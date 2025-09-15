@@ -14,11 +14,14 @@ class BoringAppInstance {
   final String? path;
   final BoringNavigation boringNavigation;
   final List<BoringPageGroup> _pageGroups;
+  final FutureOr<String?> Function(BuildContext context, GoRouterState state)?
+      redirect;
 
   BoringAppInstance({
     required this.path,
     required this.boringNavigation,
     required List<BoringPage> pages,
+    this.redirect,
     this.themeConfig,
   }) : _pageGroups = [BoringPageGroup(pages: pages)];
 
@@ -27,6 +30,7 @@ class BoringAppInstance {
     required this.boringNavigation,
     required List<BoringPageGroup> pageGroups,
     this.themeConfig,
+    this.redirect,
   }) : _pageGroups = pageGroups;
 
   List<RouteBase> _routes(
@@ -63,7 +67,7 @@ class BoringAppInstance {
     return ShellRoute(
       // navigatorKey: GlobalKey<NavigatorState>(),
       // parentNavigatorKey: rootNavigatorKey,
-
+      redirect: redirect,
       routes: routes,
       builder: (context, state, child) {
         return boringNavigation.buildWithContent(
