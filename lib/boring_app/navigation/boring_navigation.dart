@@ -33,18 +33,11 @@ abstract class BoringNavigation<T> {
 
   BoringNavigation({this.appBarNotifier, this.appBarBuilder});
 
-  Widget builder(
+  Widget? builder(
     BuildContext context,
     List<BoringNavigationGroupWithSelection> navigationGroups,
     BoxConstraints constraints,
   );
-
-  Widget? _drawer(
-    BuildContext context,
-    List<BoringNavigationGroupWithSelection> navigationGroups,
-    BoxConstraints constraints,
-  ) =>
-      builder(context, navigationGroups, constraints);
 
   Widget? _bottomNav(
     BuildContext context,
@@ -98,7 +91,7 @@ abstract class BoringNavigation<T> {
       builder: (context, constraints) {
         final drawerVisible = isDrawerVisible(constraints);
         final navGroups = navigationGroups.withSelection(state);
-        final drawer = _drawer(context, navGroups, constraints);
+        final drawer = builder(context, navGroups, constraints);
 
         BoringNavigationEntryWithSelection? entry;
 

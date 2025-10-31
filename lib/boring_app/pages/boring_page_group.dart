@@ -5,12 +5,13 @@ import 'package:flutter/widgets.dart';
 class BoringPageGroup {
   final String? name;
   final Widget? icon;
-  bool get hideFromNavigation => false;
+  final bool hideFromNavigation;
 
   final List<BoringPage> pages;
 
   const BoringPageGroup({
     required this.pages,
+    this.hideFromNavigation = false,
     this.name,
     this.icon,
   });
@@ -35,6 +36,7 @@ class BoringPageGroup {
     required BoringThemeConfig theme,
     required bool? displayedWithNavigation,
     String? rootPrefix,
+    RedirectCallback? redirect,
   }) =>
       pages
           .where(
@@ -48,6 +50,7 @@ class BoringPageGroup {
               rootPrefix: rootPrefix,
               theme: theme,
               displayWithNavigation: displayedWithNavigation,
+              globalRedirect: redirect,
             ),
           )
           .toList();

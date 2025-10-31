@@ -5,6 +5,9 @@ import 'package:boring_app/boring_app.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+typedef RedirectCallback = FutureOr<String?> Function(
+    BuildContext context, GoRouterState state);
+
 class BoringStaticRouter {
   static GoRouter? goRouter;
 }
@@ -14,11 +17,13 @@ class BoringAppInstance {
   final String? path;
   final BoringNavigation boringNavigation;
   final List<BoringPageGroup> _pageGroups;
+  final RedirectCallback? redirect;
 
   BoringAppInstance({
     required this.path,
     required this.boringNavigation,
     required List<BoringPage> pages,
+    this.redirect,
     this.themeConfig,
   }) : _pageGroups = [BoringPageGroup(pages: pages)];
 
@@ -27,12 +32,14 @@ class BoringAppInstance {
     required this.boringNavigation,
     required List<BoringPageGroup> pageGroups,
     this.themeConfig,
+    this.redirect,
   }) : _pageGroups = pageGroups;
 
   List<RouteBase> _routes(
     GlobalKey<NavigatorState> rootNavigatorKey, {
     required BoringThemeConfig theme,
     required bool? displayedWithNavigation,
+    RedirectCallback? redirect,
   }) {
     return _pageGroups
         .map(
@@ -41,6 +48,7 @@ class BoringAppInstance {
             rootPrefix: path,
             displayedWithNavigation: displayedWithNavigation,
             theme: theme,
+            redirect: redirect,
           ),
         )
         .expand((element) => element)
@@ -63,7 +71,7 @@ class BoringAppInstance {
     return ShellRoute(
       // navigatorKey: GlobalKey<NavigatorState>(),
       // parentNavigatorKey: rootNavigatorKey,
-
+      redirect: redirect,
       routes: routes,
       builder: (context, state, child) {
         return boringNavigation.buildWithContent(
@@ -85,6 +93,7 @@ class BoringAppInstance {
         rootNavigatorKey,
         displayedWithNavigation: false,
         theme: rootThemeConfig,
+        redirect: redirect,
       );
 
   List<BoringNavigationGroup> get _navigationGroups =>
