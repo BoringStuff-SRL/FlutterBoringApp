@@ -10,6 +10,11 @@ typedef RedirectCallback = FutureOr<String?> Function(
 
 class BoringStaticRouter {
   static GoRouter? goRouter;
+
+  static void Function(String? initialLocation, {bool reset})? _computeRouter;
+
+  static void computeRouter(String? initialLocation, {bool reset = false}) =>
+      _computeRouter?.call(initialLocation, reset: reset);
 }
 
 class BoringAppInstance {
@@ -200,7 +205,10 @@ class BoringApp extends StatelessWidget {
       .expand((element) => element)
       .toList();
 
-  void _computeRouter() {
+  void _computeRouter(String? initialLocation, {bool reset = false}) {
+    if (reset) {
+      BoringStaticRouter.goRouter = null;
+    }
     BoringStaticRouter.goRouter ??= GoRouter(
       debugLogDiagnostics: debug,
       initialLocation: initialLocation,
@@ -213,7 +221,8 @@ class BoringApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _computeRouter();
+    BoringStaticRouter._computeRouter = _computeRouter;
+    BoringStaticRouter.computeRouter(initialLocation);
     final app = MaterialApp.router(
       //routerConfig: _goRouter,
       localizationsDelegates: localizationsDelegates,
