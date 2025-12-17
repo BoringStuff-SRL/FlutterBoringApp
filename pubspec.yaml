@@ -10,8 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  go_router: ^16.0.0
-  syncfusion_localizations: ^30.1.42
+  go_router: ^17.0.1
+  syncfusion_localizations: ^32.1.19
 
 dev_dependencies:
   flutter_lints: ^5.0.0
